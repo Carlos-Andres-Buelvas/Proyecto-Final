@@ -1,0 +1,15 @@
+<RCC>
+    <qresource prefix="/sprites">
+        <file>Pictures/sprite-goku.png</file>
+        <file>Pictures/sprite-goku2.png</file>
+        <file>Pictures/Shelom.png</file>
+        <file>Pictures/goku_agarrado.png</file>
+        <file>Pictures/goku_corre_se_cae.png</file>
+        <file>Pictures/goku_dispara.png</file>
+        <file>Pictures/gokusalta.png</file>
+    </qresource>
+    <qresource prefix="/fondos">
+        <file>Pictures/fondo_inicial.jpg</file>
+        <file>Pictures/fondo_nivel1.png</file>
+    </qresource>
+</RCC>
