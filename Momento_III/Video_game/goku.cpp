@@ -30,7 +30,7 @@ void Goku::cargarAnimaciones() {
     // Disparo
     QPixmap disparo(":/sprites/Pictures/goku_dispara.png");
     for (int i = 0; i < 2; ++i)
-        framesDisparo.append(disparo.copy(i * 138, 0, 138, 196));
+        framesDisparo.append(disparo.copy(i * 467, 0, 467, 267));
 
     // Cuerda
     spriteCuerda = QPixmap(":/sprites/Pictures/goku_agarrado.png");
@@ -66,13 +66,13 @@ void Goku::saltar() {
 void Goku::animarCorrer() {
     contador++;
     if (contador >= velocidadAnimacion) {
-        QPixmap frame = framesDisparo[frameActual];
+        QPixmap frame = framesCorrer[frameActual];
         QPixmap escalado = frame.scaled(ancho, alto, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
         setOffset((ancho - escalado.width()) / 2, (alto - escalado.height()) / 2);
         setPixmap(escalado);
 
-        frameActual = (frameActual + 1) % framesDisparo.size();
+        frameActual = (frameActual + 1) % framesCorrer.size();
         contador = 0;
     }
 }
@@ -93,5 +93,5 @@ void Goku::animarCuerda() {
 }
 
 void Goku::acelerarCaida() {
-    velocidadY += 5; // cae más rápido cuando el jugador presiona S
+    velocidadY += 10; // cae más rápido cuando el jugador presiona S
 }
