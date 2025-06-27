@@ -11,8 +11,8 @@ Enemigo::Enemigo(float x, float y, float ancho, float alto, Goku* gokuRef)
     direccion(1),
     frameActual(0),
     contador(0),
-    velocidadAnimacion(10),
-    velocidadMovimiento(6),
+    velocidadAnimacion(5),
+    velocidadMovimiento(15),
     estado(Patrullando),
     disparando(false),
     timerDisparo(new QTimer(this))
@@ -57,13 +57,13 @@ void Enemigo::animarMovimiento() {
     float distancia = std::abs(gokuDetectado->x() - x());
 
     // Solo dispara si Goku está cerca Y está a la izquierda del enemigo
-    if (distancia < 800 && gokuDetectado->x() < x()) {
+    if (distancia < 900 && gokuDetectado->x() < x()) {
         estado = Disparando;
         direccion = -1;  // ← Fuerza dirección izquierda para animación y disparo
 
         if (!disparando) {
             disparando = true;
-            timerDisparo->start(500);  // dispara cada medio segundo
+            timerDisparo->start(1000);  // dispara cada medio segundo
         }
     } else {
         estado = Patrullando;
@@ -97,43 +97,76 @@ void Enemigo::mover() {
 }
 
 void Enemigo::disparar(QGraphicsScene* escena) {
-    if (direccion != -1) return; // Solo permite disparo si va hacia la izquierda
+    if (direccion != -1) return; // Solo dispara si está mirando a la izquierda
 
-    QGraphicsEllipseItem* proyectil = new QGraphicsEllipseItem(0, 0, 15, 15);
-    proyectil->setBrush(Qt::red);
-    proyectil->setZValue(1);
+    // Crear el proyectil visual
+    QGraphicsEllipseItem* proyectilSoldado = new QGraphicsEllipseItem(0, 0, 15, 15);
+    proyectilSoldado->setBrush(Qt::red);
+    proyectilSoldado->setZValue(1);
 
     float posDisparoY = y() + boundingRect().height() / 2 - 7;
-    float posDisparoX = x() - 10;
+    float posDisparoX = x() - 75;
 
-    proyectil->setPos(posDisparoX, posDisparoY);
-    escena->addItem(proyectil);
+    proyectilSoldado->setPos(posDisparoX, posDisparoY);
+    escena->addItem(proyectilSoldado);
 
+    // Timer para mover el proyectil
     QTimer* t = new QTimer(this);
     connect(t, &QTimer::timeout, [=]() mutable {
-        if (!proyectil || !scene() || !scene()->items().contains(proyectil)) {
-            if (proyectil) {
-                scene()->removeItem(proyectil);
-                delete proyectil;
-            }
+        if (!proyectilSoldado || !proyectilSoldado->scene()) {
             t->stop();
             t->deleteLater();
             return;
         }
 
-        proyectil->moveBy(-15, 0);
+        proyectilSoldado->moveBy(-20, 0); // más rápido
 
-        if (proyectil->x() < -100) {
-            scene()->removeItem(proyectil);
-            delete proyectil;
+        if (proyectilSoldado->x() < -100) {
+            if (scene()) scene()->removeItem(proyectilSoldado);
+            delete proyectilSoldado;
+
+            // Limpiar de la lista
+            for (int i = 0; i < proyectilesActivos.size(); ++i) {
+                if (proyectilesActivos[i].first == proyectilSoldado) {
+                    QTimer* tmp = proyectilesActivos[i].second;
+                    if (tmp) { tmp->stop(); tmp->deleteLater(); }
+                    proyectilesActivos.removeAt(i);
+                    break;
+                }
+            }
+
             t->stop();
             t->deleteLater();
         }
     });
-
     t->start(30);
+
+    // Guardar para eliminar después
+    proyectilesActivos.append(qMakePair(proyectilSoldado, t));
+
+    // **AÑADE ESTO**: reprográmate a ti mismo dentro de 5 s
+    QTimer::singleShot(10000, this, [=]() {
+        disparar(escena);
+    });
 }
 
 bool Enemigo::estaDisparando() const {
     return estado == Disparando;
 }
+
+void Enemigo::eliminarProyectiles() {
+    for (const auto& par : proyectilesActivos) {
+        auto proyectil = par.first;
+        auto timer = par.second;
+
+        if (scene()) scene()->removeItem(proyectil);
+        delete proyectil;
+
+        if (timer) {
+            timer->stop();
+            timer->deleteLater();
+        }
+    }
+    proyectilesActivos.clear();
+}
+

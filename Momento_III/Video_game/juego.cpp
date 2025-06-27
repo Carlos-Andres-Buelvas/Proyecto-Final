@@ -116,6 +116,7 @@ void Juego::actualizar() {
     // Mover proyectiles
     for (int i = 0; i < proyectiles.size(); ++i) {
         auto p = proyectiles[i];
+        qDebug() << "proyectil Goku";
         p->setX(p->x() + 10);
 
         if (p->x() > 1300) {
@@ -141,6 +142,7 @@ void Juego::actualizar() {
         enemigo->mover();
 
         if (enemigo->x() + enemigo->boundingRect().width() < 0) {
+            enemigo->eliminarProyectiles();
             escena->removeItem(enemigo);
             delete enemigo;
             enemigos.removeAt(i);
@@ -155,17 +157,24 @@ void Juego::actualizar() {
         for (int j = 0; j < enemigos.size(); ++j) {
             Enemigo* enemigo = enemigos[j];
             if (p->collidesWithItem(enemigo)) {
+                // 1) Elimina todos los disparos del soldado
+                enemigo->eliminarProyectiles();
+
+                // 2) Elimina el propio proyectil de Goku
                 escena->removeItem(p);
-                escena->removeItem(enemigo);
                 delete p;
-                delete enemigo;
                 proyectiles.removeAt(i);
-                enemigos.removeAt(j);
                 --i;
+
+                // 3) Borra al enemigo de la escena y del vector
+                escena->removeItem(enemigo);
+                delete enemigo;
+                enemigos.removeAt(j);
+
+                // rompemos el bucle de enemigos
                 break;
             }
         }
-
         if (p->x() > 1300) {
             escena->removeItem(p);
             delete p;

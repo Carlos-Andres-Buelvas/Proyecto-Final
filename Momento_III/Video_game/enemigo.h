@@ -16,6 +16,8 @@ public:
     void mover() override;
     void disparar(QGraphicsScene* escena) override;
     bool estaDisparando() const;
+    QList<QPair<QGraphicsEllipseItem*, QTimer*>> proyectilesActivos;
+    void eliminarProyectiles();
 
 private:
     void cargarAnimaciones();
@@ -39,6 +41,7 @@ private:
     bool disparando = false;
     QTimer* animacionTimer;
     QTimer* timerDisparo;
+
 };
 
 #endif // ENEMIGO_H
