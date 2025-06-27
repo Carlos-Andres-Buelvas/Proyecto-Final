@@ -6,7 +6,7 @@
         <file>Pictures/goku_agarrado.png</file>
         <file>Pictures/goku_corre_se_cae.png</file>
         <file>Pictures/goku_dispara.png</file>
-        <file>Pictures/gokusalta.png</file>
+        <file>Pictures/capsula.png</file>
     </qresource>
     <qresource prefix="/fondos">
         <file>Pictures/fondo_inicial.jpg</file>

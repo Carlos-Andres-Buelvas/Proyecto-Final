@@ -8,6 +8,8 @@ class Enemigo : public Personaje {
 public:
     Enemigo(float x, float y, float ancho, float alto);
     void mover() override;
+    void disparar(QGraphicsScene* escena) override;
+
 };
 
 #endif // ENEMIGO_H

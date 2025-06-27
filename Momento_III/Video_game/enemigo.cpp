@@ -1,4 +1,6 @@
 #include "enemigo.h"
+#include <QGraphicsScene>
+#include <QGraphicsEllipseItem>
 
 Enemigo::Enemigo(float x, float y, float ancho, float alto)
     : Personaje(x, y, ancho, alto) {
@@ -6,6 +8,12 @@ Enemigo::Enemigo(float x, float y, float ancho, float alto)
 }
 
 void Enemigo::mover() {
-    posX -= 5; // Se mueve a la izquierda
-    setPos(posX, posY);
+    setX(x() - 2);  // Enemigo se mueve hacia la izquierda
+}
+
+void Enemigo::disparar(QGraphicsScene* escena) {
+    QGraphicsEllipseItem* disparo = new QGraphicsEllipseItem(0, 0, 15, 15);
+    disparo->setBrush(Qt::red); // Disparo rojo
+    disparo->setPos(x() - 10, y() + boundingRect().height()/2 - 7);
+    escena->addItem(disparo);
 }

@@ -8,7 +8,9 @@ class Personaje : public QObject, public QGraphicsPixmapItem {
     Q_OBJECT
 public:
     Personaje(float x, float y, float ancho, float alto);
-    virtual void mover() = 0;  // Método abstracto
+    virtual void mover() = 0;
+    virtual void disparar(QGraphicsScene* escena) = 0;
+
 
 protected:
     float posX, posY;

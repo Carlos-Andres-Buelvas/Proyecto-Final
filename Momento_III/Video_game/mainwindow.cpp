@@ -22,9 +22,11 @@ void MainWindow::on_newGameButton_clicked()
         delete juego;
     }
 
+    //ui->shenronLabel->hide();
     juego = new Juego(); // SIN el "this" como parent
     juego->show();
 
     this->hide();
+    juego->iniciar();
 }
 

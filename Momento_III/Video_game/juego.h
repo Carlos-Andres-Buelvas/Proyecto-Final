@@ -24,9 +24,16 @@ private:
     Goku* goku;
     QTimer* timerInput;
 
-    QList<QGraphicsPixmapItem*> fondos;
-    void crearScrollFondo();
     void moverFondo();
+    QGraphicsRectItem* fondoBarra;
+    QGraphicsRectItem* barraEnergia;
+    void actualizarBarraEnergia();
+    QList<QGraphicsPixmapItem*> capsulas;
+    QTimer* timerCapsulas;
+    QList<QGraphicsEllipseItem*> proyectiles;
+    QList<QGraphicsPixmapItem*> fondosScroll;
+    float velocidadScroll = 3.0;
+
 
 protected:
     void keyPressEvent(QKeyEvent* event) override;

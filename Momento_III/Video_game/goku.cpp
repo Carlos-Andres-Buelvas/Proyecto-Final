@@ -1,12 +1,18 @@
 #include "goku.h"
 #include <QPixmap>
+#include <QBrush>
+#include <QGraphicsScene>
 #include <QDebug>
 
 Goku::Goku(float x, float y, float ancho, float alto)
-    : Personaje(x, y, ancho, alto), frameActual(0), contador(0), velocidadAnimacion(10)
+    : Personaje(x, y, ancho, alto), frameActual(0), contador(0),
+    velocidadAnimacion(10), disparando(false)
 {
     cargarAnimaciones();
     setPixmap(framesCorrer[0].scaled(ancho, alto, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+
+    disparoTimer = new QTimer(this);
+    connect(disparoTimer, &QTimer::timeout, this, &Goku::animarDisparoFrame);
 
 }
 
@@ -17,7 +23,7 @@ void Goku::cargarAnimaciones() {
     for (int i = 0; i < 8; ++i) {
         int x = (i % 3) * 1;
         int y = (i / 3) * 1;
-        framesCorrer.append(spriteSheet.copy(x*498, y*285, 498, 285));
+        framesCorrer.append(spriteSheet.copy(x * 498, y * 285, 498, 285));
     }
 
     // Caída (4 frames)
@@ -36,24 +42,23 @@ void Goku::cargarAnimaciones() {
     spriteCuerda = QPixmap(":/sprites/Pictures/goku_agarrado.png");
 }
 
-void Goku::mover() {
+void Goku::aplicarFisicas() {
     velocidadY += gravedad;
     posY += velocidadY;
 
-    float limiteSuelo = 375; // Altura del suelo (ajusta si cambias el tamaño del personaje)
-
+    float limiteSuelo = 375;
     if (posY >= limiteSuelo) {
         posY = limiteSuelo;
         velocidadY = 0;
         enSuelo = true;
 
-        // Mientras esté en el suelo, animación de correr
-        animarCorrer();
+        if (!disparando)
+            animarCorrer();
     } else {
         enSuelo = false;
     }
 
-    setPos(posX, posY);
+    setPos(posX, posY); // ya no actualiza posX (queda fijo horizontal)
 }
 
 void Goku::saltar() {
@@ -68,7 +73,6 @@ void Goku::animarCorrer() {
     if (contador >= velocidadAnimacion) {
         QPixmap frame = framesCorrer[frameActual];
         QPixmap escalado = frame.scaled(ancho, alto, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-
         setOffset((ancho - escalado.width()) / 2, (alto - escalado.height()) / 2);
         setPixmap(escalado);
 
@@ -78,14 +82,36 @@ void Goku::animarCorrer() {
 }
 
 void Goku::animarCaida() {
-    if (framesCaer.size() == 0) return;
+    if (framesCaer.isEmpty()) return;
+
     frameActual = (frameActual + 1) % framesCaer.size();
     setPixmap(framesCaer[frameActual].scaled(ancho, alto, Qt::KeepAspectRatio, Qt::SmoothTransformation));
 }
 
 void Goku::animarDisparo() {
-    frameActual = (frameActual + 1) % framesDisparo.size();
-    setPixmap(framesDisparo[frameActual].scaled(ancho, alto, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    if (disparando) return; // Evita que se interrumpa si ya está disparando
+
+    disparando = true;
+    frameDisparoActual = 0;
+    disparoTimer->start(150); // Velocidad entre frames
+}
+
+void Goku::animarDisparoFrame() {
+    const int repeticiones = 6;
+
+    if (frameDisparoActual < repeticiones) {
+        int index = frameDisparoActual % framesDisparo.size();
+        QPixmap frame = framesDisparo[index];
+        QPixmap escalado = frame.scaled(ancho, alto, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+        setOffset((ancho - escalado.width()) / 2, (alto - escalado.height()) / 2);
+        setPixmap(escalado);
+
+        frameDisparoActual++;
+    } else {
+        disparoTimer->stop();
+        disparando = false;
+        animarCorrer();
+    }
 }
 
 void Goku::animarCuerda() {
@@ -93,5 +119,30 @@ void Goku::animarCuerda() {
 }
 
 void Goku::acelerarCaida() {
-    velocidadY += 10; // cae más rápido cuando el jugador presiona S
+    velocidadY += 10;
 }
+
+bool Goku::estaDisparando() const {
+    return disparando;
+}
+
+QGraphicsEllipseItem* Goku::crearProyectil() {
+    QGraphicsEllipseItem* bola = new QGraphicsEllipseItem(0, 0, 30, 30);
+    bola->setBrush(QBrush(Qt::yellow));
+    bola->setPos(x() + ancho, y() + alto / 2 - 15);
+    return bola;
+}
+
+void Goku::disparar(QGraphicsScene* escena) {
+    // Por ahora deja vacía o haz un disparo si ya tienes animación
+    QGraphicsEllipseItem* bola = new QGraphicsEllipseItem(0, 0, 30, 30);
+    bola->setBrush(Qt::yellow);
+    bola->setPos(x() + ancho, y() + alto / 2 - 15);
+    escena->addItem(bola);
+}
+
+void Goku::mover() {
+    aplicarFisicas();
+}
+
+
