@@ -31,7 +31,7 @@ Juego::Juego(QWidget *parent) : QGraphicsView(parent) {
     escena->addItem(goku);
 
     // Crear primer enemigo (opcional)
-    Enemigo* enemigo = new Enemigo(850, 375, 100, 100);
+    Enemigo* enemigo = new Enemigo(1024, 375, 100, 100, goku);
     escena->addItem(enemigo);
     enemigos.append(enemigo);
 
@@ -147,12 +147,48 @@ void Juego::actualizar() {
             --i;
         }
     }
+
+    for (int i = 0; i < proyectiles.size(); ++i) {
+        auto p = proyectiles[i];
+        p->setX(p->x() + 10);
+
+        for (int j = 0; j < enemigos.size(); ++j) {
+            Enemigo* enemigo = enemigos[j];
+            if (p->collidesWithItem(enemigo)) {
+                escena->removeItem(p);
+                escena->removeItem(enemigo);
+                delete p;
+                delete enemigo;
+                proyectiles.removeAt(i);
+                enemigos.removeAt(j);
+                --i;
+                break;
+            }
+        }
+
+        if (p->x() > 1300) {
+            escena->removeItem(p);
+            delete p;
+            proyectiles.removeAt(i);
+            --i;
+        }
+    }
+
+    // Colisión Goku vs Enemigo
+    for (int i = 0; i < enemigos.size(); ++i) {
+        if (goku->collidesWithItem(enemigos[i])) {
+            // Puedes mostrar alguna animación, sonido o mensaje
+            qDebug() << "Goku ha colisionado con un enemigo.";
+            // Aquí puedes reducir vida, reiniciar juego, o lo que necesites
+            return;
+        }
+    }
 }
 
 void Juego::generarEnemigo() {
     int posY = 375; // siempre en el mismo nivel del suelo que Goku
 
-    Enemigo* enemigo = new Enemigo(1024, posY, 100, 100); // misma altura
+    Enemigo* enemigo = new Enemigo(1024, posY, 100, 100, goku); // misma altura
     escena->addItem(enemigo);
     enemigos.append(enemigo);
 }
