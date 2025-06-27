@@ -64,8 +64,9 @@ void Goku::aplicarFisicas() {
 void Goku::saltar() {
     if (!enSuelo) return;
 
-    velocidadY = -23;
+    velocidadY = -33;
     enSuelo = false;
+    teclaWSostenida = true;
 }
 
 void Goku::animarCorrer() {
@@ -143,6 +144,17 @@ void Goku::disparar(QGraphicsScene* escena) {
 
 void Goku::mover() {
     aplicarFisicas();
+
+    if (cayendoLento && velocidadY > 0){
+        velocidadY += gravedad * -1; // Caída mas lenta
+    } else {
+        velocidadY += gravedad; // Caída normal
+    }
 }
 
-
+void Goku::mantenerSalto() {
+    // Mientras la tecla W esté presionada y Goku siga subiendo
+    if (teclaWSostenida && velocidadY < 0) {
+        velocidadY -= -10;  // más impulso hacia arriba (opcionalmente puedes limitar este valor)
+    }
+}

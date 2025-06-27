@@ -16,7 +16,6 @@ Juego::Juego(QWidget *parent) : QGraphicsView(parent) {
 
     // Fondo tipo scroll
     QPixmap fondoPixmap(":/fondos/Pictures/fondo_nivel1.png");
-    //fondoPixmap = fondoPixmap.scaled(1100, 600, Qt::IgnoreAspectRatio, Qt::FastTransformation);
     fondoPixmap = fondoPixmap.scaledToHeight(600, Qt::FastTransformation);
 
     for (int i = 0; i < 2; ++i) {
@@ -31,13 +30,18 @@ Juego::Juego(QWidget *parent) : QGraphicsView(parent) {
     goku = new Goku(0, 375, 275, 275);
     escena->addItem(goku);
 
-    // Timer de scroll y físicas
+    // Crear primer enemigo (opcional)
+    Enemigo* enemigo = new Enemigo(850, 375, 100, 100);
+    escena->addItem(enemigo);
+    enemigos.append(enemigo);
+
+    // Timer principal del juego
     timerJuego = new QTimer(this);
     connect(timerJuego, &QTimer::timeout, this, &Juego::actualizar);
 
-    // Timer de enemigos
+    // Timer para generar enemigos
     timerEnemigos = new QTimer(this);
-    //connect(timerEnemigos, &QTimer::timeout, this, &Juego::generarEnemigo);
+    connect(timerEnemigos, &QTimer::timeout, this, &Juego::generarEnemigo);
 
     // Barra de energía
     fondoBarra = new QGraphicsRectItem(0, 0, 104, 24);
@@ -67,7 +71,7 @@ Juego::Juego(QWidget *parent) : QGraphicsView(parent) {
 
 void Juego::iniciar() {
     timerJuego->start(16);         // ~60 FPS
-    timerEnemigos->start(2000);    // cada 2 segundos
+    timerEnemigos->start(5000);    // enemigos cada 1.5 s
 }
 
 void Juego::actualizar() {
@@ -129,26 +133,34 @@ void Juego::actualizar() {
     if (contador % 300 == 0 && velocidadScroll < 10) {
         velocidadScroll += 0.2;
     }
+
+    // Mover enemigos y eliminarlos si se salen
+    for (int i = 0; i < enemigos.size(); ++i) {
+        Enemigo* enemigo = enemigos[i];
+
+        enemigo->mover();
+
+        if (enemigo->x() + enemigo->boundingRect().width() < 0) {
+            escena->removeItem(enemigo);
+            delete enemigo;
+            enemigos.removeAt(i);
+            --i;
+        }
+    }
 }
 
 void Juego::generarEnemigo() {
-    Enemigo* enemigo = new Enemigo(850, 400, 80, 80);
-    escena->addItem(enemigo);
+    int posY = 375; // siempre en el mismo nivel del suelo que Goku
 
-    QTimer* enemigoTimer = new QTimer(this);
-    connect(enemigoTimer, &QTimer::timeout, [enemigo]() {
-        enemigo->mover();
-        if (enemigo->x() < -100) {
-            enemigo->scene()->removeItem(enemigo);
-            delete enemigo;
-        }
-    });
-    enemigoTimer->start(30);
+    Enemigo* enemigo = new Enemigo(1024, posY, 100, 100); // misma altura
+    escena->addItem(enemigo);
+    enemigos.append(enemigo);
 }
 
 void Juego::keyPressEvent(QKeyEvent* event) {
     if (event->key() == Qt::Key_W) {
         goku->saltar();
+        goku->cayendoLento = true;
     }
     if (event->key() == Qt::Key_S) {
         goku->acelerarCaida();
@@ -168,10 +180,15 @@ void Juego::keyPressEvent(QKeyEvent* event) {
             actualizarBarraEnergia();
         }
     }
-
 }
 
 void Juego::actualizarBarraEnergia() {
     float porcentaje = static_cast<float>(goku->obtenerEnergia()) / 100.0f;
     barraEnergia->setRect(2, 2, porcentaje * 100, 20);
+}
+
+void Juego::keyReleaseEvent(QKeyEvent* event) {
+    if (event->key() == Qt::Key_W) {
+        goku->cayendoLento = false;
+    }
 }

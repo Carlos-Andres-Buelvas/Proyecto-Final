@@ -12,7 +12,7 @@ class Goku : public Personaje {
 public:
     Goku(float x, float y, float ancho, float alto);
 
-    void mover();
+    void mover() override;
     void aplicarFisicas(); // nueva función
     void saltar();
     void animarCorrer();
@@ -20,6 +20,8 @@ public:
     void animarDisparo();
     void animarCuerda();
     void acelerarCaida(); // tecla S
+    bool teclaWSostenida = false;
+    bool cayendoLento = false;
     bool estaDisparando() const;
 
     bool puedeDisparar() const { return energia >= energiaMaxima; }
@@ -33,6 +35,7 @@ public:
 
     QGraphicsEllipseItem* crearProyectil();
     void disparar(QGraphicsScene* escena) override;
+    void mantenerSalto(); //Se llam mientras W está presionado
 private:
     QVector<QPixmap> framesCorrer;
     QVector<QPixmap> framesCaer;

@@ -33,10 +33,12 @@ private:
     QList<QGraphicsEllipseItem*> proyectiles;
     QList<QGraphicsPixmapItem*> fondosScroll;
     float velocidadScroll = 3.0;
+    QList<Enemigo*> enemigos;
 
 
 protected:
     void keyPressEvent(QKeyEvent* event) override;
+    void keyReleaseEvent(QKeyEvent* event) override;
 
 };
 
