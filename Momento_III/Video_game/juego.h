@@ -37,6 +37,13 @@ private:
     QVector<QGraphicsPixmapItem*> plataformas;
     QTimer* timerPlataformas;
 
+    // Lista para los obstáculos
+    QVector<QGraphicsPixmapItem*> obstaculos;
+    QTimer* timerObstaculos;
+
+    // Método que vamos a implementar
+    void generarObstaculo();
+
 protected:
     void keyPressEvent(QKeyEvent* event) override;
     void keyReleaseEvent(QKeyEvent* event) override;

@@ -11,6 +11,8 @@
         <file>Pictures/plataforma_1.png</file>
         <file>Pictures/plataforma_2.png</file>
         <file>Pictures/plataforma_3.png</file>
+        <file>Pictures/troncos.png</file>
+        <file>Pictures/rocas.png</file>
     </qresource>
     <qresource prefix="/fondos">
         <file>Pictures/fondo_inicial.jpg</file>
