@@ -29,7 +29,6 @@ Juego::Juego(QWidget *parent) : QGraphicsView(parent) {
 
     // Crear Goku
     goku = new Goku(0, 375, 275, 275);
-    //goku->setListaProyectiles(&proyectiles);
     escena->addItem(goku);
 
     // Crear primer enemigo (opcional)
@@ -148,10 +147,6 @@ void Juego::actualizar() {
             return;
         }
     }
-}
-
-void Juego::registrarProyectil(QGraphicsEllipseItem* p){
-    proyectiles.append(p);
 }
 
 void Juego::generarEnemigo() {

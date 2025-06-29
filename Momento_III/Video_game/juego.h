@@ -12,7 +12,6 @@ class Juego : public QGraphicsView {
 public:
     Juego(QWidget *parent = nullptr);
     void iniciar();
-    void registrarProyectil(QGraphicsEllipseItem* p);
 
 private slots:
     void actualizar();
@@ -23,7 +22,6 @@ private:
     QTimer* timerJuego;
     QTimer* timerEnemigos;
     Goku* goku;
-    QTimer* timerInput;
 
     void moverFondo();
     QGraphicsRectItem* fondoBarra;
@@ -31,7 +29,6 @@ private:
     void actualizarBarraEnergia();
     QVector<QGraphicsPixmapItem*> capsulas;
     QTimer* timerCapsulas;
-    QVector<QGraphicsEllipseItem*> proyectiles;
     QVector<QGraphicsPixmapItem*> fondosScroll;
     float velocidadScroll = 3.0;
     QVector<Enemigo*> enemigos;

@@ -140,7 +140,6 @@ void Goku::disparar(QGraphicsScene* escena) {
         proyectilGoku->setPos(posX, posY);
 
         escena->addItem(proyectilGoku);
-        if (listaProyectiles) listaProyectiles->append(proyectilGoku);
 
         QTimer* timer = new QTimer(this);
         connect(timer, &QTimer::timeout, [=]() mutable {
@@ -192,14 +191,6 @@ void Goku::mover() {
     } else {
         velocidadY += gravedad; // Caída normal
     }
-}
-
-void Goku::setJuego(Juego* juegoPtr){
-    juego = juegoPtr;
-}
-
-void Goku::setListaProyectiles(QVector<QGraphicsEllipseItem*>* lista){
-    listaProyectiles = lista;
 }
 
 void Goku::setListaEnemigos(QVector<Enemigo*>* lista) {
