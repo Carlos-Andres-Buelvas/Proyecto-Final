@@ -2,9 +2,13 @@
 #define GOKU_H
 
 #include "personaje.h"
+
 #include <QVector>
 #include <QPixmap>
 #include <QGraphicsScene>
+
+class Juego;
+class Enemigo;
 
 class Goku : public Personaje {
     Q_OBJECT
@@ -12,6 +16,7 @@ class Goku : public Personaje {
 public:
     Goku(float x, float y, float ancho, float alto);
 
+    void setJuego(Juego* juegoPtr);
     void mover() override;
     void aplicarFisicas(); // nueva función
     void saltar();
@@ -33,8 +38,9 @@ public:
         if (energia > energiaMaxima) energia = energiaMaxima;
     }
 
-    QGraphicsEllipseItem* crearProyectil();
     void disparar(QGraphicsScene* escena) override;
+    void setListaProyectiles(QVector<QGraphicsEllipseItem*>* lista);
+    void setListaEnemigos(QVector<Enemigo*>* lista);
     void mantenerSalto(); //Se llam mientras W está presionado
 private:
     QVector<QPixmap> framesCorrer;
@@ -61,6 +67,10 @@ private:
 
     int energia = 0;
     const int energiaMaxima = 100;
+
+    QVector<QGraphicsEllipseItem*>* listaProyectiles = nullptr;
+    QVector<Enemigo*>* listaEnemigos = nullptr;
+    Juego* juego = nullptr;
 
 };
 

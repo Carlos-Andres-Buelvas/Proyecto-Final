@@ -1,4 +1,5 @@
 #include "enemigo.h"
+#include "goku.h"
 #include <QGraphicsEllipseItem>
 #include <QGraphicsScene>
 #include <QTimer>
@@ -76,7 +77,7 @@ void Enemigo::animarMovimiento() {
     // Animar
     contador++;
     if (contador >= velocidadAnimacion) {
-        QList<QPixmap>& frames = (direccion == -1) ? framesIzquierda : framesDerecha;
+        QVector<QPixmap>& frames = (direccion == -1) ? framesIzquierda : framesDerecha;
         setPixmap(frames[frameActual].scaled(ancho, alto, Qt::KeepAspectRatio, Qt::SmoothTransformation));
         frameActual = (frameActual + 1) % frames.size();
         contador = 0;
@@ -143,11 +144,12 @@ void Enemigo::disparar(QGraphicsScene* escena) {
 
     // Guardar para eliminar después
     proyectilesActivos.append(qMakePair(proyectilSoldado, t));
-
+/*
     // **AÑADE ESTO**: reprográmate a ti mismo dentro de 5 s
     QTimer::singleShot(10000, this, [=]() {
         disparar(escena);
     });
+*/
 }
 
 bool Enemigo::estaDisparando() const {

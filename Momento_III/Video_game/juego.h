@@ -12,6 +12,7 @@ class Juego : public QGraphicsView {
 public:
     Juego(QWidget *parent = nullptr);
     void iniciar();
+    void registrarProyectil(QGraphicsEllipseItem* p);
 
 private slots:
     void actualizar();
@@ -28,12 +29,12 @@ private:
     QGraphicsRectItem* fondoBarra;
     QGraphicsRectItem* barraEnergia;
     void actualizarBarraEnergia();
-    QList<QGraphicsPixmapItem*> capsulas;
+    QVector<QGraphicsPixmapItem*> capsulas;
     QTimer* timerCapsulas;
-    QList<QGraphicsEllipseItem*> proyectiles;
-    QList<QGraphicsPixmapItem*> fondosScroll;
+    QVector<QGraphicsEllipseItem*> proyectiles;
+    QVector<QGraphicsPixmapItem*> fondosScroll;
     float velocidadScroll = 3.0;
-    QList<Enemigo*> enemigos;
+    QVector<Enemigo*> enemigos;
 
 
 protected:

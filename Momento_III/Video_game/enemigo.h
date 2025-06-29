@@ -2,11 +2,12 @@
 #define ENEMIGO_H
 
 #include "personaje.h"
-#include "goku.h"
-#include <QList>
+#include <QVector>
 #include <QPixmap>
 #include <QTimer>
 #include <QGraphicsScene>
+
+class Goku;
 
 class Enemigo : public Personaje {
     Q_OBJECT
@@ -16,7 +17,10 @@ public:
     void mover() override;
     void disparar(QGraphicsScene* escena) override;
     bool estaDisparando() const;
-    QList<QPair<QGraphicsEllipseItem*, QTimer*>> proyectilesActivos;
+    QVector<QPair<QGraphicsEllipseItem*, QTimer*>> proyectilesActivos;
+    QVector<QPair<QGraphicsEllipseItem*, QTimer*>> obtenerProyectilesActivos() const {
+        return proyectilesActivos;
+    }
     void eliminarProyectiles();
 
 private:
@@ -29,8 +33,8 @@ private:
     EstadoEnemigo estado = Patrullando;
 
     Goku* gokuDetectado = nullptr;
-    QList<QPixmap> framesIzquierda;
-    QList<QPixmap> framesDerecha;
+    QVector<QPixmap> framesIzquierda;
+    QVector<QPixmap> framesDerecha;
 
     int direccion;
     int frameActual;

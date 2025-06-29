@@ -1,4 +1,6 @@
 #include "goku.h"
+#include "juego.h"
+#include "enemigo.h"
 #include <QPixmap>
 #include <QBrush>
 #include <QGraphicsScene>
@@ -127,19 +129,59 @@ bool Goku::estaDisparando() const {
     return disparando;
 }
 
-QGraphicsEllipseItem* Goku::crearProyectil() {
-    QGraphicsEllipseItem* bola = new QGraphicsEllipseItem(0, 0, 30, 30);
-    bola->setBrush(QBrush(Qt::yellow));
-    bola->setPos(x() + ancho, y() + alto / 2 - 15);
-    return bola;
-}
-
 void Goku::disparar(QGraphicsScene* escena) {
-    // Por ahora deja vacía o haz un disparo si ya tienes animación
-    QGraphicsEllipseItem* bola = new QGraphicsEllipseItem(0, 0, 30, 30);
-    bola->setBrush(Qt::yellow);
-    bola->setPos(x() + ancho, y() + alto / 2 - 15);
-    escena->addItem(bola);
+    for (int i = 0; i < 3; ++i) {
+        QGraphicsEllipseItem* proyectilGoku = new QGraphicsEllipseItem(0, 0, 30, 30);
+        proyectilGoku->setBrush(Qt::yellow);
+        proyectilGoku->setZValue(1);
+
+        float posX = x() + ancho;
+        float posY = y() + alto / 2 - 15 - (i * 10);
+        proyectilGoku->setPos(posX, posY);
+
+        escena->addItem(proyectilGoku);
+        if (listaProyectiles) listaProyectiles->append(proyectilGoku);
+
+        QTimer* timer = new QTimer(this);
+        connect(timer, &QTimer::timeout, [=]() mutable {
+            if (!proyectilGoku || !proyectilGoku->scene()) {
+                timer->stop();
+                timer->deleteLater();
+                return;
+            }
+
+            proyectilGoku->moveBy(20, 0);
+
+            // 🎯 DETECCIÓN DE COLISIÓN CON ENEMIGOS SIN CAMBIAR FIRMA
+            if (listaEnemigos) {
+                for (int j = 0; j < listaEnemigos->size(); ++j) {
+                    Enemigo* enemigo = listaEnemigos->at(j);
+                    if (proyectilGoku->collidesWithItem(enemigo)) {
+                        enemigo->eliminarProyectiles();
+                        escena->removeItem(enemigo);
+                        delete enemigo;
+                        listaEnemigos->removeAt(j);
+
+                        escena->removeItem(proyectilGoku);
+                        delete proyectilGoku;
+
+                        timer->stop();
+                        timer->deleteLater();
+                        return;
+                    }
+                }
+            }
+
+            if (proyectilGoku->x() > 1300) {
+                escena->removeItem(proyectilGoku);
+                delete proyectilGoku;
+                timer->stop();
+                timer->deleteLater();
+            }
+        });
+
+        timer->start(30);
+    }
 }
 
 void Goku::mover() {
@@ -151,6 +193,19 @@ void Goku::mover() {
         velocidadY += gravedad; // Caída normal
     }
 }
+
+void Goku::setJuego(Juego* juegoPtr){
+    juego = juegoPtr;
+}
+
+void Goku::setListaProyectiles(QVector<QGraphicsEllipseItem*>* lista){
+    listaProyectiles = lista;
+}
+
+void Goku::setListaEnemigos(QVector<Enemigo*>* lista) {
+    listaEnemigos = lista;
+}
+
 
 void Goku::mantenerSalto() {
     // Mientras la tecla W esté presionada y Goku siga subiendo

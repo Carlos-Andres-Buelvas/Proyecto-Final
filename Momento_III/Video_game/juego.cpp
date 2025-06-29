@@ -1,4 +1,5 @@
 #include "juego.h"
+#include "enemigo.h"
 #include <QGraphicsPixmapItem>
 #include <QKeyEvent>
 #include <QRandomGenerator>
@@ -28,6 +29,7 @@ Juego::Juego(QWidget *parent) : QGraphicsView(parent) {
 
     // Crear Goku
     goku = new Goku(0, 375, 275, 275);
+    //goku->setListaProyectiles(&proyectiles);
     escena->addItem(goku);
 
     // Crear primer enemigo (opcional)
@@ -113,20 +115,6 @@ void Juego::actualizar() {
         }
     }
 
-    // Mover proyectiles
-    for (int i = 0; i < proyectiles.size(); ++i) {
-        auto p = proyectiles[i];
-        qDebug() << "proyectil Goku";
-        p->setX(p->x() + 10);
-
-        if (p->x() > 1300) {
-            escena->removeItem(p);
-            delete p;
-            proyectiles.removeAt(i);
-            --i;
-        }
-    }
-
     // Aumentar velocidad gradualmente
     static int contador = 0;
     contador++;
@@ -150,48 +138,20 @@ void Juego::actualizar() {
         }
     }
 
-    for (int i = 0; i < proyectiles.size(); ++i) {
-        auto p = proyectiles[i];
-        p->setX(p->x() + 10);
-
-        for (int j = 0; j < enemigos.size(); ++j) {
-            Enemigo* enemigo = enemigos[j];
-            if (p->collidesWithItem(enemigo)) {
-                // 1) Elimina todos los disparos del soldado
-                enemigo->eliminarProyectiles();
-
-                // 2) Elimina el propio proyectil de Goku
-                escena->removeItem(p);
-                delete p;
-                proyectiles.removeAt(i);
-                --i;
-
-                // 3) Borra al enemigo de la escena y del vector
-                escena->removeItem(enemigo);
-                delete enemigo;
-                enemigos.removeAt(j);
-
-                // rompemos el bucle de enemigos
-                break;
-            }
-        }
-        if (p->x() > 1300) {
-            escena->removeItem(p);
-            delete p;
-            proyectiles.removeAt(i);
-            --i;
-        }
-    }
-
     // Colisión Goku vs Enemigo
     for (int i = 0; i < enemigos.size(); ++i) {
         if (goku->collidesWithItem(enemigos[i])) {
+            goku->animarCaida();
             // Puedes mostrar alguna animación, sonido o mensaje
             qDebug() << "Goku ha colisionado con un enemigo.";
             // Aquí puedes reducir vida, reiniciar juego, o lo que necesites
             return;
         }
     }
+}
+
+void Juego::registrarProyectil(QGraphicsEllipseItem* p){
+    proyectiles.append(p);
 }
 
 void Juego::generarEnemigo() {
@@ -213,13 +173,8 @@ void Juego::keyPressEvent(QKeyEvent* event) {
     if (event->key() == Qt::Key_Space) {
         if (goku->puedeDisparar()) {
             goku->animarDisparo();
-
-            for (int i = 0; i < 3; ++i) {
-                auto p = goku->crearProyectil();
-                p->setY(p->y() - i * 10); // Pequeña separación vertical opcional
-                escena->addItem(p);
-                proyectiles.append(p);
-            }
+            goku->setListaEnemigos(&enemigos);
+            goku->disparar(escena);  // ✅ llama al método heredado correctamente
 
             goku->reiniciarEnergia();
             actualizarBarraEnergia();
