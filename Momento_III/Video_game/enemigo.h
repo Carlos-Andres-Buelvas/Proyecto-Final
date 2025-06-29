@@ -18,14 +18,10 @@ public:
     void disparar(QGraphicsScene* escena) override;
     bool estaDisparando() const;
     QVector<QPair<QGraphicsEllipseItem*, QTimer*>> proyectilesActivos;
-    QVector<QPair<QGraphicsEllipseItem*, QTimer*>> obtenerProyectilesActivos() const {
-        return proyectilesActivos;
-    }
     void eliminarProyectiles();
 
 private:
     void cargarAnimaciones();
-    void animarMovimiento();
     void iniciarDisparo();      // activa el disparo continuo
     void crearDisparo();        // lanza una bala
 
@@ -43,7 +39,6 @@ private:
     float velocidadMovimiento;
 
     bool disparando = false;
-    QTimer* animacionTimer;
     QTimer* timerDisparo;
 
 };

@@ -15,7 +15,7 @@ public:
     Goku(float x, float y, float ancho, float alto);
 
     void mover() override;
-    void aplicarFisicas(); // nueva función
+    void disparar(QGraphicsScene* escena) override;
     void saltar();
     void animarCorrer();
     void animarCaida();
@@ -35,9 +35,8 @@ public:
         if (energia > energiaMaxima) energia = energiaMaxima;
     }
 
-    void disparar(QGraphicsScene* escena) override;
     void setListaEnemigos(QVector<Enemigo*>* lista);
-    void mantenerSalto(); //Se llam mientras W está presionado
+    //void mantenerSalto(); //Se llama mientras W está presionado
 private:
     QVector<QPixmap> framesCorrer;
     QVector<QPixmap> framesCaer;

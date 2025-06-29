@@ -44,29 +44,10 @@ void Goku::cargarAnimaciones() {
     spriteCuerda = QPixmap(":/sprites/Pictures/goku_agarrado.png");
 }
 
-void Goku::aplicarFisicas() {
-    velocidadY += gravedad;
-    posY += velocidadY;
-
-    float limiteSuelo = 375;
-    if (posY >= limiteSuelo) {
-        posY = limiteSuelo;
-        velocidadY = 0;
-        enSuelo = true;
-
-        if (!disparando)
-            animarCorrer();
-    } else {
-        enSuelo = false;
-    }
-
-    setPos(posX, posY); // ya no actualiza posX (queda fijo horizontal)
-}
-
 void Goku::saltar() {
     if (!enSuelo) return;
 
-    velocidadY = -33;
+    velocidadY = -22;
     enSuelo = false;
     teclaWSostenida = true;
 }
@@ -149,7 +130,7 @@ void Goku::disparar(QGraphicsScene* escena) {
                 return;
             }
 
-            proyectilGoku->moveBy(20, 0);
+            proyectilGoku->moveBy(30, 0);
 
             // 🎯 DETECCIÓN DE COLISIÓN CON ENEMIGOS SIN CAMBIAR FIRMA
             if (listaEnemigos) {
@@ -184,23 +165,40 @@ void Goku::disparar(QGraphicsScene* escena) {
 }
 
 void Goku::mover() {
-    aplicarFisicas();
-
-    if (cayendoLento && velocidadY > 0){
-        velocidadY += gravedad * -1; // Caída mas lenta
+    // Aplicar gravedad con lógica de caída lenta
+    if (cayendoLento && velocidadY > 0) {
+        velocidadY += gravedad * 0.01; // Caída más lenta
     } else {
-        velocidadY += gravedad; // Caída normal
+        velocidadY += gravedad;     // Caída normal
     }
+
+    posY += velocidadY;
+
+    float limiteSuelo = 375;
+    if (posY >= limiteSuelo) {
+        posY = limiteSuelo;
+        velocidadY = 0;
+        enSuelo = true;
+
+        if (!disparando)
+            animarCorrer();  // Goku corre cuando está en el suelo
+    } else {
+        enSuelo = false;
+    }
+
+    // Ya no se modifica posX aquí, se hace en Juego::actualizar()
+    setPos(posX, posY);
 }
 
 void Goku::setListaEnemigos(QVector<Enemigo*>* lista) {
     listaEnemigos = lista;
 }
 
-
+/*
 void Goku::mantenerSalto() {
     // Mientras la tecla W esté presionada y Goku siga subiendo
     if (teclaWSostenida && velocidadY < 0) {
         velocidadY -= -10;  // más impulso hacia arriba (opcionalmente puedes limitar este valor)
     }
 }
+*/

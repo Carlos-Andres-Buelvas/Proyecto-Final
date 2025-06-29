@@ -72,7 +72,7 @@ Juego::Juego(QWidget *parent) : QGraphicsView(parent) {
 
 void Juego::iniciar() {
     timerJuego->start(16);         // ~60 FPS
-    timerEnemigos->start(5000);    // enemigos cada 1.5 s
+    timerEnemigos->start(7000);    // enemigos cada 1.5 s
 }
 
 void Juego::actualizar() {
@@ -145,6 +145,21 @@ void Juego::actualizar() {
             qDebug() << "Goku ha colisionado con un enemigo.";
             // Aquí puedes reducir vida, reiniciar juego, o lo que necesites
             return;
+        }
+    }
+
+    // Colisión Goku vs proyectiles de soldados
+    for (int i = 0; i < enemigos.size(); ++i) {
+        Enemigo* enemigo = enemigos[i];
+
+        for (int j = 0; j < enemigo->proyectilesActivos.size(); ++j) {
+            QGraphicsEllipseItem* proyectil = enemigo->proyectilesActivos[j].first;
+
+            if (proyectil && goku->collidesWithItem(proyectil)) {
+                goku->animarCaida();
+                qDebug() << "Goku ha sido golpeado por un disparo enemigo.";
+                return;
+            }
         }
     }
 }

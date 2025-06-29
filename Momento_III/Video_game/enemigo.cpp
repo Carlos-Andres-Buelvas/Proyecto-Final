@@ -12,8 +12,8 @@ Enemigo::Enemigo(float x, float y, float ancho, float alto, Goku* gokuRef)
     direccion(1),
     frameActual(0),
     contador(0),
-    velocidadAnimacion(5),
-    velocidadMovimiento(15),
+    velocidadAnimacion(50),
+    velocidadMovimiento(1),
     estado(Patrullando),
     disparando(false),
     timerDisparo(new QTimer(this))
@@ -26,10 +26,6 @@ Enemigo::Enemigo(float x, float y, float ancho, float alto, Goku* gokuRef)
     posX = x;
     posY = 375 - alto + 170;
     setPos(posX, posY);
-
-    animacionTimer = new QTimer(this);
-    connect(animacionTimer, &QTimer::timeout, this, &Enemigo::animarMovimiento);
-    animacionTimer->start(100);
 
     // conectar disparo al método heredado
     connect(timerDisparo, &QTimer::timeout, this, [=]() {
@@ -52,29 +48,33 @@ void Enemigo::cargarAnimaciones() {
         framesDerecha.append(spriteSheet.copy(i * w, 2 * h, w, h));
 }
 
-void Enemigo::animarMovimiento() {
-    if (!gokuDetectado) return;
+void Enemigo::mover() {
+    // Desplazamiento general por scroll
+    posX -= 3;
+    setX(posX);
 
-    float distancia = std::abs(gokuDetectado->x() - x());
+    // 🎯 Detección de Goku
+    if (gokuDetectado) {
+        float distancia = std::abs(gokuDetectado->x() - x());
 
-    // Solo dispara si Goku está cerca Y está a la izquierda del enemigo
-    if (distancia < 900 && gokuDetectado->x() < x()) {
-        estado = Disparando;
-        direccion = -1;  // ← Fuerza dirección izquierda para animación y disparo
+        if (distancia < 800 && gokuDetectado->x() < x()) {
+            estado = Disparando;
+            direccion = -1;
 
-        if (!disparando) {
-            disparando = true;
-            timerDisparo->start(1000);  // dispara cada medio segundo
-        }
-    } else {
-        estado = Patrullando;
-        if (disparando) {
-            disparando = false;
-            timerDisparo->stop();
+            if (!disparando) {
+                disparando = true;
+                timerDisparo->start(1000);  // dispara cada 1s
+            }
+        } else {
+            estado = Patrullando;
+            if (disparando) {
+                disparando = false;
+                timerDisparo->stop();
+            }
         }
     }
 
-    // Animar
+    // 🎞️ Animación de frames
     contador++;
     if (contador >= velocidadAnimacion) {
         QVector<QPixmap>& frames = (direccion == -1) ? framesIzquierda : framesDerecha;
@@ -83,18 +83,14 @@ void Enemigo::animarMovimiento() {
         contador = 0;
     }
 
+    // 🚶‍♂️ Movimiento lateral si está patrullando
     if (estado == Patrullando) {
         posX += direccion * velocidadMovimiento;
         setX(posX);
 
-        if (posX <= 800 || posX >= 1024)
+        if (posX <= 800 || posX >= 1300)
             direccion *= -1;
     }
-}
-
-void Enemigo::mover() {
-    posX -= 4; // para scroll
-    setX(posX);
 }
 
 void Enemigo::disparar(QGraphicsScene* escena) {
