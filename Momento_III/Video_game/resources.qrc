@@ -8,6 +8,9 @@
         <file>Pictures/goku_dispara.png</file>
         <file>Pictures/capsula.png</file>
         <file>Pictures/soldados.png</file>
+        <file>Pictures/plataforma_1.png</file>
+        <file>Pictures/plataforma_2.png</file>
+        <file>Pictures/plataforma_3.png</file>
     </qresource>
     <qresource prefix="/fondos">
         <file>Pictures/fondo_inicial.jpg</file>

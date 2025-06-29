@@ -29,6 +29,7 @@ Juego::Juego(QWidget *parent) : QGraphicsView(parent) {
 
     // Crear Goku
     goku = new Goku(0, 375, 275, 275);
+    goku->setZValue(2);
     escena->addItem(goku);
 
     // Crear primer enemigo (opcional)
@@ -68,6 +69,10 @@ Juego::Juego(QWidget *parent) : QGraphicsView(parent) {
         capsulas.append(capsula);
     });
     timerCapsulas->start(2000); // cada 2 segundos
+
+    timerPlataformas = new QTimer(this);
+    connect(timerPlataformas, &QTimer::timeout, this, &Juego::generarPlataforma);
+    timerPlataformas->start(3500);  // cada 3.5 segundos (puedes ajustar)
 }
 
 void Juego::iniciar() {
@@ -79,8 +84,32 @@ void Juego::actualizar() {
     // Movimiento automático
     goku->setX(goku->x() + velocidadScroll);
     goku->mover();            // Aplica gravedad y salto
-    goku->animarCorrer();     // Anima correr
 
+    bool sobrePlataforma = false;
+
+    for (auto plataforma : plataformas) {
+        if (goku->collidesWithItem(plataforma)) {
+            // Verificamos que la colisión sea desde arriba (evitar que se "suba" desde abajo o de lado)
+            qreal gokuBaseY = goku->y() + goku->boundingRect().height();
+            qreal plataformaY = plataforma->y();
+
+            if (gokuBaseY <= plataformaY + 15 && goku->estaBajando() && !goku->estaForzandoCaida()) {
+                // Aterrizó en la plataforma
+                goku->setY(plataformaY - goku->boundingRect().height() - 30);
+                goku->detenerCaida();
+                sobrePlataforma = true;
+                break;
+            }
+        }
+    }
+
+    // Si no está ni en plataforma ni en el suelo, cae
+    if (!sobrePlataforma && !goku->estaEnSuelo()) {
+        goku->activarCaida();
+        goku->cancelarCaidaForzada();  // ✅ una vez que cae, ya no está forzando
+    }
+
+    goku->animarCorrer();     // Anima correr
     if (goku->x() > 500) {
         goku->setX(500); // Limita la posición de Goku para no salirse
     }
@@ -162,6 +191,18 @@ void Juego::actualizar() {
             }
         }
     }
+
+    for (int i = 0; i < plataformas.size(); ++i) {
+        auto p = plataformas[i];
+        p->setX(p->x() - velocidadScroll);
+
+        if (p->x() + p->pixmap().width() < 0) {
+            escena->removeItem(p);
+            delete p;
+            plataformas.removeAt(i);
+            --i;
+        }
+    }
 }
 
 void Juego::generarEnemigo() {
@@ -179,6 +220,7 @@ void Juego::keyPressEvent(QKeyEvent* event) {
     }
     if (event->key() == Qt::Key_S) {
         goku->acelerarCaida();
+        goku->forzarCaida();
     }
     if (event->key() == Qt::Key_Space) {
         if (goku->puedeDisparar()) {
@@ -195,6 +237,39 @@ void Juego::keyPressEvent(QKeyEvent* event) {
 void Juego::actualizarBarraEnergia() {
     float porcentaje = static_cast<float>(goku->obtenerEnergia()) / 100.0f;
     barraEnergia->setRect(2, 2, porcentaje * 100, 20);
+}
+
+void Juego::generarPlataforma() {
+    QVector<QString> rutas = {
+        ":/sprites/Pictures/plataforma_1.png",
+        ":/sprites/Pictures/plataforma_2.png",
+        ":/sprites/Pictures/plataforma_3.png"
+    };
+
+    int cantidad = QRandomGenerator::global()->bounded(1, 3); // 1 o 2 plataformas
+    int baseX = 1024;
+
+    for (int i = 0; i < cantidad; ++i) {
+        QString ruta = rutas[QRandomGenerator::global()->bounded(0, rutas.size())];
+        QPixmap sprite(ruta);
+        sprite = sprite.scaled(350, 35); // más ancha
+
+        QGraphicsPixmapItem* plataforma = new QGraphicsPixmapItem(sprite);
+        plataforma->setZValue(1);
+
+        int y;
+        if (cantidad == 2) {
+            // Si hay 2, la primera más baja, la segunda más alta
+            y = (i == 0) ? 425 : 250;
+        } else {
+            // Si solo hay una, se escoge aleatoriamente
+            y = (QRandomGenerator::global()->bounded(0, 2) == 0) ? 425 : 250;
+        }
+
+        plataforma->setPos(baseX + i * 400, y);  // separadas horizontalmente
+        escena->addItem(plataforma);
+        plataformas.append(plataforma);
+    }
 }
 
 void Juego::keyReleaseEvent(QKeyEvent* event) {

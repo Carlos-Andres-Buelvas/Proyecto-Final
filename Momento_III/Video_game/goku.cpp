@@ -194,11 +194,35 @@ void Goku::setListaEnemigos(QVector<Enemigo*>* lista) {
     listaEnemigos = lista;
 }
 
-/*
-void Goku::mantenerSalto() {
-    // Mientras la tecla W esté presionada y Goku siga subiendo
-    if (teclaWSostenida && velocidadY < 0) {
-        velocidadY -= -10;  // más impulso hacia arriba (opcionalmente puedes limitar este valor)
-    }
+bool Goku::estaBajando() const {
+    return velocidadY > 0;
 }
-*/
+
+bool Goku::estaEnSuelo() const {
+    return enSuelo;
+}
+
+void Goku::detenerCaida() {
+    velocidadY = 0;
+    enSuelo = true;
+}
+
+void Goku::activarCaida() {
+    enSuelo = false;
+    // Si Goku ya tiene velocidad negativa (subiendo), no se toca
+    // Solo lo aseguramos cayendo si está flotando sin estar en suelo
+    if (velocidadY == 0)
+        velocidadY = 1; // mínima caída para reiniciar el efecto de gravedad
+}
+
+void Goku::forzarCaida() {
+    forzarCaidaManual = true;
+}
+
+bool Goku::estaForzandoCaida() const {
+    return forzarCaidaManual;
+}
+
+void Goku::cancelarCaidaForzada() {
+    forzarCaidaManual = false;
+}

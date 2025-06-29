@@ -35,8 +35,16 @@ public:
         if (energia > energiaMaxima) energia = energiaMaxima;
     }
 
+    bool estaBajando() const;
+    bool estaEnSuelo() const;
+    void detenerCaida();
+    void activarCaida();
+    void forzarCaida();
+    bool estaForzandoCaida() const;  // nuevo
+    void cancelarCaidaForzada();     // nuevo
+
     void setListaEnemigos(QVector<Enemigo*>* lista);
-    //void mantenerSalto(); //Se llama mientras W está presionado
+
 private:
     QVector<QPixmap> framesCorrer;
     QVector<QPixmap> framesCaer;
@@ -61,6 +69,8 @@ private:
     const int energiaMaxima = 100;
 
     QVector<Enemigo*>* listaEnemigos = nullptr;
+
+    bool forzarCaidaManual = false;
 
 };
 

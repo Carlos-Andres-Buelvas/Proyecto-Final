@@ -16,6 +16,7 @@ public:
 private slots:
     void actualizar();
     void generarEnemigo();
+    void generarPlataforma(); // método que genera las plataformas
 
 private:
     QGraphicsScene* escena;
@@ -33,6 +34,8 @@ private:
     float velocidadScroll = 3.0;
     QVector<Enemigo*> enemigos;
 
+    QVector<QGraphicsPixmapItem*> plataformas;
+    QTimer* timerPlataformas;
 
 protected:
     void keyPressEvent(QKeyEvent* event) override;
