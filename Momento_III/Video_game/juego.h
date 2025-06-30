@@ -44,6 +44,26 @@ private:
     // Método que vamos a implementar
     void generarObstaculo();
 
+    QVector<QPixmap> imagenesPlataformas;
+    QVector<QPixmap> imagenesTroncos;
+    QVector<QPixmap> imagenesRocas;
+    QVector<QPixmap> imagenesObstaculos;
+
+    // --- CUERDA ---
+    QGraphicsLineItem* cuerdaLine = nullptr;
+    QGraphicsPixmapItem* gokuColgado = nullptr; // sprite de Goku colgando
+    QTimer* timerCuerda = nullptr;
+
+    // Parámetros del péndulo
+    QPointF origenCuerda;  // punto fijo
+    double largoCuerda = 200;  // puedes ajustar
+    double angulo = -M_PI / 4;
+    double velocidadAngular = 0;
+    double gravedad = 0.015;
+
+    bool gokuEnCuerda = false;
+    void actualizarCuerda();
+
 protected:
     void keyPressEvent(QKeyEvent* event) override;
     void keyReleaseEvent(QKeyEvent* event) override;

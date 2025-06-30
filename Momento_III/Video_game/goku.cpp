@@ -174,7 +174,7 @@ void Goku::mover() {
 
     posY += velocidadY;
 
-    float limiteSuelo = 375;
+    float limiteSuelo = 450;
     if (posY >= limiteSuelo) {
         posY = limiteSuelo;
         velocidadY = 0;
@@ -226,3 +226,5 @@ bool Goku::estaForzandoCaida() const {
 void Goku::cancelarCaidaForzada() {
     forzarCaidaManual = false;
 }
+
+

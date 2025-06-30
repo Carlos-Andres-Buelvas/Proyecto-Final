@@ -24,8 +24,8 @@ Enemigo::Enemigo(float x, float y, float ancho, float alto, Goku* gokuRef)
     cargarAnimaciones();
     setPixmap(framesDerecha[0].scaled(this->ancho, this->alto, Qt::KeepAspectRatio, Qt::SmoothTransformation));
     posX = x;
-    posY = 375 - alto + 170;
-    setPos(posX, posY);
+    posY = y; //375 - alto + 170;
+    //setPos(posX, posY);
 
     // conectar disparo al método heredado
     connect(timerDisparo, &QTimer::timeout, this, [=]() {
