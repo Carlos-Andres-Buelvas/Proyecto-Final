@@ -52,15 +52,14 @@ private:
     // CUERDA
     struct Cuerda {
         QPointF origen;
-        double largo = 275;
-        double angulo; // Ángulo actual en radianes
+        double largo = 220;
+        double angulo;
         double velocidadAngular = 0;
         bool activa = false;
-        QGraphicsLineItem* linea = nullptr;
+        QGraphicsPathItem* cuerdaItem = nullptr; // Cambiamos de LineItem a PathItem
         QGraphicsPixmapItem* gokuSprite = nullptr;
-        bool gokuAgarrado = false; // Nuevo: indica si Goku está agarrado a esta cuerda
-        //int tiempoEnCuerda = 0; // Contador de frames en la cuerda
-        //const int maxTiempoEnCuerda = 180; // 3 segundos (60fps * 3)
+        bool gokuAgarrado = false;
+        QPointF puntoMedio; // Para la curvatura
     };
 
     QVector<Cuerda> cuerdas;  // múltiples cuerdas
@@ -71,6 +70,38 @@ private:
     void actualizarCuerda();  // para actualizar el péndulo
     void activarCuerda(Goku* goku);
     void soltarGokuDeCuerda(Cuerda& cuerda);
+    QPointF calcularExtremo(const Cuerda& cuerda) const;
+
+    struct TroncoGiratorio {
+        QGraphicsPixmapItem* sprite;
+        qreal velocidadY;        // Velocidad vertical de caída (hacia abajo)
+        qreal velocidadX;        // Velocidad horizontal (0 inicial, luego negativa)
+        qreal velocidadRotacion; // Velocidad de rotación (negativa para giro antihorario)
+        qreal rotacionActual;
+        bool enSuelo;           // Bandera para controlar el cambio de movimiento
+    };
+
+    TroncoGiratorio troncoActual; // Solo un tronco activo
+    QTimer* timerTroncos;
+    void generarTroncoUnico();   // Renombrado para claridad
+    void actualizarTronco();
+
+    QGraphicsPixmapItem* detectarPlataformaSobre(TroncoGiratorio& tronco) {
+        QRectF areaTronco = tronco.sprite->boundingRect().translated(tronco.sprite->pos());
+
+        for (auto plataforma : plataformas) {
+            QRectF areaPlataforma = plataforma->boundingRect().translated(plataforma->pos());
+
+            // Verifica si el tronco está sobre la plataforma (con margen de 5px)
+            if (areaTronco.bottom() >= areaPlataforma.top() - 5 &&
+                areaTronco.bottom() <= areaPlataforma.top() + 15 &&
+                areaTronco.right() > areaPlataforma.left() &&
+                areaTronco.left() < areaPlataforma.right()) {
+                return plataforma;
+            }
+        }
+        return nullptr;
+    }
 
 protected:
     void keyPressEvent(QKeyEvent* event) override;
