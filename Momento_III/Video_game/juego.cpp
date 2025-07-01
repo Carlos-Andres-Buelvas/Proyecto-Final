@@ -16,24 +16,6 @@ Juego::Juego(QWidget *parent) : QGraphicsView(parent) {
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setFocusPolicy(Qt::StrongFocus);
 
-    // Crear cuerda
-    origenCuerda = QPointF(1000, 0);  // esquina superior derecha
-    cuerdaLine = new QGraphicsLineItem();
-    cuerdaLine->setPen(QPen(Qt::darkYellow, 4));
-    escena->addItem(cuerdaLine);
-
-    // Sprite Goku colgado (oculto al inicio)
-    QPixmap gokuSprite(":/sprites/Pictures/goku_agarrado.png");
-    gokuColgado = new QGraphicsPixmapItem(gokuSprite.scaled(90, 200));
-    gokuColgado->setVisible(false);
-    gokuColgado->setZValue(3);
-    escena->addItem(gokuColgado);
-
-    // Timer para actualizar el movimiento de la cuerda
-    timerCuerda = new QTimer(this);
-    connect(timerCuerda, &QTimer::timeout, this, &Juego::actualizarCuerda);
-    timerCuerda->start(16);  // 60 fps
-
     // Cargar y guardar plataformas
     imagenesPlataformas = {
         QPixmap(":/sprites/Pictures/plataforma_1.png").scaled(550, 35),
@@ -142,6 +124,16 @@ Juego::Juego(QWidget *parent) : QGraphicsView(parent) {
     timerObstaculos = new QTimer(this);
     connect(timerObstaculos, &QTimer::timeout, this, &Juego::generarObstaculo);
     timerObstaculos->start(6000);
+
+    // Actualiza las cuerdas que ya están
+    timerAnimacionCuerda = new QTimer(this);
+    connect(timerAnimacionCuerda, &QTimer::timeout, this, &Juego::actualizarCuerda);
+    timerAnimacionCuerda->start(16);  // 60 FPS
+
+    // Genera nuevas cuerdas aleatorias
+    timerGeneracionCuerdas = new QTimer(this);
+    connect(timerGeneracionCuerdas, &QTimer::timeout, this, &Juego::generarCuerda);
+    timerGeneracionCuerdas->start(6000);
 }
 
 void Juego::iniciar() {
@@ -178,27 +170,6 @@ void Juego::actualizar() {
         goku->cancelarCaidaForzada();  // ✅ una vez que cae, ya no está forzando
     }
 
-    // Verificar si Goku toca la cuerda
-    if (!gokuEnCuerda && goku->y() < 250) {  // altura de salto
-        QLineF cuerda = cuerdaLine->line();
-        QPointF extremo = cuerda.p2();
-
-        QRectF gokuRect = goku->boundingRect().translated(goku->pos());
-        QRectF puntoCuerda(extremo.x() - 15, extremo.y() - 15, 30, 30);  // pequeña área
-
-        if (gokuRect.intersects(puntoCuerda)) {
-            gokuEnCuerda = true;
-
-            // Oculta Goku normal y muestra colgado
-            goku->setVisible(false);
-            gokuColgado->setVisible(true);
-
-            // Goku empieza desde el extremo
-            gokuColgado->setPos(extremo.x() - gokuColgado->pixmap().width() / 2,
-                                extremo.y());
-        }
-    }
-
     goku->animarCorrer();     // Anima correr
     if (goku->x() > 700) {
         goku->setX(700); // Limita la posición de Goku para no salirse
@@ -217,9 +188,6 @@ void Juego::actualizar() {
             fondo->setX(maxX + fondo->pixmap().width() - 5);
         }
     }
-
-    // Scroll para la cuerda
-    origenCuerda.setX(origenCuerda.x() - velocidadScroll);
 
     // Mover cápsulas
     for (int i = 0; i < capsulas.size(); ++i) {
@@ -347,6 +315,40 @@ void Juego::actualizar() {
             }
         }
     }
+
+    //GOKU CON  LA CUERDA
+    // Detección de colisión con cuerdas
+    if (!gokuEnCuerda && goku->y() < 300) { // Solo verificar si está en altura de cuerdas
+        for (Cuerda& cuerda : cuerdas) {
+            if (!cuerda.activa) {
+                QPointF extremo(
+                    cuerda.origen.x() + cuerda.largo * sin(cuerda.angulo),
+                    cuerda.origen.y() + cuerda.largo * cos(cuerda.angulo)
+                    );
+
+                // Verificar colisión con Goku (mejor detección)
+                QRectF areaCuerda(extremo.x() - 30, extremo.y() - 30, 60, 60);
+                if (goku->collidesWithItem(cuerda.linea) ||
+                    areaCuerda.contains(goku->pos())) {
+
+                    cuerda.activa = true;
+                    cuerda.gokuAgarrado = true;
+                    gokuEnCuerda = true;
+
+                    // Ocultar Goku normal y mostrar sprite en cuerda
+                    goku->setVisible(false);
+                    if (cuerda.gokuSprite) {
+                        cuerda.gokuSprite->setVisible(true);
+                        cuerda.gokuSprite->setPos(
+                            extremo.x() - cuerda.gokuSprite->pixmap().width()/2,
+                            extremo.y() - 20
+                            );
+                    }
+                    break;
+                }
+            }
+        }
+    }
 }
 
 void Juego::generarEnemigo() {
@@ -387,25 +389,24 @@ void Juego::keyPressEvent(QKeyEvent* event) {
         goku->cayendoLento = true;
     }
     if (event->key() == Qt::Key_S) {
-        if (gokuEnCuerda) {
-            // Soltar cuerda
-            gokuEnCuerda = false;
-            goku->setVisible(true);
-            goku->setX(gokuColgado->x());
-            goku->setY(gokuColgado->y());
-            goku->activarCaida();
-            gokuColgado->setVisible(false);
+        if (gokuEnCuerda) {  // Solo si está en una cuerda
+            for (Cuerda& cuerda : cuerdas) {
+                if (cuerda.gokuAgarrado) {
+                    soltarGokuDeCuerda(cuerda);
+                    qDebug() << "Goku se soltó de la cuerda con S";  // Debug
+                    break;
+                }
+            }
         } else {
-            // Caída normal
+            // Comportamiento normal de la tecla S (si lo necesitas)
             goku->acelerarCaida();
-            goku->forzarCaida();
         }
     }
     if (event->key() == Qt::Key_Space) {
         if (goku->puedeDisparar()) {
             goku->animarDisparo();
             goku->setListaEnemigos(&enemigos);
-            goku->disparar(escena);  // ✅ llama al método heredado correctamente
+            goku->disparar(escena);
 
             goku->reiniciarEnergia();
             actualizarBarraEnergia();
@@ -485,37 +486,156 @@ void Juego::generarObstaculo() {
     obstaculos.append(obst);
 }
 
-void Juego::actualizarCuerda() {
-    // Física del péndulo
-    double ax = -gravedad * sin(angulo);
-    velocidadAngular += ax;
-    angulo += velocidadAngular;
+void Juego::generarCuerda() {
+    if (QRandomGenerator::global()->bounded(0, 100) > 50) return;
 
-    // Limitar el ángulo
-    const double minAng = -M_PI / 4;
-    const double maxAng =  M_PI / 4;
-    if (angulo < minAng) {
-        angulo = minAng;
-        velocidadAngular *= -0.8;
-    } else if (angulo > maxAng) {
-        angulo = maxAng;
-        velocidadAngular *= -0.8;
-    }
+    Cuerda c;
 
-    // Posición del extremo
+    // Coordenadas fijas en la esquina superior derecha
+    c.origen = QPointF(width() - 50, 15);  // 50px desde el borde derecho y 50px desde el borde superior
+
+    // Ángulo FIJO de -45° (π/4 radianes en negativo)
+    c.angulo = -M_PI/4;
+
+    c.velocidadAngular = 0;
+    c.activa = false;
+    c.gokuAgarrado = false;
+
+    c.linea = new QGraphicsLineItem();
+    c.linea->setPen(QPen(Qt::darkYellow, 15, Qt::SolidLine, Qt::RoundCap));
+    escena->addItem(c.linea);
+    c.linea->setZValue(1);
+
+    // Calcular extremo inicial
     QPointF extremo(
-        origenCuerda.x() + largoCuerda * sin(angulo),
-        origenCuerda.y() + largoCuerda * cos(angulo)
+        c.origen.x() + c.largo * sin(c.angulo),
+        c.origen.y() + c.largo * cos(c.angulo)
+        );
+    c.linea->setLine(QLineF(c.origen, extremo));
+
+    // Sprite de Goku (oculto inicialmente)
+    QPixmap sprite(":/sprites/Pictures/goku_agarrado.png");
+    c.gokuSprite = new QGraphicsPixmapItem(sprite.scaled(90, 200, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    c.gokuSprite->setVisible(false);
+    c.gokuSprite->setZValue(3);
+    escena->addItem(c.gokuSprite);
+
+    cuerdas.append(c);
+}
+
+void Juego::actualizarCuerda() {
+    for (int i = 0; i < cuerdas.size(); ++i) {
+        Cuerda& cuerda = cuerdas[i];
+
+        // Eliminar si sale de pantalla
+        if (cuerda.origen.x() + cuerda.largo < 0) {
+            escena->removeItem(cuerda.linea);
+            if (cuerda.gokuSprite) escena->removeItem(cuerda.gokuSprite);
+            delete cuerda.linea;
+            delete cuerda.gokuSprite;
+            cuerdas.removeAt(i);
+            --i;
+            continue;
+        }
+
+        // Mover con scroll
+        cuerda.origen.setX(cuerda.origen.x() - velocidadScroll);
+
+        // Física del péndulo (solo si está activa)
+        if (cuerda.activa) {
+            const double gravity = 1;//0.8; // Aumentado para movimiento más rápido
+            const double damping = 0.995; // Amortiguación
+
+            // Ecuación física del péndulo
+            double acceleration = -gravity / cuerda.largo * sin(cuerda.angulo);
+
+            cuerda.velocidadAngular += acceleration;
+            cuerda.velocidadAngular *= damping;
+            cuerda.angulo += cuerda.velocidadAngular;
+        }
+
+        // Calcular extremo
+        QPointF extremo(
+            cuerda.origen.x() + cuerda.largo * sin(cuerda.angulo),
+            cuerda.origen.y() + cuerda.largo * cos(cuerda.angulo)
+            );
+
+        // Actualizar línea
+        cuerda.linea->setLine(QLineF(cuerda.origen, extremo));
+
+        // Actualizar sprite de Goku si está agarrado
+        if (cuerda.gokuAgarrado && cuerda.gokuSprite) {
+            cuerda.gokuSprite->setPos(
+                extremo.x() - cuerda.gokuSprite->pixmap().width()/2,
+                extremo.y() - 20 // Ajuste para mejor posición visual
+                );
+        }
+
+        // Control de tiempo en cuerda
+        if (cuerda.gokuAgarrado) {
+            // Condición para soltar al final del trayecto:
+            // Cuando la velocidad angular es cercana a 0 (cambio de dirección)
+            // y el ángulo está volviendo hacia el centro (punto más alto)
+            if (std::abs(cuerda.velocidadAngular) < 0.01 &&
+                std::abs(cuerda.angulo) < 0.1) {  // Cerca del punto neutral (0°)
+
+                soltarGokuDeCuerda(cuerda);  // Suelta automáticamente
+            }
+        }
+    }
+}
+
+void Juego::activarCuerda(Goku* goku) {
+    if (gokuEnCuerda) return;
+
+    for (Cuerda& cuerda : cuerdas) {
+        if (!cuerda.activa) {
+            QPointF extremo(
+                cuerda.origen.x() + cuerda.largo * sin(cuerda.angulo),
+                cuerda.origen.y() + cuerda.largo * cos(cuerda.angulo)
+                );
+
+            // Verificar colisión con Goku (radio de 50px)
+            if (QLineF(goku->pos(), extremo).length() < 50) {
+                cuerda.activa = true;
+                gokuEnCuerda = true;
+
+                // Ocultar sprite normal de Goku y mostrar el de cuerda
+                goku->setVisible(false);
+                if (cuerda.gokuSprite) {
+                    cuerda.gokuSprite->setVisible(true);
+                    cuerda.gokuSprite->setPos(
+                        extremo.x() - cuerda.gokuSprite->pixmap().width() / 2,
+                        extremo.y() - 20
+                        );
+                }
+                break;
+            }
+        }
+    }
+}
+
+void Juego::soltarGokuDeCuerda(Cuerda& cuerda) {
+    if (!cuerda.gokuAgarrado) return;
+
+    // Calcular posición final
+    QPointF extremo(
+        cuerda.origen.x() + cuerda.largo * sin(cuerda.angulo),
+        cuerda.origen.y() + cuerda.largo * cos(cuerda.angulo)
         );
 
-    // Mover cuerda visual
-    cuerdaLine->setLine(origenCuerda.x(), origenCuerda.y(), extremo.x(), extremo.y());
+    // Restablecer a Goku
+    goku->setPos(extremo);
+    goku->setVisible(true);
+    goku->activarCaida();
 
-    // Si Goku está colgado, lo sigue
-    if (gokuEnCuerda && gokuColgado) {
-        gokuColgado->setPos(extremo.x() - gokuColgado->pixmap().width() / 2,
-                            extremo.y());
-    }
+    // Restablecer la cuerda
+    cuerda.gokuAgarrado = false;
+    cuerda.activa = false;
+    //cuerda.tiempoEnCuerda = 0;
+    if (cuerda.gokuSprite) cuerda.gokuSprite->setVisible(false);
+
+    gokuEnCuerda = false;
 }
 
 void Juego::keyReleaseEvent(QKeyEvent* event) {

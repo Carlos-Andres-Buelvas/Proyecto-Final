@@ -49,20 +49,28 @@ private:
     QVector<QPixmap> imagenesRocas;
     QVector<QPixmap> imagenesObstaculos;
 
-    // --- CUERDA ---
-    QGraphicsLineItem* cuerdaLine = nullptr;
-    QGraphicsPixmapItem* gokuColgado = nullptr; // sprite de Goku colgando
-    QTimer* timerCuerda = nullptr;
+    // CUERDA
+    struct Cuerda {
+        QPointF origen;
+        double largo = 275;
+        double angulo; // Ángulo actual en radianes
+        double velocidadAngular = 0;
+        bool activa = false;
+        QGraphicsLineItem* linea = nullptr;
+        QGraphicsPixmapItem* gokuSprite = nullptr;
+        bool gokuAgarrado = false; // Nuevo: indica si Goku está agarrado a esta cuerda
+        //int tiempoEnCuerda = 0; // Contador de frames en la cuerda
+        //const int maxTiempoEnCuerda = 180; // 3 segundos (60fps * 3)
+    };
 
-    // Parámetros del péndulo
-    QPointF origenCuerda;  // punto fijo
-    double largoCuerda = 200;  // puedes ajustar
-    double angulo = -M_PI / 4;
-    double velocidadAngular = 0;
-    double gravedad = 0.015;
-
+    QVector<Cuerda> cuerdas;  // múltiples cuerdas
+    QTimer* timerAnimacionCuerda = nullptr;  // Para actualizar el péndulo (60 FPS)
+    QTimer* timerGeneracionCuerdas = nullptr; // Para generar nuevas cuerdas cada X segundos
     bool gokuEnCuerda = false;
-    void actualizarCuerda();
+    void generarCuerda();     // para crear nuevas cuerdas
+    void actualizarCuerda();  // para actualizar el péndulo
+    void activarCuerda(Goku* goku);
+    void soltarGokuDeCuerda(Cuerda& cuerda);
 
 protected:
     void keyPressEvent(QKeyEvent* event) override;
