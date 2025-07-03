@@ -2,12 +2,10 @@
 #define GOKU_H
 
 #include "personaje.h"
-
 #include <QVector>
 #include <QPixmap>
 #include <QGraphicsScene>
 
-class Juego;
 class Enemigo;
 
 class Goku : public Personaje {
@@ -16,9 +14,8 @@ class Goku : public Personaje {
 public:
     Goku(float x, float y, float ancho, float alto);
 
-    void setJuego(Juego* juegoPtr);
     void mover() override;
-    void aplicarFisicas(); // nueva función
+    void disparar(QGraphicsScene* escena) override;
     void saltar();
     void animarCorrer();
     void animarCaida();
@@ -38,10 +35,18 @@ public:
         if (energia > energiaMaxima) energia = energiaMaxima;
     }
 
-    void disparar(QGraphicsScene* escena) override;
-    void setListaProyectiles(QVector<QGraphicsEllipseItem*>* lista);
+    bool estaBajando() const;
+    bool estaEnSuelo() const;
+    void detenerCaida();
+    void activarCaida();
+    void forzarCaida();
+    bool estaForzandoCaida() const;  // nuevo
+    void cancelarCaidaForzada();     // nuevo
+
     void setListaEnemigos(QVector<Enemigo*>* lista);
-    void mantenerSalto(); //Se llam mientras W está presionado
+
+    //bool enPlataforma = false;
+
 private:
     QVector<QPixmap> framesCorrer;
     QVector<QPixmap> framesCaer;
@@ -57,9 +62,6 @@ private:
     void actualizarSprite();
     bool enSuelo;
 
-    QTimer* saltoTimer;
-    int frameSaltoActual;
-
     QTimer* disparoTimer;
     int frameDisparoActual;
 
@@ -68,9 +70,9 @@ private:
     int energia = 0;
     const int energiaMaxima = 100;
 
-    QVector<QGraphicsEllipseItem*>* listaProyectiles = nullptr;
     QVector<Enemigo*>* listaEnemigos = nullptr;
-    Juego* juego = nullptr;
+
+    bool forzarCaidaManual = false;
 
 };
 
