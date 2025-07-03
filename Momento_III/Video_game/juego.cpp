@@ -46,7 +46,7 @@ Juego::Juego(QWidget *parent) : QGraphicsView(parent) {
 
     for (int i = 0; i < 2; ++i) {
         auto fondo = new QGraphicsPixmapItem(fondoPixmap);
-        fondo->setPos(i * (fondoPixmap.width() + 5), 0); //cambie de -5 a 5 en X
+        fondo->setPos(i * (fondoPixmap.width() - 5), 0);
         fondo->setZValue(-1);
         escena->addItem(fondo);
         fondosScroll.append(fondo);
@@ -58,7 +58,7 @@ Juego::Juego(QWidget *parent) : QGraphicsView(parent) {
     escena->addItem(goku);
 
     // Crear primer enemigo (opcional)
-    Enemigo* enemigo = new Enemigo(1280, 510, 100, 100, goku);
+    Enemigo* enemigo = new Enemigo(1280, 650, 100, 100, goku);
     escena->addItem(enemigo);
     enemigos.append(enemigo);
     generarPlataforma();
@@ -88,7 +88,7 @@ Juego::Juego(QWidget *parent) : QGraphicsView(parent) {
 
         QVector<QGraphicsPixmapItem*> plataformasVisibles;
         for (auto p : plataformas) {
-            if (p->x() > 100 && p->x() + p->pixmap().width() < 1280) {
+            if (p->x() > 100 && p->x() + p->pixmap().width() < 1024) {
                 plataformasVisibles.append(p);
             }
         }
@@ -98,8 +98,8 @@ Juego::Juego(QWidget *parent) : QGraphicsView(parent) {
             auto capsula = new QGraphicsPixmapItem(sprite.scaled(40, 40));
             capsula->setZValue(2);
 
-            int posX = 1280 + i * 45;
-            int posY = 550;  // por defecto, en el suelo
+            int posX = 1024 + i * 45;
+            int posY = 475;  // por defecto, en el suelo
 
             // Si hay plataformas disponibles, poner cápsula encima de alguna de ellas
             bool enPlataforma = QRandomGenerator::global()->bounded(0, 100) < 50;
@@ -114,16 +114,16 @@ Juego::Juego(QWidget *parent) : QGraphicsView(parent) {
             capsulas.append(capsula);
         }
     });
-    timerCapsulas->start(4500); // cada 2 segundos
+    timerCapsulas->start(3000); // cada 2 segundos
 
     timerPlataformas = new QTimer(this);
     connect(timerPlataformas, &QTimer::timeout, this, &Juego::generarPlataforma);
-    timerPlataformas->start(7000);  // cada 3.5 segundos (puedes ajustar)
+    timerPlataformas->start(5000);  // cada 3.5 segundos (puedes ajustar)
 
     // Timer para generar obstáculos cada 3 segundos (ajústalo a tu gusto)
     timerObstaculos = new QTimer(this);
     connect(timerObstaculos, &QTimer::timeout, this, &Juego::generarObstaculo);
-    timerObstaculos->start(7000);
+    timerObstaculos->start(6000);
 
     // Actualiza las cuerdas que ya están
     timerAnimacionCuerda = new QTimer(this);
@@ -144,13 +144,12 @@ Juego::Juego(QWidget *parent) : QGraphicsView(parent) {
     timerTroncos->start(16);
 
     // Generar primer tronco con delay inicial
-    QTimer::singleShot(5000, this, &Juego::generarTroncoUnico); // Espera 5 segundos al inicio
+    QTimer::singleShot(2000, this, &Juego::generarTroncoUnico); // Espera 2 segundos al inicio
 }
 
 void Juego::iniciar() {
     timerJuego->start(16);         // ~60 FPS
-    int intervalo = QRandomGenerator::global()->bounded(10000, 15000); // Entre 8 y 12 segundos
-    timerEnemigos->start(intervalo);
+    timerEnemigos->start(7000);    // enemigos cada 1.5 s
     generarTroncoUnico(); // Primer tronco
 }
 
@@ -296,11 +295,11 @@ void Juego::actualizar() {
         if (goku->collidesWithItem(o)) {
             qreal obstY = o->y();
             qreal gokuY = goku->y();
-            //qDebug() << obstY << gokuY;
+            qDebug() << obstY << gokuY;
             qDebug() << std::abs(obstY - gokuY);
 
             // ⚠️ Tolerancia para colisión en el suelo
-            if (std::abs(obstY - gokuY) < 390) {
+            if (std::abs(obstY - gokuY) < 180) {
                 goku->animarCaida();
                 qDebug() << "✅ Goku ha chocado con obstáculo en el suelo.";
                 return;
@@ -316,7 +315,7 @@ void Juego::actualizar() {
                 bool gokuSobrePlataforma = std::abs(gokuBase - platY) <= 5;
 
                 qDebug() << std::abs(obstBase - platY);
-                qDebug() << std::abs(gokuBase - platY);
+                 qDebug() << std::abs(gokuBase - platY);
 
                 if (obstSobrePlataforma && gokuSobrePlataforma &&
                     p->collidesWithItem(o) && p->collidesWithItem(goku)) {
@@ -370,26 +369,34 @@ void Juego::actualizar() {
 }
 
 void Juego::generarEnemigo() {
-    if (enemigos.size() >= 2) {
-        return; // No generar más si ya hay 2 en pantalla
-    }
-    // Generar 1 o 2 soldados aleatoriamente (75% de probabilidad para cada caso)
-    int cantidad = (QRandomGenerator::global()->bounded(0, 100) < 75) ? 1 : 2;
+    int cantidad = QRandomGenerator::global()->bounded(1, 3); // 1 o 2 soldados
 
     for (int i = 0; i < cantidad; ++i) {
-        // Posición X: aparecen fuera de pantalla a la derecha con separación
-        int x = 1280 + i * 200; // 150px de separación entre soldados
+        int x = 1280 + i * 120; // separación horizontal entre soldados
 
-        // Posición Y fija en el suelo (ajusta este valor según tu escenario)
-        int y = 510; // Valor de Y para el suelo (ajusta según necesites)
+        bool enPlataforma = QRandomGenerator::global()->bounded(0, 100) < 70; // 35% probabilidad
 
-        // Crear el enemigo
+        int y = 450; // Suelo por defecto
+
+        if (enPlataforma && !plataformas.isEmpty()) {
+            QVector<QGraphicsPixmapItem*> plataformasVisibles;
+            for (auto p : plataformas) {
+                if (p->x() > 50 && p->x() + p->pixmap().width() < 1280) {  // if (p->x() > 100 && p->x() < 1024)
+                    plataformasVisibles.append(p);
+                }
+            }
+
+            if (!plataformasVisibles.isEmpty()) {
+                QGraphicsPixmapItem* plataforma = plataformasVisibles[QRandomGenerator::global()->bounded(0, plataformasVisibles.size())];
+                y = plataforma->y() - 100;  // ajustar altura para que el enemigo quede sobre la plataforma
+                x = plataforma->x() + QRandomGenerator::global()->bounded(0, plataforma->pixmap().width() - 100);
+            }
+        }
+
         Enemigo* enemigo = new Enemigo(x, y, 100, 100, goku);
         enemigo->setPos(x, y);
         escena->addItem(enemigo);
         enemigos.append(enemigo);
-
-        qDebug() << "Soldado generado en posición:" << x << "," << y;
     }
 }
 
@@ -430,7 +437,7 @@ void Juego::generarPlataforma() {
             QVector<QPixmap>& fuente = (QRandomGenerator::global()->bounded(0, 2) == 0) ? imagenesTroncos : imagenesRocas;
             QPixmap obstaculoSprite = fuente[QRandomGenerator::global()->bounded(fuente.size())];
             QGraphicsPixmapItem* obstaculo = new QGraphicsPixmapItem(obstaculoSprite);
-            obstaculo->setZValue(1);
+            obstaculo->setZValue(2);
 
             // Posición: centro, izquierda o derecha
             int opcion = QRandomGenerator::global()->bounded(0, 2); // 0 centro, 1 izq, 2 der
@@ -470,12 +477,11 @@ void Juego::generarCuerda() {
 
     Cuerda c;
     // Posición inicial (esquina superior derecha con variación)
-    //c.origen = QPointF(width() + QRandomGenerator::global()->bounded(50, 200),
-      //                 QRandomGenerator::global()->bounded(50, 150));
+    c.origen = QPointF(width() + QRandomGenerator::global()->bounded(50, 200),
+                       QRandomGenerator::global()->bounded(50, 150));
 
-    c.origen = QPointF(1280, 0);
     // Configuración física
-    c.largo = 225; //+ QRandomGenerator::global()->bounded(-30, 30); // Longitud variable
+    c.largo = 220; //+ QRandomGenerator::global()->bounded(-30, 30); // Longitud variable
     c.angulo = -M_PI/4; // Ángulo inicial fijo
     c.velocidadAngular = 0;
     c.activa = false;
@@ -492,7 +498,7 @@ void Juego::generarCuerda() {
 
     // Configuración visual de la cuerda
     c.cuerdaItem = new QGraphicsPathItem(path);
-    QPen penCuerda(QColor(160, 82, 45), 8); // Color marrón con grosor
+    QPen penCuerda(QColor(160, 82, 45), 4.5); // Color marrón con grosor
     penCuerda.setCapStyle(Qt::RoundCap);
     c.cuerdaItem->setPen(penCuerda);
     c.cuerdaItem->setZValue(1);
@@ -614,7 +620,7 @@ void Juego::soltarGokuDeCuerda(Cuerda& cuerda) {
     goku->setPos(extremo);
     goku->setVisible(true);
     goku->activarCaida();
-    //goku->forzarCaida();
+    goku->forzarCaida();
 
     // Restablecer la cuerda
     cuerda.gokuAgarrado = false;
@@ -648,7 +654,7 @@ void Juego::generarTroncoUnico() {
     troncoActual.sprite = new QGraphicsPixmapItem(sprite.scaled(80, 80, Qt::KeepAspectRatio));
 
     // Configuración inicial
-    troncoActual.sprite->setPos(1200, QRandomGenerator::global()->bounded(0, 20));
+    troncoActual.sprite->setPos(1000, QRandomGenerator::global()->bounded(50, 200));
     troncoActual.velocidadY = 2.5;
     troncoActual.velocidadX = 0;
     troncoActual.velocidadRotacion = -3.0;
@@ -684,14 +690,14 @@ void Juego::actualizarTronco() {
             qreal nuevaY = plataforma->y() - troncoActual.sprite->boundingRect().height();
             troncoActual.sprite->setY(nuevaY);
             troncoActual.enSuelo = true;
-            troncoActual.velocidadX = -4.0;
+            troncoActual.velocidadX = -9.0;
             troncoActual.velocidadY = 0;
         }
         else if (troncoActual.sprite->y() >= 670 - troncoActual.sprite->boundingRect().height()) {
             // Caída al suelo principal
             troncoActual.sprite->setY(670 - troncoActual.sprite->boundingRect().height());
             troncoActual.enSuelo = true;
-            troncoActual.velocidadX = -9.0;
+            troncoActual.velocidadX = -4.0;
             troncoActual.velocidadY = 0;
         }
     }
@@ -721,6 +727,7 @@ void Juego::actualizarTronco() {
             troncoActual.velocidadX = 0; // Resetear velocidad horizontal al caer
         }
     }
+
     // 3. Detección de colisión con Goku (PRIMERO verifica esto)
     if (troncoActual.sprite->collidesWithItem(goku)) {
         goku->animarCaida();
@@ -730,7 +737,7 @@ void Juego::actualizarTronco() {
         escena->removeItem(troncoActual.sprite);
         delete troncoActual.sprite;
         troncoActual.sprite = nullptr;
-        QTimer::singleShot(5000, this, &Juego::generarTroncoUnico);
+        QTimer::singleShot(3000, this, &Juego::generarTroncoUnico);
         return; // ¡IMPORTANTE! Salir para evitar doble eliminación
     }
 
@@ -739,7 +746,8 @@ void Juego::actualizarTronco() {
         escena->removeItem(troncoActual.sprite);
         delete troncoActual.sprite;
         troncoActual.sprite = nullptr;
-        QTimer::singleShot(5000, this, &Juego::generarTroncoUnico);
+        QTimer::singleShot(QRandomGenerator::global()->bounded(3000, 5000),
+                           this, &Juego::generarTroncoUnico);
     }
 }
 
