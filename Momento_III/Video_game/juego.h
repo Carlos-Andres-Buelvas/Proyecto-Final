@@ -52,7 +52,7 @@ private:
     // CUERDA
     struct Cuerda {
         QPointF origen;
-        double largo = 220;
+        double largo;
         double angulo;
         double velocidadAngular = 0;
         bool activa = false;

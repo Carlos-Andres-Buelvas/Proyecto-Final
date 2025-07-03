@@ -57,7 +57,7 @@ void Enemigo::mover() {
     if (gokuDetectado) {
         float distancia = std::abs(gokuDetectado->x() - x());
 
-        if (distancia < 800 && gokuDetectado->x() < x()) {
+        if (distancia < 950 && gokuDetectado->x() < x()) {
             estado = Disparando;
             direccion = -1;
 
