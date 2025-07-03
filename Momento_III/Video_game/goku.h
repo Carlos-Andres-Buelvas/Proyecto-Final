@@ -45,7 +45,7 @@ public:
 
     void setListaEnemigos(QVector<Enemigo*>* lista);
 
-    bool enPlataforma = false;
+    //bool enPlataforma = false;
 
 private:
     QVector<QPixmap> framesCorrer;

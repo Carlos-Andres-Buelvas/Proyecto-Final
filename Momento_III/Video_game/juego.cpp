@@ -481,7 +481,7 @@ void Juego::generarCuerda() {
                        QRandomGenerator::global()->bounded(50, 150));
 
     // Configuración física
-    c.largo = 180 + QRandomGenerator::global()->bounded(-30, 30); // Longitud variable
+    c.largo = 220; //+ QRandomGenerator::global()->bounded(-30, 30); // Longitud variable
     c.angulo = -M_PI/4; // Ángulo inicial fijo
     c.velocidadAngular = 0;
     c.activa = false;
@@ -519,47 +519,54 @@ void Juego::actualizarCuerda() {
     for (int i = 0; i < cuerdas.size(); ++i) {
         Cuerda& cuerda = cuerdas[i];
 
-        // 1. Mover con scroll (si aplica)
+        // 1. Mover con scroll
         cuerda.origen.setX(cuerda.origen.x() - velocidadScroll);
 
         // 2. Física del péndulo (solo si está activa)
         if (cuerda.activa) {
             const double gravedad = 0.7;
             const double amortiguacion = 0.996;
+            const double anguloLiberacion = M_PI/3; // 60° exactos
 
+            // Calcular aceleración angular
             double aceleracion = -gravedad / cuerda.largo * sin(cuerda.angulo);
             cuerda.velocidadAngular += aceleracion;
             cuerda.velocidadAngular *= amortiguacion;
+
+            // Verificar si debemos liberar (antes de actualizar el ángulo)
+            // Liberación automática más agresiva
+            if (cuerda.gokuAgarrado &&
+                (abs(cuerda.angulo) >= anguloLiberacion ||
+                 abs(cuerda.velocidadAngular) < 0.01)) {
+                soltarGokuDeCuerda(cuerda);
+                continue;
+            }
+
+            // Actualizar ángulo si no se liberó
             cuerda.angulo += cuerda.velocidadAngular;
         }
 
-        // 3. Calcular extremo y punto medio dinámico
+        // Resto de la función permanece igual...
         QPointF extremo = calcularExtremo(cuerda);
 
-        // Curvatura dinámica basada en movimiento
+        // Actualizar posición del sprite de Goku si sigue agarrado
+        if (cuerda.gokuAgarrado && cuerda.gokuSprite) {
+            cuerda.gokuSprite->setPos(extremo.x() - 40, extremo.y() - 10);
+        }
+
+        // Actualizar gráficos de la cuerda
         float factorCurvatura = 25 + 15 * sin(cuerda.angulo * 2.5);
         cuerda.puntoMedio = QPointF(
             (cuerda.origen.x() + extremo.x())/2 + 5 * cos(cuerda.angulo),
             (cuerda.origen.y() + extremo.y())/2 + factorCurvatura
             );
 
-        // 4. Actualizar gráficos de la cuerda
         QPainterPath path;
         path.moveTo(cuerda.origen);
         path.quadTo(cuerda.puntoMedio, extremo);
         cuerda.cuerdaItem->setPath(path);
 
-        // 5. Actualizar posición de Goku si está agarrado
-        if (cuerda.gokuAgarrado && cuerda.gokuSprite) {
-            cuerda.gokuSprite->setPos(extremo.x() - 40, extremo.y() - 10);
-
-            // Soltar automáticamente al final del balanceo
-            if (abs(cuerda.velocidadAngular) < 0.005 && abs(cuerda.angulo) < 0.1) {
-                soltarGokuDeCuerda(cuerda);
-            }
-        }
-
-        // 6. Eliminar cuerdas fuera de pantalla
+        // Eliminar si sale de pantalla
         if (cuerda.origen.x() + cuerda.largo < 0) {
             escena->removeItem(cuerda.cuerdaItem);
             if (cuerda.gokuSprite) escena->removeItem(cuerda.gokuSprite);
@@ -613,6 +620,7 @@ void Juego::soltarGokuDeCuerda(Cuerda& cuerda) {
     goku->setPos(extremo);
     goku->setVisible(true);
     goku->activarCaida();
+    goku->forzarCaida();
 
     // Restablecer la cuerda
     cuerda.gokuAgarrado = false;
