@@ -2,6 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QFontDatabase>  // Para manejo de fuentes
+#include <QMessageBox>
 #include "juego.h"
 
 QT_BEGIN_NAMESPACE
@@ -21,6 +23,10 @@ private slots:
 private:
     Ui::MainWindow *ui;
     Juego* juego;
+    QString dragonBallFont;  // Para almacenar el nombre de la fuente
+
+    // Método para cargar la fuente
+    QString loadDragonBallFont();
 };
 
 #endif // MAINWINDOW_H

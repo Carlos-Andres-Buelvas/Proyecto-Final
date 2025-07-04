@@ -139,6 +139,10 @@ void Goku::disparar(QGraphicsScene* escena) {
                     if (proyectilGoku->collidesWithItem(enemigo)) {
                         enemigo->eliminarProyectiles();
                         escena->removeItem(enemigo);
+                        // Notificar al juego que se eliminó un soldado
+                        if (Juego* juego = dynamic_cast<Juego*>(escena->views().first())) {
+                            juego->aumentarContadorSoldados();
+                        }
                         delete enemigo;
                         listaEnemigos->removeAt(j);
 
@@ -147,6 +151,7 @@ void Goku::disparar(QGraphicsScene* escena) {
 
                         timer->stop();
                         timer->deleteLater();
+
                         return;
                     }
                 }
@@ -226,5 +231,3 @@ bool Goku::estaForzandoCaida() const {
 void Goku::cancelarCaidaForzada() {
     forzarCaidaManual = false;
 }
-
-

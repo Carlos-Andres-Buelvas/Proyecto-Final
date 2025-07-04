@@ -16,14 +16,18 @@ public:
 
     void mover() override;
     void disparar(QGraphicsScene* escena) override;
-    bool estaDisparando() const;
-    QVector<QPair<QGraphicsEllipseItem*, QTimer*>> proyectilesActivos;
+    bool estaDisparando() const { return estado == Disparando; }
     void eliminarProyectiles();
+    void detenerProyectiles();
+    void reanudarProyectiles();
+    void setPausado(bool pausa);
+
+    QVector<QPair<QGraphicsEllipseItem*, QTimer*>> proyectilesActivos;
 
 private:
     void cargarAnimaciones();
-    void iniciarDisparo();      // activa el disparo continuo
-    void crearDisparo();        // lanza una bala
+    void iniciarDisparo();
+    void crearDisparo();
 
     enum EstadoEnemigo { Patrullando, Disparando, Muerto };
     EstadoEnemigo estado = Patrullando;
@@ -37,10 +41,10 @@ private:
     int contador;
     int velocidadAnimacion;
     float velocidadMovimiento;
+    bool pausado = false;
 
     bool disparando = false;
     QTimer* timerDisparo;
-
 };
 
 #endif // ENEMIGO_H

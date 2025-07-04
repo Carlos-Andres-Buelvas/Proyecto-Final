@@ -4,6 +4,16 @@
 #include <QGraphicsView>
 #include <QGraphicsScene>
 #include <QTimer>
+#include <QGraphicsProxyWidget>
+#include <QPushButton>
+#include <QFontDatabase>          // Para manejo de fuentes
+#include <QPropertyAnimation>     // Para animaciones
+#include <QEasingCurve>           // Para curvas de animación
+#include <QGraphicsEffect>        // Para efectos visuales
+#include <QGraphicsDropShadowEffect> // Para sombras
+#include <QGraphicsColorizeEffect>   // Para efecto de color
+#include <QTimeLine>
+#include <QGraphicsItemAnimation>
 #include "goku.h"
 #include "enemigo.h"
 
@@ -12,87 +22,108 @@ class Juego : public QGraphicsView {
 public:
     Juego(QWidget *parent = nullptr);
     void iniciar();
+    void aumentarContadorSoldados();
+    void pausarJuego();
+    void agregarItemEscena(QGraphicsItem* item);
+    void removerItemEscena(QGraphicsItem* item);
+    void togglePausa();
+    bool estaPausado() const { return pausado; }
+    void detenerTodo();
+    void reanudarTodo();
+    ~Juego();
+
+signals:
+    void salirAlMenu();
 
 private slots:
     void actualizar();
     void generarEnemigo();
-    void generarPlataforma(); // método que genera las plataformas
+    void generarPlataforma();
 
 private:
+    // Elementos gráficos y escena
     QGraphicsScene* escena;
-    QTimer* timerJuego;
-    QTimer* timerEnemigos;
-    Goku* goku;
-
-    void moverFondo();
     QGraphicsRectItem* fondoBarra;
     QGraphicsRectItem* barraEnergia;
-    void actualizarBarraEnergia();
-    QVector<QGraphicsPixmapItem*> capsulas;
-    QTimer* timerCapsulas;
-    QVector<QGraphicsPixmapItem*> fondosScroll;
-    float velocidadScroll = 3.0;
+    QGraphicsTextItem* contadorSoldados;
+    QPushButton* botonPausa;
+    QString dragonBallFont;
+    QPushButton* btnContinuar;
+    QPushButton* btnSalir;
+    QGraphicsProxyWidget* proxyContinuar;
+    QGraphicsProxyWidget* proxySalir;
+
+    // Personajes y objetos del juego
+    Goku* goku;
     QVector<Enemigo*> enemigos;
-
+    QVector<QGraphicsPixmapItem*> capsulas;
     QVector<QGraphicsPixmapItem*> plataformas;
-    QTimer* timerPlataformas;
-
-    // Lista para los obstáculos
     QVector<QGraphicsPixmapItem*> obstaculos;
-    QTimer* timerObstaculos;
-
-    // Método que vamos a implementar
-    void generarObstaculo();
-
     QVector<QPixmap> imagenesPlataformas;
     QVector<QPixmap> imagenesTroncos;
     QVector<QPixmap> imagenesRocas;
     QVector<QPixmap> imagenesObstaculos;
+    QVector<QGraphicsPixmapItem*> fondosScroll;
 
-    // CUERDA
+    // Timers del juego
+    QTimer* timerJuego;
+    QTimer* timerEnemigos;
+    QTimer* timerCapsulas;
+    QTimer* timerPlataformas;
+    QTimer* timerObstaculos;
+    QTimer* timerAnimacionCuerda;
+    QTimer* timerGeneracionCuerdas;
+    QTimer* timerTroncos;
+
+    // Variables de estado
+    float velocidadScroll = 3.0;
+    bool gokuEnCuerda = false;
+    bool pausado = false;
+    bool pPresionado = false;
+    int soldadosEliminados = 0;
+    const int OBJETIVO_SOLDADOS = 5;
+
+    // Estructuras especiales
     struct Cuerda {
         QPointF origen;
         double largo = 220;
         double angulo;
         double velocidadAngular = 0;
         bool activa = false;
-        QGraphicsPathItem* cuerdaItem = nullptr; // Cambiamos de LineItem a PathItem
+        QGraphicsPathItem* cuerdaItem = nullptr;
         QGraphicsPixmapItem* gokuSprite = nullptr;
         bool gokuAgarrado = false;
-        QPointF puntoMedio; // Para la curvatura
+        QPointF puntoMedio;
     };
-
-    QVector<Cuerda> cuerdas;  // múltiples cuerdas
-    QTimer* timerAnimacionCuerda = nullptr;  // Para actualizar el péndulo (60 FPS)
-    QTimer* timerGeneracionCuerdas = nullptr; // Para generar nuevas cuerdas cada X segundos
-    bool gokuEnCuerda = false;
-    void generarCuerda();     // para crear nuevas cuerdas
-    void actualizarCuerda();  // para actualizar el péndulo
-    void activarCuerda(Goku* goku);
-    void soltarGokuDeCuerda(Cuerda& cuerda);
-    QPointF calcularExtremo(const Cuerda& cuerda) const;
+    QVector<Cuerda> cuerdas;
 
     struct TroncoGiratorio {
         QGraphicsPixmapItem* sprite;
-        qreal velocidadY;        // Velocidad vertical de caída (hacia abajo)
-        qreal velocidadX;        // Velocidad horizontal (0 inicial, luego negativa)
-        qreal velocidadRotacion; // Velocidad de rotación (negativa para giro antihorario)
+        qreal velocidadY;
+        qreal velocidadX;
+        qreal velocidadRotacion;
         qreal rotacionActual;
-        bool enSuelo;           // Bandera para controlar el cambio de movimiento
+        bool enSuelo;
     };
+    TroncoGiratorio troncoActual;
 
-    TroncoGiratorio troncoActual; // Solo un tronco activo
-    QTimer* timerTroncos;
-    void generarTroncoUnico();   // Renombrado para claridad
+    // Métodos privados
+    void moverFondo();
+    void actualizarBarraEnergia();
+    void generarObstaculo();
+    void generarCuerda();
+    void actualizarCuerda();
+    void activarCuerda(Goku* goku);
+    void soltarGokuDeCuerda(Cuerda& cuerda);
+    QPointF calcularExtremo(const Cuerda& cuerda) const;
+    void generarTroncoUnico();
     void actualizarTronco();
+    void configurarBotonesPausa();
 
     QGraphicsPixmapItem* detectarPlataformaSobre(TroncoGiratorio& tronco) {
         QRectF areaTronco = tronco.sprite->boundingRect().translated(tronco.sprite->pos());
-
         for (auto plataforma : plataformas) {
             QRectF areaPlataforma = plataforma->boundingRect().translated(plataforma->pos());
-
-            // Verifica si el tronco está sobre la plataforma (con margen de 5px)
             if (areaTronco.bottom() >= areaPlataforma.top() - 5 &&
                 areaTronco.bottom() <= areaPlataforma.top() + 15 &&
                 areaTronco.right() > areaPlataforma.left() &&
@@ -103,10 +134,24 @@ private:
         return nullptr;
     }
 
+    // Métodos para decoración
+    void cargarAssetsDecoracion();
+    void generarDecoracionPalmeras();
+    void actualizarDecoracion();
+    void iniciarAnimacionPajaro();  // Añade esta declaración
+    void animarPajaro();
+
+    // Miembros para decoración
+    QVector<QPixmap> spritesPalmeras;
+    QVector<QPixmap> framesPajaro;
+    QVector<QGraphicsPixmapItem*> decoracionPalmeras;
+    QGraphicsPixmapItem* pajaroItem;
+    int frameActualPajaro;
+    QTimer* timerAnimacionPajaro;
+
 protected:
     void keyPressEvent(QKeyEvent* event) override;
     void keyReleaseEvent(QKeyEvent* event) override;
-
 };
 
 #endif // JUEGO_H

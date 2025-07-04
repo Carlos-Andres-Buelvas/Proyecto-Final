@@ -7,17 +7,7 @@
 #include <QGraphicsScene>
 #include <QPixmap>
 
-#include <QGraphicsProxyWidget>
-#include <QFontDatabase>
-#include <QPropertyAnimation>
-#include <QEasingCurve>
-#include <QGraphicsDropShadowEffect>
-#include <QGraphicsColorizeEffect>
-#include <QGraphicsItemAnimation>
-
-Juego::Juego(QWidget *parent) : QGraphicsView(parent), timerAnimacionCuerda(nullptr),
-    timerGeneracionCuerdas(nullptr), btnContinuar(nullptr), btnSalir(nullptr),
-    proxyContinuar(nullptr), proxySalir(nullptr), pajaroItem(nullptr), frameActualPajaro(0), timerAnimacionPajaro(nullptr) {
+Juego::Juego(QWidget *parent) : QGraphicsView(parent) {
     escena = new QGraphicsScene(this);
     escena->setSceneRect(0, 0, 1280, 680);
     setScene(escena);
@@ -25,24 +15,6 @@ Juego::Juego(QWidget *parent) : QGraphicsView(parent), timerAnimacionCuerda(null
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setFocusPolicy(Qt::StrongFocus);
-
-    // Cargar fuente Dragon Ball con manejo de errores
-    int fontId = QFontDatabase::addApplicationFont(":/fondos/Pictures/db_font.ttf");
-    if (fontId == -1) {
-        qDebug() << "Error al cargar la fuente Dragon Ball";
-        dragonBallFont = "Arial"; // Usar fuente por defecto
-    } else {
-        QStringList fontFamilies = QFontDatabase::applicationFontFamilies(fontId);
-        if (!fontFamilies.isEmpty()) {
-            dragonBallFont = fontFamilies.at(0);
-        } else {
-            qDebug() << "No se encontraron familias de fuentes";
-            dragonBallFont = "Arial";
-        }
-    }
-
-    // Guardar la fuente como miembro de clase
-    this->dragonBallFont = dragonBallFont;
 
     // Cargar y guardar plataformas
     imagenesPlataformas = {
@@ -74,7 +46,7 @@ Juego::Juego(QWidget *parent) : QGraphicsView(parent), timerAnimacionCuerda(null
 
     for (int i = 0; i < 2; ++i) {
         auto fondo = new QGraphicsPixmapItem(fondoPixmap);
-        fondo->setPos(i * (fondoPixmap.width() + 5), 0);
+        fondo->setPos(i * (fondoPixmap.width() - 5), 0);
         fondo->setZValue(-1);
         escena->addItem(fondo);
         fondosScroll.append(fondo);
@@ -86,7 +58,7 @@ Juego::Juego(QWidget *parent) : QGraphicsView(parent), timerAnimacionCuerda(null
     escena->addItem(goku);
 
     // Crear primer enemigo (opcional)
-    Enemigo* enemigo = new Enemigo(1280, 510, 100, 100, goku);
+    Enemigo* enemigo = new Enemigo(1280, 650, 100, 100, goku);
     escena->addItem(enemigo);
     enemigos.append(enemigo);
     generarPlataforma();
@@ -100,74 +72,14 @@ Juego::Juego(QWidget *parent) : QGraphicsView(parent), timerAnimacionCuerda(null
     connect(timerEnemigos, &QTimer::timeout, this, &Juego::generarEnemigo);
 
     // Barra de energía
-    barraEnergia = new QGraphicsRectItem(25, 25, 0, 20);
-    QLinearGradient gradient(0, 0, 200, 0);
-    gradient.setColorAt(0, QColor(255, 255, 0));
-    gradient.setColorAt(0.5, QColor(255, 165, 0));
-    gradient.setColorAt(1, QColor(255, 0, 0));
-    barraEnergia->setBrush(QBrush(gradient));
-    barraEnergia->setPen(QPen(QColor(255, 215, 0), 2));
-    barraEnergia->setZValue(11);
-    escena->addItem(barraEnergia);
+    fondoBarra = new QGraphicsRectItem(0, 0, 104, 24);
+    fondoBarra->setBrush(Qt::black);
+    fondoBarra->setPos(10, 10);
+    escena->addItem(fondoBarra);
 
-    // Texto "ENERGÍA"
-    QGraphicsTextItem* energiaText = new QGraphicsTextItem("ENERGIA");
-    energiaText->setDefaultTextColor(QColor(255, 215, 0));
-    energiaText->setFont(QFont(dragonBallFont, 16));
-    energiaText->setPos(30, 0);
-
-    QGraphicsDropShadowEffect* textShadow = new QGraphicsDropShadowEffect();
-    textShadow->setBlurRadius(5);
-    textShadow->setColor(QColor(0, 0, 0, 200));
-    textShadow->setOffset(3, 3);
-    energiaText->setGraphicsEffect(textShadow);
-
-    energiaText->setZValue(12);
-    escena->addItem(energiaText);
-
-    // Contador de soldados
-    contadorSoldados = new QGraphicsTextItem();
-    contadorSoldados->setHtml(
-        "<div style='color: #ffcc00; font-family: \"" + dragonBallFont + "\"; font-size: 18px; "
-                                                                         "font-weight: bold; text-shadow: 3px 3px 5px #000000; letter-spacing: 2px;'>"
-                                                                         "ENEMIGOS: <span style='color: #ffffff;'>0</span>/" + QString::number(OBJETIVO_SOLDADOS) +
-        "</div>"
-        );
-    contadorSoldados->setPos(30, 65);
-    contadorSoldados->setZValue(12);
-    escena->addItem(contadorSoldados);
-
-    // Botón de pausa
-    botonPausa = new QPushButton(this);
-    botonPausa->setGeometry(width() - 150, 20, 120, 50);
-    botonPausa->setIconSize(QSize(120, 50));
-    botonPausa->setText("PAUSA");
-    botonPausa->setStyleSheet(
-        "QPushButton {"
-        "   background-color: transparent;"
-        "   border: none;"
-        "   color: #ffcc00;"
-        "   font: bold 18px '" + dragonBallFont + "';"
-                           "   padding: 0px;"
-                           "   text-shadow: 2px 2px 4px #000000;"
-                           "}"
-                           "QPushButton:hover {"
-                           "   color: #ffffff;"
-                           "}"
-                           "QPushButton:pressed {"
-                           "   color: #ff9900;"
-                           "   padding-top: 2px;"
-                           "   padding-left: 2px;"
-                           "}"
-        );
-
-    QGraphicsDropShadowEffect* buttonShadow = new QGraphicsDropShadowEffect();
-    buttonShadow->setBlurRadius(10);
-    buttonShadow->setColor(QColor(255, 165, 0, 150));
-    buttonShadow->setOffset(5, 5);
-    botonPausa->setGraphicsEffect(buttonShadow);
-
-    connect(botonPausa, &QPushButton::clicked, this, &Juego::togglePausa);
+    barraEnergia = new QGraphicsRectItem(fondoBarra);
+    barraEnergia->setRect(2, 2, 0, 20);
+    barraEnergia->setBrush(Qt::green);
 
     // Timer de cápsulas
     timerCapsulas = new QTimer(this);
@@ -176,7 +88,7 @@ Juego::Juego(QWidget *parent) : QGraphicsView(parent), timerAnimacionCuerda(null
 
         QVector<QGraphicsPixmapItem*> plataformasVisibles;
         for (auto p : plataformas) {
-            if (p->x() > 100 && p->x() + p->pixmap().width() < 1280) {
+            if (p->x() > 100 && p->x() + p->pixmap().width() < 1024) {
                 plataformasVisibles.append(p);
             }
         }
@@ -186,14 +98,14 @@ Juego::Juego(QWidget *parent) : QGraphicsView(parent), timerAnimacionCuerda(null
             auto capsula = new QGraphicsPixmapItem(sprite.scaled(40, 40));
             capsula->setZValue(2);
 
-            int posX = 1280 + i * 45;
-            int posY = 550;  // por defecto, en el suelo
+            int posX = 1024 + i * 45;
+            int posY = 475;  // por defecto, en el suelo
 
-        // Si hay plataformas disponibles, poner cápsulas encima de alguna de ellas
+            // Si hay plataformas disponibles, poner cápsula encima de alguna de ellas
             bool enPlataforma = QRandomGenerator::global()->bounded(0, 100) < 50;
             if (enPlataforma && !plataformasVisibles.isEmpty()) {
                 auto plataforma = plataformasVisibles.at(QRandomGenerator::global()->bounded(plataformasVisibles.size()));
-                posY = plataforma->y() - 40;
+                posY = plataforma->y() - 40; // encima
                 posX = plataforma->x() + QRandomGenerator::global()->bounded(0, plataforma->pixmap().width() - 40);
             }
 
@@ -202,24 +114,28 @@ Juego::Juego(QWidget *parent) : QGraphicsView(parent), timerAnimacionCuerda(null
             capsulas.append(capsula);
         }
     });
-    timerCapsulas->start(4500);
+    timerCapsulas->start(3000); // cada 2 segundos
 
     timerPlataformas = new QTimer(this);
     connect(timerPlataformas, &QTimer::timeout, this, &Juego::generarPlataforma);
-    timerPlataformas->start(7000);
+    timerPlataformas->start(5000);  // cada 3.5 segundos (puedes ajustar)
 
+    // Timer para generar obstáculos cada 3 segundos (ajústalo a tu gusto)
     timerObstaculos = new QTimer(this);
     connect(timerObstaculos, &QTimer::timeout, this, &Juego::generarObstaculo);
-    timerObstaculos->start(7000);
+    timerObstaculos->start(6000);
 
+    // Actualiza las cuerdas que ya están
     timerAnimacionCuerda = new QTimer(this);
     connect(timerAnimacionCuerda, &QTimer::timeout, this, &Juego::actualizarCuerda);
-    timerAnimacionCuerda->start(16);
+    timerAnimacionCuerda->start(16);  // 60 FPS
 
+    // Genera nuevas cuerdas aleatorias
     timerGeneracionCuerdas = new QTimer(this);
     connect(timerGeneracionCuerdas, &QTimer::timeout, this, &Juego::generarCuerda);
     timerGeneracionCuerdas->start(6000);
 
+    // Inicialización robusta del tronco
     troncoActual.sprite = nullptr;
     troncoActual.enSuelo = false;
 
@@ -227,25 +143,13 @@ Juego::Juego(QWidget *parent) : QGraphicsView(parent), timerAnimacionCuerda(null
     connect(timerTroncos, &QTimer::timeout, this, &Juego::actualizarTronco);
     timerTroncos->start(16);
 
-    QTimer::singleShot(5000, this, &Juego::generarTroncoUnico);
-
-    cargarAssetsDecoracion();
-    generarDecoracionPalmeras();
-
-    // Iniciar animación del pájaro con un pequeño retraso aleatorio
-    QTimer::singleShot(QRandomGenerator::global()->bounded(1000, 3000),
-                       this, &Juego::iniciarAnimacionPajaro);
-
-    // Timer para decoración más eficiente
-    QTimer* timerDecoracion = new QTimer(this);
-    connect(timerDecoracion, &QTimer::timeout, this, &Juego::actualizarDecoracion);
-    timerDecoracion->start(16);  // ~60 FPS para movimiento suave
+    // Generar primer tronco con delay inicial
+    QTimer::singleShot(2000, this, &Juego::generarTroncoUnico); // Espera 2 segundos al inicio
 }
 
 void Juego::iniciar() {
     timerJuego->start(16);         // ~60 FPS
-    int intervalo = QRandomGenerator::global()->bounded(10000, 15000); // Entre 10 y 15 segundos
-    timerEnemigos->start(intervalo);
+    timerEnemigos->start(7000);    // enemigos cada 1.5 s
     generarTroncoUnico(); // Primer tronco
 }
 
@@ -281,11 +185,6 @@ void Juego::actualizar() {
     goku->animarCorrer();     // Anima correr
     if (goku->x() > 700) {
         goku->setX(700); // Limita la posición de Goku para no salirse
-    }
-
-    // Asegurar que Goku no se quede atrás
-    if (goku->x() < 700) {
-        goku->setX(goku->x() + velocidadScroll * 1);
     }
 
     // Scroll del fondo
@@ -359,7 +258,7 @@ void Juego::actualizar() {
             QGraphicsEllipseItem* proyectil = enemigo->proyectilesActivos[j].first;
 
             if (proyectil && goku->collidesWithItem(proyectil)) {
-                goku->animarCaida();
+                //goku->animarCaida();
                 qDebug() << "Goku ha sido golpeado por un disparo enemigo.";
                 return;
             }
@@ -396,11 +295,11 @@ void Juego::actualizar() {
         if (goku->collidesWithItem(o)) {
             qreal obstY = o->y();
             qreal gokuY = goku->y();
-            //qDebug() << obstY << gokuY;
+            qDebug() << obstY << gokuY;
             qDebug() << std::abs(obstY - gokuY);
 
             // ⚠️ Tolerancia para colisión en el suelo
-            if (std::abs(obstY - gokuY) < 390) {
+            if (std::abs(obstY - gokuY) < 180) {
                 goku->animarCaida();
                 qDebug() << "✅ Goku ha chocado con obstáculo en el suelo.";
                 return;
@@ -416,7 +315,7 @@ void Juego::actualizar() {
                 bool gokuSobrePlataforma = std::abs(gokuBase - platY) <= 5;
 
                 qDebug() << std::abs(obstBase - platY);
-                qDebug() << std::abs(gokuBase - platY);
+                 qDebug() << std::abs(gokuBase - platY);
 
                 if (obstSobrePlataforma && gokuSobrePlataforma &&
                     p->collidesWithItem(o) && p->collidesWithItem(goku)) {
@@ -465,101 +364,45 @@ void Juego::actualizar() {
 
     // Dentro de Juego::actualizar(): TRONCO
     //if (!troncosGiratorios.isEmpty() && QRandomGenerator::global()->bounded(0, 100) > 95) {
-    //        actualizarTroncosGiratorios();
-    //  }
+//        actualizarTroncosGiratorios();
+  //  }
 }
 
 void Juego::generarEnemigo() {
-    if (enemigos.size() >= 2) {
-        return; // No generar más si ya hay 2 en pantalla
-    }
-    // Generar 1 o 2 soldados aleatoriamente (75% de probabilidad para cada caso)
-    int cantidad = (QRandomGenerator::global()->bounded(0, 100) < 75) ? 1 : 2;
+    int cantidad = QRandomGenerator::global()->bounded(1, 3); // 1 o 2 soldados
 
     for (int i = 0; i < cantidad; ++i) {
-        // Posición X: aparecen fuera de pantalla a la derecha con separación
-        int x = 1280 + i * 200; // 150px de separación entre soldados
+        int x = 1280 + i * 120; // separación horizontal entre soldados
 
-        // Posición Y fija en el suelo (ajusta este valor según tu escenario)
-        int y = 510; // Valor de Y para el suelo (ajusta según necesites)
+        bool enPlataforma = QRandomGenerator::global()->bounded(0, 100) < 70; // 35% probabilidad
 
-        // Crear el enemigo
+        int y = 450; // Suelo por defecto
+
+        if (enPlataforma && !plataformas.isEmpty()) {
+            QVector<QGraphicsPixmapItem*> plataformasVisibles;
+            for (auto p : plataformas) {
+                if (p->x() > 50 && p->x() + p->pixmap().width() < 1280) {  // if (p->x() > 100 && p->x() < 1024)
+                    plataformasVisibles.append(p);
+                }
+            }
+
+            if (!plataformasVisibles.isEmpty()) {
+                QGraphicsPixmapItem* plataforma = plataformasVisibles[QRandomGenerator::global()->bounded(0, plataformasVisibles.size())];
+                y = plataforma->y() - 100;  // ajustar altura para que el enemigo quede sobre la plataforma
+                x = plataforma->x() + QRandomGenerator::global()->bounded(0, plataforma->pixmap().width() - 100);
+            }
+        }
+
         Enemigo* enemigo = new Enemigo(x, y, 100, 100, goku);
         enemigo->setPos(x, y);
         escena->addItem(enemigo);
         enemigos.append(enemigo);
-
-        qDebug() << "Soldado generado en posición:" << x << "," << y;
     }
 }
 
 void Juego::actualizarBarraEnergia() {
     float porcentaje = static_cast<float>(goku->obtenerEnergia()) / 100.0f;
-    QRectF targetRect(25, 25, porcentaje * 200, 20);
-
-    // Crear la animación
-    QTimeLine *timer = new QTimeLine(200, this); // 200 ms de duración
-    timer->setFrameRange(0, 100);
-
-    // Conectar la señal frameChanged para actualizar manualmente el rectángulo
-    connect(timer, &QTimeLine::frameChanged, [this, timer, targetRect](int frame) {
-        QRectF currentRect = barraEnergia->rect();
-        qreal progress = timer->currentValue();
-
-        // Interpolar entre el rectángulo actual y el objetivo
-        QRectF interpolatedRect(
-            currentRect.x(),
-            currentRect.y(),
-            currentRect.width() + (targetRect.width() - currentRect.width()) * progress,
-            currentRect.height()
-            );
-
-        barraEnergia->setRect(interpolatedRect);
-    });
-
-    // Eliminar el timer cuando termine
-    connect(timer, &QTimeLine::finished, timer, &QTimeLine::deleteLater);
-
-    // Iniciar la animación
-    timer->start();
-
-    // Efecto especial cuando está llena
-    if (goku->puedeDisparar()) {
-        QGraphicsColorizeEffect* colorize = new QGraphicsColorizeEffect(this);
-        colorize->setColor(QColor(255, 255, 255, 150));
-        barraEnergia->setGraphicsEffect(colorize);
-
-        QTimer::singleShot(500, [this]() {
-            barraEnergia->setGraphicsEffect(nullptr);
-        });
-    }
-}
-
-void Juego::aumentarContadorSoldados() {
-    soldadosEliminados++;
-    contadorSoldados->setHtml(
-        "<div style='color: #ffcc00; font-family: \"" + dragonBallFont + "\"; font-size: 18px; "
-                                                                         "font-weight: bold; text-shadow: 3px 3px 5px #000000; letter-spacing: 2px;'>"
-                                                                         "ENEMIGOS: <span style='color: #ffffff;'>" + QString::number(soldadosEliminados) + "</span>/" +
-        QString::number(OBJETIVO_SOLDADOS) + "</div>"
-        );
-
-    if (soldadosEliminados >= OBJETIVO_SOLDADOS) {
-        detenerTodo();
-        QGraphicsTextItem* nivelCompletado = new QGraphicsTextItem("NIVEL COMPLETADO");
-        nivelCompletado->setDefaultTextColor(QColor(255, 215, 0));
-        nivelCompletado->setFont(QFont(dragonBallFont, 36));
-        nivelCompletado->setPos(width()/2 - nivelCompletado->boundingRect().width()/2, height()/2 - 50);
-
-        QGraphicsDropShadowEffect* shadow = new QGraphicsDropShadowEffect();
-        shadow->setBlurRadius(10);
-        shadow->setColor(Qt::black);
-        shadow->setOffset(5, 5);
-        nivelCompletado->setGraphicsEffect(shadow);
-
-        nivelCompletado->setZValue(1001);
-        escena->addItem(nivelCompletado);
-    }
+    barraEnergia->setRect(2, 2, porcentaje * 100, 20);
 }
 
 void Juego::generarPlataforma() {
@@ -594,7 +437,7 @@ void Juego::generarPlataforma() {
             QVector<QPixmap>& fuente = (QRandomGenerator::global()->bounded(0, 2) == 0) ? imagenesTroncos : imagenesRocas;
             QPixmap obstaculoSprite = fuente[QRandomGenerator::global()->bounded(fuente.size())];
             QGraphicsPixmapItem* obstaculo = new QGraphicsPixmapItem(obstaculoSprite);
-            obstaculo->setZValue(1);
+            obstaculo->setZValue(2);
 
             // Posición: centro, izquierda o derecha
             int opcion = QRandomGenerator::global()->bounded(0, 2); // 0 centro, 1 izq, 2 der
@@ -634,12 +477,11 @@ void Juego::generarCuerda() {
 
     Cuerda c;
     // Posición inicial (esquina superior derecha con variación)
-    //c.origen = QPointF(width() + QRandomGenerator::global()->bounded(50, 200),
-    //                 QRandomGenerator::global()->bounded(50, 150));
+    c.origen = QPointF(width() + QRandomGenerator::global()->bounded(50, 200),
+                       QRandomGenerator::global()->bounded(50, 150));
 
-    c.origen = QPointF(1280, 0);
     // Configuración física
-    c.largo = 225; //+ QRandomGenerator::global()->bounded(-30, 30); // Longitud variable
+    c.largo = 220; //+ QRandomGenerator::global()->bounded(-30, 30); // Longitud variable
     c.angulo = -M_PI/4; // Ángulo inicial fijo
     c.velocidadAngular = 0;
     c.activa = false;
@@ -656,7 +498,7 @@ void Juego::generarCuerda() {
 
     // Configuración visual de la cuerda
     c.cuerdaItem = new QGraphicsPathItem(path);
-    QPen penCuerda(QColor(160, 82, 45), 8); // Color marrón con grosor
+    QPen penCuerda(QColor(160, 82, 45), 4.5); // Color marrón con grosor
     penCuerda.setCapStyle(Qt::RoundCap);
     c.cuerdaItem->setPen(penCuerda);
     c.cuerdaItem->setZValue(1);
@@ -775,11 +617,10 @@ void Juego::soltarGokuDeCuerda(Cuerda& cuerda) {
         );
 
     // Restablecer a Goku
-    // Solución: Ajustar la posición X manualmente
-    extremo.setX(extremo.x() + velocidadScroll + 10);
+    goku->setPos(extremo);
     goku->setVisible(true);
-    //goku->activarCaida();
-    //goku->forzarCaida();
+    goku->activarCaida();
+    goku->forzarCaida();
 
     // Restablecer la cuerda
     cuerda.gokuAgarrado = false;
@@ -813,7 +654,7 @@ void Juego::generarTroncoUnico() {
     troncoActual.sprite = new QGraphicsPixmapItem(sprite.scaled(80, 80, Qt::KeepAspectRatio));
 
     // Configuración inicial
-    troncoActual.sprite->setPos(1200, QRandomGenerator::global()->bounded(0, 20));
+    troncoActual.sprite->setPos(1000, QRandomGenerator::global()->bounded(50, 200));
     troncoActual.velocidadY = 2.5;
     troncoActual.velocidadX = 0;
     troncoActual.velocidadRotacion = -3.0;
@@ -849,14 +690,14 @@ void Juego::actualizarTronco() {
             qreal nuevaY = plataforma->y() - troncoActual.sprite->boundingRect().height();
             troncoActual.sprite->setY(nuevaY);
             troncoActual.enSuelo = true;
-            troncoActual.velocidadX = -4.0;
+            troncoActual.velocidadX = -9.0;
             troncoActual.velocidadY = 0;
         }
         else if (troncoActual.sprite->y() >= 670 - troncoActual.sprite->boundingRect().height()) {
             // Caída al suelo principal
             troncoActual.sprite->setY(670 - troncoActual.sprite->boundingRect().height());
             troncoActual.enSuelo = true;
-            troncoActual.velocidadX = -9.0;
+            troncoActual.velocidadX = -4.0;
             troncoActual.velocidadY = 0;
         }
     }
@@ -886,6 +727,7 @@ void Juego::actualizarTronco() {
             troncoActual.velocidadX = 0; // Resetear velocidad horizontal al caer
         }
     }
+
     // 3. Detección de colisión con Goku (PRIMERO verifica esto)
     if (troncoActual.sprite->collidesWithItem(goku)) {
         goku->animarCaida();
@@ -895,7 +737,7 @@ void Juego::actualizarTronco() {
         escena->removeItem(troncoActual.sprite);
         delete troncoActual.sprite;
         troncoActual.sprite = nullptr;
-        QTimer::singleShot(5000, this, &Juego::generarTroncoUnico);
+        QTimer::singleShot(3000, this, &Juego::generarTroncoUnico);
         return; // ¡IMPORTANTE! Salir para evitar doble eliminación
     }
 
@@ -904,371 +746,44 @@ void Juego::actualizarTronco() {
         escena->removeItem(troncoActual.sprite);
         delete troncoActual.sprite;
         troncoActual.sprite = nullptr;
-        QTimer::singleShot(5000, this, &Juego::generarTroncoUnico);
+        QTimer::singleShot(QRandomGenerator::global()->bounded(3000, 5000),
+                           this, &Juego::generarTroncoUnico);
     }
 }
 
 void Juego::keyPressEvent(QKeyEvent* event) {
-    if (pausado) {
-        // Solo permitir despausar con ESPACIO cuando está pausado
-        if (event->key() == Qt::Key_Space && !event->isAutoRepeat()) {
-            togglePausa();
-        }
-        return;
-    }
-
-    // Comportamiento normal del juego
-    switch (event->key()) {
-    case Qt::Key_W:
+    if (event->key() == Qt::Key_W) {
         goku->saltar();
         goku->cayendoLento = true;
-        break;
-
-    case Qt::Key_S:
-        if (gokuEnCuerda) {
+    }
+    if (event->key() == Qt::Key_S) {
+        if (gokuEnCuerda) {  // Solo si está en una cuerda
             for (Cuerda& cuerda : cuerdas) {
                 if (cuerda.gokuAgarrado) {
                     soltarGokuDeCuerda(cuerda);
+                    qDebug() << "Goku se soltó de la cuerda con S";  // Debug
                     break;
                 }
             }
         } else {
+            // Comportamiento normal de la tecla S (si lo necesitas)
             goku->acelerarCaida();
         }
-        break;
-
-    case Qt::Key_P:
-        if (!pPresionado && goku->puedeDisparar()) {
-            pPresionado = true;
+    }
+    if (event->key() == Qt::Key_Space) {
+        if (goku->puedeDisparar()) {
             goku->animarDisparo();
             goku->setListaEnemigos(&enemigos);
             goku->disparar(escena);
+
             goku->reiniciarEnergia();
             actualizarBarraEnergia();
         }
-        break;
-
-    case Qt::Key_Space:
-        if (!event->isAutoRepeat()) {
-            togglePausa();
-        }
-        break;
     }
 }
 
 void Juego::keyReleaseEvent(QKeyEvent* event) {
-    switch (event->key()) {
-    case Qt::Key_W:
+    if (event->key() == Qt::Key_W) {
         goku->cayendoLento = false;
-        break;
-
-    case Qt::Key_P:
-        pPresionado = false;
-        break;
     }
-    QGraphicsView::keyReleaseEvent(event);
-}
-
-void Juego::agregarItemEscena(QGraphicsItem* item) {
-    escena->addItem(item);
-}
-
-void Juego::removerItemEscena(QGraphicsItem* item) {
-    escena->removeItem(item);
-}
-
-void Juego::detenerTodo() {
-    // Detener todos los timers
-    timerJuego->stop();
-    timerEnemigos->stop();
-    timerAnimacionCuerda->stop();
-    timerGeneracionCuerdas->stop();
-    timerPlataformas->stop();
-    timerObstaculos->stop();
-    timerTroncos->stop();
-    timerCapsulas->stop();
-
-    // Pausar todos los enemigos y sus proyectiles
-    for (Enemigo* enemigo : enemigos) {
-        enemigo->setPausado(true);
-    }
-}
-
-void Juego::reanudarTodo() {
-    // Reanudar todos los timers
-    timerJuego->start(16);
-    timerEnemigos->start(10000);
-    timerAnimacionCuerda->start(16);
-    timerGeneracionCuerdas->start(6000);
-    timerPlataformas->start(7000);
-    timerObstaculos->start(7000);
-    timerTroncos->start(16);
-    timerCapsulas->start(3000);
-
-    // Reanudar enemigos y proyectiles
-    for (Enemigo* enemigo : enemigos) {
-        enemigo->setPausado(false);
-    }
-}
-
-void Juego::togglePausa() {
-    pausado = !pausado;
-
-    if (pausado) {
-        detenerTodo();
-
-        // Fondo semitransparente (como ya lo tienes)
-        QGraphicsRectItem* overlay = new QGraphicsRectItem(0, 0, width(), height());
-        overlay->setBrush(QColor(0, 0, 0, 180));
-        overlay->setZValue(999);
-        overlay->setData(0, "pausa_overlay");
-        escena->addItem(overlay);
-
-        // Texto "PAUSA" (como ya lo tienes)
-        QGraphicsTextItem* pausaText = new QGraphicsTextItem("PAUSA");
-        pausaText->setDefaultTextColor(QColor(255, 215, 0));
-        pausaText->setFont(QFont(dragonBallFont, 58, QFont::Bold));
-        // ... (configuración de sombra y posición)
-
-        // Configurar botones (solo la primera vez)
-        if (!btnContinuar) {
-            configurarBotonesPausa();
-        } else {
-            proxyContinuar->show();
-            proxySalir->show();
-        }
-
-    } else {
-        // Limpiar elementos de pausa
-        for (QGraphicsItem* item : escena->items()) {
-            if (item->data(0).toString() == "pausa_overlay") {
-                escena->removeItem(item);
-                delete item;
-            }
-        }
-
-        // Ocultar botones (no eliminarlos para mejor performance)
-        if (proxyContinuar) proxyContinuar->hide();
-        if (proxySalir) proxySalir->hide();
-
-        reanudarTodo();
-    }
-}
-
-void Juego::configurarBotonesPausa() {
-    // Botón Continuar
-    btnContinuar = new QPushButton("CONTINUAR");
-    btnContinuar->setObjectName("btnPausa");
-    btnContinuar->setFont(QFont(dragonBallFont, 20, QFont::Bold));
-    btnContinuar->setStyleSheet(
-        "QPushButton#btnPausa {"
-        "   background-color: #ff9900;"
-        "   color: white;"
-        "   border: 3px solid #ffcc00;"
-        "   border-radius: 15px;"
-        "   padding: 10px 25px;"
-        "   min-width: 200px;"
-        "}"
-        "QPushButton#btnPausa:hover {"
-        "   background-color: #ffaa33;"
-        "   border-color: #ffffff;"
-        "}"
-        );
-
-    // Botón Salir
-    btnSalir = new QPushButton("SALIR AL MENÚ");
-    btnSalir->setObjectName("btnPausa");
-    btnSalir->setFont(QFont(dragonBallFont, 20, QFont::Bold));
-    btnSalir->setStyleSheet(
-        "QPushButton#btnPausa {"
-        "   background-color: #cc0000;"
-        "   color: white;"
-        "   border: 3px solid #ff4444;"
-        "   border-radius: 15px;"
-        "   padding: 10px 25px;"
-        "   min-width: 200px;"
-        "}"
-        "QPushButton#btnPausa:hover {"
-        "   background-color: #ff4444;"
-        "   border-color: #ffffff;"
-        "}"
-        );
-
-    // Posicionamiento usando QGraphicsProxyWidget
-    proxyContinuar = escena->addWidget(btnContinuar);
-    proxyContinuar->setPos(width()/2 - btnContinuar->width()/2, height()/2 + 30);
-    proxyContinuar->setZValue(1002);
-
-    proxySalir = escena->addWidget(btnSalir);
-    proxySalir->setPos(width()/2 - btnSalir->width()/2, height()/2 + 110);
-    proxySalir->setZValue(1002);
-
-    // Conexiones de señales
-    connect(btnContinuar, &QPushButton::clicked, this, &Juego::togglePausa);
-    connect(btnSalir, &QPushButton::clicked, this, [this]() {
-        emit salirAlMenu();
-        togglePausa();
-    });
-}
-
-void Juego::cargarAssetsDecoracion()
-{
-    // Cargar palmeras una sola vez
-    spritesPalmeras = {
-        QPixmap(":/fondos/Pictures/palmera_1.png"),
-        QPixmap(":/fondos/Pictures/palmera_2.png"),
-        QPixmap(":/fondos/Pictures/palmera_3.png"),
-        QPixmap(":/fondos/Pictures/palmera_4.png")
-    };
-
-    // Cargar frames del pájaro una sola vez
-    QPixmap spriteSheetPajaro(":/fondos/Pictures/pajaro.png");
-    for (int fila = 0; fila < 4; ++fila) {
-        for (int col = 0; col < 6; ++col) {
-            framesPajaro.append(spriteSheetPajaro.copy(col * 200, fila * 180, 200, 180));
-        }
-    }
-}
-
-void Juego::generarDecoracionPalmeras()
-{
-    // Limpiar palmeras existentes
-    for (auto palmera : decoracionPalmeras) {
-        escena->removeItem(palmera);
-        delete palmera;
-    }
-    decoracionPalmeras.clear();
-
-    // Generar nuevas palmeras (10-15 palmeras)
-    int cantidadPalmeras = QRandomGenerator::global()->bounded(5, 9);
-    for (int i = 0; i < cantidadPalmeras; ++i) {
-        int tipo = QRandomGenerator::global()->bounded(spritesPalmeras.size());
-        QGraphicsPixmapItem* palmera = new QGraphicsPixmapItem(spritesPalmeras[tipo]);
-
-        // Tamaño constante (2x el tamaño original)
-        qreal escala = 5.5;
-        palmera->setScale(escala);
-
-        // Posición aleatoria
-        qreal x = 1280 + QRandomGenerator::global()->bounded(4000);  // Más separación
-        qreal y = 275 + QRandomGenerator::global()->bounded(150);    // Mismo rango vertical
-
-        palmera->setPos(x, y);
-        palmera->setZValue(-1);  // Detrás del fondo principal
-
-        escena->addItem(palmera);
-        decoracionPalmeras.append(palmera);
-    }
-}
-
-void Juego::actualizarDecoracion()
-{
-    // Mover palmeras existentes
-    for (auto palmera : decoracionPalmeras) {
-        palmera->moveBy(-velocidadScroll, 0);
-
-        if (palmera->x() + palmera->boundingRect().width() * palmera->scale() < 0) {
-            // Guardamos la posición Y actual antes de reposicionar
-            qreal currentY = palmera->y();
-
-            // AUMENTAR EL RANGO ALEATORIO PARA QUE APAREZCAN MENOS FRECUENTEMENTE
-            if (QRandomGenerator::global()->bounded(100) < 30) { // 30% de probabilidad
-                qreal newX = 1280 + QRandomGenerator::global()->bounded(3000, 6000);
-                palmera->setPos(newX, currentY);
-            } else {
-                // Si no cumple la probabilidad, colocar muy lejos para que tarde en aparecer
-                palmera->setPos(10000, currentY);
-            }
-        }
-    }
-
-    // OPCIONAL: Generar palmeras nuevas con baja frecuencia
-    static int contador = 0;
-    if (contador++ > 100 && decoracionPalmeras.size() < 8) { // Cada 100 frames
-        contador = 0;
-        if (QRandomGenerator::global()->bounded(100) < 20) { // 20% de probabilidad
-            // Crear nueva palmera
-            QGraphicsPixmapItem* palmera = new QGraphicsPixmapItem(spritesPalmeras[0]);
-            palmera->setScale(5.5);
-            palmera->setPos(1280 + QRandomGenerator::global()->bounded(2000),
-                            275 + QRandomGenerator::global()->bounded(150));
-            palmera->setZValue(-1);
-            escena->addItem(palmera);
-            decoracionPalmeras.append(palmera);
-        }
-    }
-}
-
-void Juego::iniciarAnimacionPajaro()
-{
-    if (framesPajaro.empty()) return;
-
-    if (pajaroItem) {
-        escena->removeItem(pajaroItem);
-        delete pajaroItem;
-    }
-
-    // Crear pájaro con tamaño adecuado (ajustar escala si es necesario)
-    pajaroItem = new QGraphicsPixmapItem(framesPajaro[0]);
-    pajaroItem->setScale(0.7);  // Ajustar según necesidad
-    pajaroItem->setZValue(-0.5);
-    escena->addItem(pajaroItem);
-
-    // Posición inicial más variable
-    pajaroItem->setPos(1280, QRandomGenerator::global()->bounded(5, 125));
-
-    // Configurar timer de animación más rápido
-    if (!timerAnimacionPajaro) {
-        timerAnimacionPajaro = new QTimer(this);
-        connect(timerAnimacionPajaro, &QTimer::timeout, this, &Juego::animarPajaro);
-    }
-    timerAnimacionPajaro->start(50);  // Más rápido (12-13 FPS)
-}
-
-void Juego::animarPajaro()
-{
-    if (!pajaroItem || framesPajaro.empty()) return;
-
-    // Avanzar animación
-    frameActualPajaro = (frameActualPajaro + 1) % framesPajaro.size();
-    pajaroItem->setPixmap(framesPajaro[frameActualPajaro]);
-
-    // Mover más rápido (8px por frame en lugar de 5)
-    pajaroItem->moveBy(-8, 0);
-
-    // Reposicionar cuando esté completamente fuera
-    if (pajaroItem->x() + pajaroItem->boundingRect().width() * pajaroItem->scale() < 0) {
-        pajaroItem->setPos(1280, QRandomGenerator::global()->bounded(5, 125));
-
-        // 80% de probabilidad de mostrar otro pájaro
-        pajaroItem->setVisible(QRandomGenerator::global()->bounded(100) < 80);
-
-        // Variar velocidad ocasionalmente
-        if (QRandomGenerator::global()->bounded(100) < 30) {
-            timerAnimacionPajaro->start(40); // Más rápido
-        } else {
-            timerAnimacionPajaro->start(50); // Velocidad normal
-        }
-    }
-}
-
-Juego::~Juego() {
-    // Limpiar decoración
-    for (auto palmera : decoracionPalmeras) {
-        escena->removeItem(palmera);
-        delete palmera;
-    }
-    decoracionPalmeras.clear();
-
-    if (pajaroItem) {
-        escena->removeItem(pajaroItem);
-        delete pajaroItem;
-    }
-
-    if (timerAnimacionPajaro) {
-        timerAnimacionPajaro->stop();
-        delete timerAnimacionPajaro;
-    }
-
-    // ... resto de la limpieza ...
 }
