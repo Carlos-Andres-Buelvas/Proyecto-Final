@@ -4,7 +4,6 @@
 #include <QGraphicsView>
 #include <QGraphicsScene>
 #include <QTimer>
-#include <QGraphicsProxyWidget>
 #include <QPushButton>
 #include <QFontDatabase>          // Para manejo de fuentes
 #include <QPropertyAnimation>     // Para animaciones
@@ -30,10 +29,6 @@ public:
     bool estaPausado() const { return pausado; }
     void detenerTodo();
     void reanudarTodo();
-    ~Juego();
-
-signals:
-    void salirAlMenu();
 
 private slots:
     void actualizar();
@@ -48,10 +43,6 @@ private:
     QGraphicsTextItem* contadorSoldados;
     QPushButton* botonPausa;
     QString dragonBallFont;
-    QPushButton* btnContinuar;
-    QPushButton* btnSalir;
-    QGraphicsProxyWidget* proxyContinuar;
-    QGraphicsProxyWidget* proxySalir;
 
     // Personajes y objetos del juego
     Goku* goku;
@@ -118,7 +109,6 @@ private:
     QPointF calcularExtremo(const Cuerda& cuerda) const;
     void generarTroncoUnico();
     void actualizarTronco();
-    void configurarBotonesPausa();
 
     QGraphicsPixmapItem* detectarPlataformaSobre(TroncoGiratorio& tronco) {
         QRectF areaTronco = tronco.sprite->boundingRect().translated(tronco.sprite->pos());
@@ -133,21 +123,6 @@ private:
         }
         return nullptr;
     }
-
-    // Métodos para decoración
-    void cargarAssetsDecoracion();
-    void generarDecoracionPalmeras();
-    void actualizarDecoracion();
-    void iniciarAnimacionPajaro();  // Añade esta declaración
-    void animarPajaro();
-
-    // Miembros para decoración
-    QVector<QPixmap> spritesPalmeras;
-    QVector<QPixmap> framesPajaro;
-    QVector<QGraphicsPixmapItem*> decoracionPalmeras;
-    QGraphicsPixmapItem* pajaroItem;
-    int frameActualPajaro;
-    QTimer* timerAnimacionPajaro;
 
 protected:
     void keyPressEvent(QKeyEvent* event) override;

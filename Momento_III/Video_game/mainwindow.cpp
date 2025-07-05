@@ -75,13 +75,6 @@ void MainWindow::on_newGameButton_clicked() {
     try {
         juego = new Juego();
         juego->show();
-
-        // Conexión para manejar el regreso al menú principal
-        connect(juego, &Juego::salirAlMenu, this, [this]() {
-            juego->hide();
-            this->show();
-        });
-
         this->hide();
 
         // Crear texto del título con estilo Dragon Ball
