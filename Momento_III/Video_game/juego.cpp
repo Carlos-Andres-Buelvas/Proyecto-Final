@@ -633,13 +633,10 @@ void Juego::generarCuerda() {
     if (QRandomGenerator::global()->bounded(0, 100) > 50) return;
 
     Cuerda c;
-    // Posición inicial (esquina superior derecha con variación)
-    //c.origen = QPointF(width() + QRandomGenerator::global()->bounded(50, 200),
-    //                 QRandomGenerator::global()->bounded(50, 150));
 
     c.origen = QPointF(1280, 0);
     // Configuración física
-    c.largo = 225; //+ QRandomGenerator::global()->bounded(-30, 30); // Longitud variable
+    c.largo = 215;
     c.angulo = -M_PI/4; // Ángulo inicial fijo
     c.velocidadAngular = 0;
     c.activa = false;
@@ -648,7 +645,7 @@ void Juego::generarCuerda() {
     // Crear curva Bézier para la cuerda
     QPointF extremo = calcularExtremo(c);
     c.puntoMedio = QPointF((c.origen.x() + extremo.x())/2,
-                           (c.origen.y() + extremo.y())/2 + 25); // Curvatura inicial
+                           (c.origen.y() + extremo.y())/2 + 50); // Curvatura inicial
 
     QPainterPath path;
     path.moveTo(c.origen);
@@ -814,7 +811,7 @@ void Juego::generarTroncoUnico() {
 
     // Configuración inicial
     troncoActual.sprite->setPos(1200, QRandomGenerator::global()->bounded(0, 20));
-    troncoActual.velocidadY = 2.5;
+    troncoActual.velocidadY = 3.0;
     troncoActual.velocidadX = 0;
     troncoActual.velocidadRotacion = -3.0;
     troncoActual.rotacionActual = 0;
@@ -849,7 +846,7 @@ void Juego::actualizarTronco() {
             qreal nuevaY = plataforma->y() - troncoActual.sprite->boundingRect().height();
             troncoActual.sprite->setY(nuevaY);
             troncoActual.enSuelo = true;
-            troncoActual.velocidadX = -4.0;
+            troncoActual.velocidadX = -4.5;
             troncoActual.velocidadY = 0;
         }
         else if (troncoActual.sprite->y() >= 670 - troncoActual.sprite->boundingRect().height()) {

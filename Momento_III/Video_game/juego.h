@@ -82,7 +82,7 @@ private:
     // Estructuras especiales
     struct Cuerda {
         QPointF origen;
-        double largo = 220;
+        double largo = 215;
         double angulo;
         double velocidadAngular = 0;
         bool activa = false;
