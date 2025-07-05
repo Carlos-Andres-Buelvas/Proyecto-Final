@@ -22,5 +22,11 @@
     <qresource prefix="/fondos">
         <file>Pictures/fondo_inicial.jpg</file>
         <file>Pictures/fondo_nivel1.png</file>
+        <file>Pictures/db_font.ttf</file>
+        <file>Pictures/pajaro.png</file>
+        <file>Pictures/palmera_1.png</file>
+        <file>Pictures/palmera_2.png</file>
+        <file>Pictures/palmera_3.png</file>
+        <file>Pictures/palmera_4.png</file>
     </qresource>
 </RCC>

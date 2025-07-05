@@ -57,7 +57,7 @@ void Enemigo::mover() {
     if (gokuDetectado) {
         float distancia = std::abs(gokuDetectado->x() - x());
 
-        if (distancia < 950 && gokuDetectado->x() < x()) {
+        if (distancia < 900 && gokuDetectado->x() < x()) {
             estado = Disparando;
             direccion = -1;
 
@@ -94,6 +94,8 @@ void Enemigo::mover() {
 }
 
 void Enemigo::disparar(QGraphicsScene* escena) {
+    // No disparar si el juego está pausado
+    if (pausado || direccion != -1) return;
     if (direccion != -1) return; // Solo dispara si está mirando a la izquierda
 
     // Crear el proyectil visual
@@ -140,16 +142,6 @@ void Enemigo::disparar(QGraphicsScene* escena) {
 
     // Guardar para eliminar después
     proyectilesActivos.append(qMakePair(proyectilSoldado, t));
-/*
-    // **AÑADE ESTO**: reprográmate a ti mismo dentro de 5 s
-    QTimer::singleShot(10000, this, [=]() {
-        disparar(escena);
-    });
-*/
-}
-
-bool Enemigo::estaDisparando() const {
-    return estado == Disparando;
 }
 
 void Enemigo::eliminarProyectiles() {
@@ -168,3 +160,35 @@ void Enemigo::eliminarProyectiles() {
     proyectilesActivos.clear();
 }
 
+void Enemigo::detenerProyectiles() {
+    for (auto& par : proyectilesActivos) {
+        if (par.second) {
+            par.second->stop();
+        }
+    }
+}
+
+void Enemigo::reanudarProyectiles() {
+    for (auto& par : proyectilesActivos) {
+        if (par.second) {
+            par.second->start(30);
+        }
+    }
+}
+
+void Enemigo::setPausado(bool pausa) {
+    pausado = pausa;
+    if (pausado) {
+        // Detener el timer de disparo y los proyectiles existentes
+        if (timerDisparo && timerDisparo->isActive()) {
+            timerDisparo->stop();
+        }
+        detenerProyectiles();
+    } else {
+        // Reanudar solo si estaba disparando
+        if (disparando && timerDisparo) {
+            timerDisparo->start(1000);
+        }
+        reanudarProyectiles();
+    }
+}
