@@ -82,10 +82,10 @@ void MainWindow::on_newGameButton_clicked() {
             this->show();
         });
 
-        // Nueva conexión para manejar game over
+        // Mantén tu conexión existente pero añade esto:
         connect(juego, &Juego::gameOver, this, [this]() {
+            // Ocultar el juego después de mostrar el mensaje
             juego->hide();
-            this->show();
 
             // Mostrar mensaje de game over con opciones
             QMessageBox msgBox;
@@ -117,6 +117,9 @@ void MainWindow::on_newGameButton_clicked() {
                 "   background-color: #c0392b;"
                 "}"
                 );
+
+            // Mostrar la ventana principal antes del message box
+            this->show();
 
             msgBox.exec();
 

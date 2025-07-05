@@ -42,6 +42,7 @@ private slots:
     void actualizar();
     void generarEnemigo();
     void generarPlataforma();
+    void mostrarMenuGameOver();
 
 private:
     // Elementos gráficos y escena
@@ -73,6 +74,7 @@ private:
     QTimer* timerAnimacionCuerda;
     QTimer* timerGeneracionCuerdas;
     QTimer* timerTroncos;
+    QTimer* timerGameOver;
 
     // Variables de estado
     float velocidadScroll = 3.0;
