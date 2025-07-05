@@ -13,9 +13,11 @@
 #include <QGraphicsDropShadowEffect>
 #include <QGraphicsColorizeEffect>
 #include <QGraphicsItemAnimation>
+#include <QGraphicsProxyWidget>
 
 Juego::Juego(QWidget *parent) : QGraphicsView(parent), timerAnimacionCuerda(nullptr),
-    timerGeneracionCuerdas(nullptr) {
+    timerGeneracionCuerdas(nullptr), btnContinuar(nullptr), btnSalir(nullptr),
+    proxyContinuar(nullptr), proxySalir(nullptr), pajaroItem(nullptr), frameActualPajaro(0), timerAnimacionPajaro(nullptr) {
     escena = new QGraphicsScene(this);
     escena->setSceneRect(0, 0, 1280, 680);
     setScene(escena);
@@ -225,7 +227,19 @@ Juego::Juego(QWidget *parent) : QGraphicsView(parent), timerAnimacionCuerda(null
     connect(timerTroncos, &QTimer::timeout, this, &Juego::actualizarTronco);
     timerTroncos->start(16);
 
-    QTimer::singleShot(5000, this, &Juego::generarTroncoUnico);
+    QTimer::singleShot(7000, this, &Juego::generarTroncoUnico);
+
+    cargarAssetsDecoracion();
+    generarDecoracionPalmeras();
+
+    // Iniciar animación del pájaro con un pequeño retraso aleatorio
+    QTimer::singleShot(QRandomGenerator::global()->bounded(1000, 3000),
+                       this, &Juego::iniciarAnimacionPajaro);
+
+    // Timer para decoración más eficiente
+    QTimer* timerDecoracion = new QTimer(this);
+    connect(timerDecoracion, &QTimer::timeout, this, &Juego::actualizarDecoracion);
+    timerDecoracion->start(16);  // ~60 FPS para movimiento suave
 }
 
 void Juego::iniciar() {
@@ -881,7 +895,7 @@ void Juego::actualizarTronco() {
         escena->removeItem(troncoActual.sprite);
         delete troncoActual.sprite;
         troncoActual.sprite = nullptr;
-        QTimer::singleShot(5000, this, &Juego::generarTroncoUnico);
+        QTimer::singleShot(7000, this, &Juego::generarTroncoUnico);
         return; // ¡IMPORTANTE! Salir para evitar doble eliminación
     }
 
@@ -890,7 +904,7 @@ void Juego::actualizarTronco() {
         escena->removeItem(troncoActual.sprite);
         delete troncoActual.sprite;
         troncoActual.sprite = nullptr;
-        QTimer::singleShot(5000, this, &Juego::generarTroncoUnico);
+        QTimer::singleShot(7000, this, &Juego::generarTroncoUnico);
     }
 }
 
@@ -1003,48 +1017,263 @@ void Juego::togglePausa() {
     if (pausado) {
         detenerTodo();
 
+        // Fondo semitransparente (como ya lo tienes)
         QGraphicsRectItem* overlay = new QGraphicsRectItem(0, 0, width(), height());
         overlay->setBrush(QColor(0, 0, 0, 180));
         overlay->setZValue(999);
         overlay->setData(0, "pausa_overlay");
         escena->addItem(overlay);
+
+        // Texto "PAUSA" (como ya lo tienes)
         QGraphicsTextItem* pausaText = new QGraphicsTextItem("PAUSA");
         pausaText->setDefaultTextColor(QColor(255, 215, 0));
         pausaText->setFont(QFont(dragonBallFont, 58, QFont::Bold));
-        pausaText->setPos(width()/2 - pausaText->boundingRect().width()/2, height()/2 - 100);
+        // ... (configuración de sombra y posición)
 
-        QGraphicsDropShadowEffect* effect = new QGraphicsDropShadowEffect();
-        effect->setBlurRadius(10);
-        effect->setColor(Qt::black);
-        effect->setOffset(5, 5);
-        pausaText->setGraphicsEffect(effect);
-
-        pausaText->setZValue(1001);
-        pausaText->setData(0, "pausa_overlay");
-        escena->addItem(pausaText);
-
-        QGraphicsTextItem* instrucciones = new QGraphicsTextItem("Presiona ESPACIO para continuar");
-        instrucciones->setDefaultTextColor(Qt::white);
-        instrucciones->setFont(QFont(dragonBallFont, 20));
-        instrucciones->setPos(width()/2 - instrucciones->boundingRect().width()/2, height()/2 + 20);
-
-        QGraphicsDropShadowEffect* shadowInst = new QGraphicsDropShadowEffect();
-        shadowInst->setBlurRadius(5);
-        shadowInst->setColor(Qt::black);
-        shadowInst->setOffset(3, 3);
-        instrucciones->setGraphicsEffect(shadowInst);
-
-        instrucciones->setZValue(1001);
-        instrucciones->setData(0, "pausa_overlay");
-        escena->addItem(instrucciones);
+        // Configurar botones (solo la primera vez)
+        if (!btnContinuar) {
+            configurarBotonesPausa();
+        } else {
+            proxyContinuar->show();
+            proxySalir->show();
+        }
 
     } else {
+        // Limpiar elementos de pausa
         for (QGraphicsItem* item : escena->items()) {
             if (item->data(0).toString() == "pausa_overlay") {
                 escena->removeItem(item);
                 delete item;
             }
         }
+
+        // Ocultar botones (no eliminarlos para mejor performance)
+        if (proxyContinuar) proxyContinuar->hide();
+        if (proxySalir) proxySalir->hide();
+
         reanudarTodo();
     }
+}
+
+void Juego::configurarBotonesPausa() {
+    // Botón Continuar
+    btnContinuar = new QPushButton("CONTINUAR");
+    btnContinuar->setObjectName("btnPausa");
+    btnContinuar->setFont(QFont(dragonBallFont, 20, QFont::Bold));
+    btnContinuar->setStyleSheet(
+        "QPushButton#btnPausa {"
+        "   background-color: #ff9900;"
+        "   color: white;"
+        "   border: 3px solid #ffcc00;"
+        "   border-radius: 15px;"
+        "   padding: 10px 25px;"
+        "   min-width: 200px;"
+        "}"
+        "QPushButton#btnPausa:hover {"
+        "   background-color: #ffaa33;"
+        "   border-color: #ffffff;"
+        "}"
+        );
+
+    // Botón Salir
+    btnSalir = new QPushButton("SALIR AL MENÚ");
+    btnSalir->setObjectName("btnPausa");
+    btnSalir->setFont(QFont(dragonBallFont, 20, QFont::Bold));
+    btnSalir->setStyleSheet(
+        "QPushButton#btnPausa {"
+        "   background-color: #cc0000;"
+        "   color: white;"
+        "   border: 3px solid #ff4444;"
+        "   border-radius: 15px;"
+        "   padding: 10px 25px;"
+        "   min-width: 200px;"
+        "}"
+        "QPushButton#btnPausa:hover {"
+        "   background-color: #ff4444;"
+        "   border-color: #ffffff;"
+        "}"
+        );
+
+    // Posicionamiento usando QGraphicsProxyWidget
+    proxyContinuar = escena->addWidget(btnContinuar);
+    proxyContinuar->setPos(width()/2 - btnContinuar->width()/2, height()/2 + 30);
+    proxyContinuar->setZValue(1002);
+
+    proxySalir = escena->addWidget(btnSalir);
+    proxySalir->setPos(width()/2 - btnSalir->width()/2, height()/2 + 110);
+    proxySalir->setZValue(1002);
+
+    // Conexiones de señales
+    connect(btnContinuar, &QPushButton::clicked, this, &Juego::togglePausa);
+    connect(btnSalir, &QPushButton::clicked, this, [this]() {
+        emit salirAlMenu();
+        togglePausa();
+    });
+}
+
+void Juego::cargarAssetsDecoracion()
+{
+    // Cargar palmeras
+    spritesPalmeras = {
+        QPixmap(":/fondos/Pictures/palmera_1.png"),
+        QPixmap(":/fondos/Pictures/palmera_2.png"),
+        QPixmap(":/fondos/Pictures/palmera_3.png"),
+        QPixmap(":/fondos/Pictures/palmera_4.png")
+    };
+
+    // Cargar frames del pájaro
+    QPixmap spriteSheetPajaro(":/fondos/Pictures/pajaro.png");
+    if (!spriteSheetPajaro.isNull()) {
+        framesPajaro.clear();  // Limpiar por si acaso
+        for (int fila = 0; fila < 4; ++fila) {
+            for (int col = 0; col < 6; ++col) {
+                framesPajaro.append(spriteSheetPajaro.copy(col * 200, fila * 180, 200, 180));
+            }
+        }
+    } else {
+        qDebug() << "Error: No se pudo cargar el sprite del pájaro";
+    }
+}
+
+void Juego::generarDecoracionPalmeras()
+{
+    // Limpiar palmeras existentes
+    for (auto palmera : decoracionPalmeras) {
+        escena->removeItem(palmera);
+        delete palmera;
+    }
+    decoracionPalmeras.clear();
+
+    // Generar nuevas palmeras (10-15 palmeras)
+    int cantidadPalmeras = QRandomGenerator::global()->bounded(5, 9);
+    for (int i = 0; i < cantidadPalmeras; ++i) {
+        int tipo = QRandomGenerator::global()->bounded(spritesPalmeras.size());
+        QGraphicsPixmapItem* palmera = new QGraphicsPixmapItem(spritesPalmeras[tipo]);
+
+        // Tamaño constante (2x el tamaño original)
+        qreal escala = 4.5;
+        palmera->setScale(escala);
+
+        // Posición aleatoria
+        qreal x = 1280 + QRandomGenerator::global()->bounded(4000);  // Más separación
+        qreal y = 300 + QRandomGenerator::global()->bounded(150);    // Mismo rango vertical
+
+        palmera->setPos(x, y);
+        palmera->setZValue(-1);  // Detrás del fondo principal
+
+        escena->addItem(palmera);
+        decoracionPalmeras.append(palmera);
+    }
+}
+
+void Juego::iniciarAnimacionPajaro()
+{
+    if (framesPajaro.empty()) return;
+
+    if (pajaroItem) {
+        escena->removeItem(pajaroItem);
+        delete pajaroItem;
+    }
+
+    // Crear pájaro con tamaño adecuado (ajustar escala si es necesario)
+    pajaroItem = new QGraphicsPixmapItem(framesPajaro[0]);
+    pajaroItem->setScale(0.7);  // Ajustar según necesidad
+    pajaroItem->setZValue(-0.5);
+    escena->addItem(pajaroItem);
+
+    // Posición inicial más variable
+    pajaroItem->setPos(1280, QRandomGenerator::global()->bounded(5, 95));
+
+    // Configurar timer de animación más rápido
+    if (!timerAnimacionPajaro) {
+        timerAnimacionPajaro = new QTimer(this);
+        connect(timerAnimacionPajaro, &QTimer::timeout, this, &Juego::animarPajaro);
+    }
+    timerAnimacionPajaro->start(40);  // Más rápido (12-13 FPS)
+}
+
+void Juego::animarPajaro()
+{
+    if (!pajaroItem || framesPajaro.empty()) return;
+
+    // Avanzar animación
+    frameActualPajaro = (frameActualPajaro + 1) % framesPajaro.size();
+    pajaroItem->setPixmap(framesPajaro[frameActualPajaro]);
+
+    // Mover más rápido (8px por frame en lugar de 5)
+    pajaroItem->moveBy(-8, 0);
+
+    // Reposicionar cuando esté completamente fuera
+    if (pajaroItem->x() + pajaroItem->boundingRect().width() * pajaroItem->scale() < 0) {
+        pajaroItem->setPos(1280, QRandomGenerator::global()->bounded(5, 95));
+
+        // 80% de probabilidad de mostrar otro pájaro
+        pajaroItem->setVisible(QRandomGenerator::global()->bounded(100) < 70);
+
+        // Variar velocidad ocasionalmente
+        if (QRandomGenerator::global()->bounded(100) < 30) {
+            timerAnimacionPajaro->start(30); // Más rápido
+        } else {
+            timerAnimacionPajaro->start(40); // Velocidad normal
+        }
+    }
+}
+
+void Juego::actualizarDecoracion()
+{
+    // Mover palmeras existentes
+    for (auto palmera : decoracionPalmeras) {
+        palmera->moveBy(-velocidadScroll, 0);
+
+        if (palmera->x() + palmera->boundingRect().width() * palmera->scale() < 0) {
+            // Guardamos la posición Y actual antes de reposicionar
+            qreal currentY = palmera->y();
+
+            // AUMENTAR EL RANGO ALEATORIO PARA QUE APAREZCAN MENOS FRECUENTEMENTE
+            if (QRandomGenerator::global()->bounded(100) < 30) { // 30% de probabilidad
+                qreal newX = 1280 + QRandomGenerator::global()->bounded(3000, 6000);
+                palmera->setPos(newX, currentY);
+            } else {
+                // Si no cumple la probabilidad, colocar muy lejos para que tarde en aparecer
+                palmera->setPos(10000, currentY);
+            }
+        }
+    }
+
+    // OPCIONAL: Generar palmeras nuevas con baja frecuencia
+    static int contador = 0;
+    if (contador++ > 100 && decoracionPalmeras.size() < 8) { // Cada 100 frames
+        contador = 0;
+        if (QRandomGenerator::global()->bounded(100) < 20) { // 20% de probabilidad
+            // Crear nueva palmera
+            QGraphicsPixmapItem* palmera = new QGraphicsPixmapItem(spritesPalmeras[0]);
+            palmera->setScale(2.0);
+            palmera->setPos(1280 + QRandomGenerator::global()->bounded(2000),
+                            450 + QRandomGenerator::global()->bounded(150));
+            palmera->setZValue(-1);
+            escena->addItem(palmera);
+            decoracionPalmeras.append(palmera);
+        }
+    }
+}
+
+Juego::~Juego() {
+    // Limpiar decoración
+    for (auto palmera : decoracionPalmeras) {
+        escena->removeItem(palmera);
+        delete palmera;
+    }
+    decoracionPalmeras.clear();
+
+    if (pajaroItem) {
+        escena->removeItem(pajaroItem);
+        delete pajaroItem;
+    }
+
+    if (timerAnimacionPajaro) {
+        timerAnimacionPajaro->stop();
+        delete timerAnimacionPajaro;
+    }
+
+    // ... resto de la limpieza ...
 }

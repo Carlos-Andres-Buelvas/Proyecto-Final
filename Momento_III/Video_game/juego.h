@@ -11,6 +11,7 @@
 #include <QGraphicsEffect>        // Para efectos visuales
 #include <QGraphicsDropShadowEffect> // Para sombras
 #include <QGraphicsColorizeEffect>   // Para efecto de color
+#include <QGraphicsProxyWidget>
 #include <QTimeLine>
 #include <QGraphicsItemAnimation>
 #include "goku.h"
@@ -29,6 +30,10 @@ public:
     bool estaPausado() const { return pausado; }
     void detenerTodo();
     void reanudarTodo();
+    ~Juego();
+
+signals:
+    void salirAlMenu();
 
 private slots:
     void actualizar();
@@ -123,6 +128,30 @@ private:
         }
         return nullptr;
     }
+
+    // Declaración de los miembros
+    QPushButton* btnContinuar;
+    QPushButton* btnSalir;
+    QGraphicsProxyWidget* proxyContinuar;
+    QGraphicsProxyWidget* proxySalir;
+
+    // Declaración del método
+    void configurarBotonesPausa();
+
+    // Métodos para decoración
+    void cargarAssetsDecoracion();
+    void generarDecoracionPalmeras();
+    void actualizarDecoracion();
+    void iniciarAnimacionPajaro();  // Añade esta declaración
+    void animarPajaro();
+
+    // Miembros para decoración
+    QVector<QPixmap> spritesPalmeras;
+    QVector<QGraphicsPixmapItem*> decoracionPalmeras;
+    QGraphicsPixmapItem* pajaroItem;
+    int frameActualPajaro;
+    QTimer* timerAnimacionPajaro;
+    QVector<QPixmap> framesPajaro;
 
 protected:
     void keyPressEvent(QKeyEvent* event) override;
