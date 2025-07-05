@@ -85,12 +85,6 @@ Juego::Juego(QWidget *parent) : QGraphicsView(parent), timerAnimacionCuerda(null
     goku->setZValue(2);
     escena->addItem(goku);
 
-    // Crear primer enemigo (opcional)
-    Enemigo* enemigo = new Enemigo(1280, 510, 100, 100, goku);
-    escena->addItem(enemigo);
-    enemigos.append(enemigo);
-    generarPlataforma();
-
     // Timer principal del juego
     timerJuego = new QTimer(this);
     connect(timerJuego, &QTimer::timeout, this, &Juego::actualizar);
@@ -240,6 +234,10 @@ Juego::Juego(QWidget *parent) : QGraphicsView(parent), timerAnimacionCuerda(null
     QTimer* timerDecoracion = new QTimer(this);
     connect(timerDecoracion, &QTimer::timeout, this, &Juego::actualizarDecoracion);
     timerDecoracion->start(16);  // ~60 FPS para movimiento suave
+
+    timerGameOver = new QTimer(this);
+    timerGameOver->setSingleShot(true);
+    connect(timerGameOver, &QTimer::timeout, this, &Juego::mostrarMenuGameOver);
 }
 
 void Juego::iniciar() {
@@ -360,8 +358,8 @@ void Juego::actualizar() {
             QGraphicsEllipseItem* proyectil = enemigo->proyectilesActivos[j].first;
 
             if (proyectil && goku->collidesWithItem(proyectil)) {
-                //goku->animarCaida();
-                //mostrarGameOver();
+                goku->animarCaida();
+                mostrarGameOver();
                 qDebug() << "Goku ha sido golpeado por un disparo enemigo.";
                 return;
             }
@@ -631,7 +629,7 @@ void Juego::generarCuerda() {
 
     Cuerda c;
 
-    c.origen = QPointF(1280, 0);
+    c.origen = QPointF(1280, -5);
     // Configuración física
     c.largo = 215;
     c.angulo = -M_PI/4; // Ángulo inicial fijo
@@ -707,7 +705,7 @@ void Juego::actualizarCuerda() {
         }
 
         // Actualizar gráficos de la cuerda
-        float factorCurvatura = 25 + 15 * sin(cuerda.angulo * 2.5);
+        float factorCurvatura = 25 + 15 * sin(cuerda.angulo * 5.5);
         cuerda.puntoMedio = QPointF(
             (cuerda.origen.x() + extremo.x())/2 + 5 * cos(cuerda.angulo),
             (cuerda.origen.y() + extremo.y())/2 + factorCurvatura
@@ -1271,8 +1269,12 @@ void Juego::mostrarGameOver() {
     gameOverText->setZValue(1000);
     escena->addItem(gameOverText);
 
-    // Emitir señal para notificar a MainWindow
-    emit gameOver();
+    // Programar la emisión de la señal después de un breve retraso
+    timerGameOver->start(3000); // 3 segundos para ver el mensaje
+}
+
+void Juego::mostrarMenuGameOver() {
+    emit gameOver(); // Ahora emitimos la señal después del retraso
 }
 
 void Juego::reiniciarJuego() {
