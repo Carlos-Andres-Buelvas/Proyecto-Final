@@ -6,6 +6,7 @@
 #include <QRandomGenerator>
 #include <cmath>
 
+// Constructor del enemigo
 Enemigo::Enemigo(float x, float y, float ancho, float alto, Goku* gokuRef)
     : Personaje(x, y, ancho, alto),
     gokuDetectado(gokuRef),
@@ -24,17 +25,17 @@ Enemigo::Enemigo(float x, float y, float ancho, float alto, Goku* gokuRef)
     cargarAnimaciones();
     setPixmap(framesDerecha[0].scaled(this->ancho, this->alto, Qt::KeepAspectRatio, Qt::SmoothTransformation));
     posX = x;
-    posY = y; //375 - alto + 170;
-    //setPos(posX, posY);
+    posY = y;
 
-    // conectar disparo al método heredado
+    // Inicia el disparo cuando el temporizador lo indique
     connect(timerDisparo, &QTimer::timeout, this, [=]() {
         if (scene()) {
-            disparar(scene());  // usa método heredado correctamente
+            disparar(scene());
         }
     });
 }
 
+// Cargar frames de la hoja de sprites
 void Enemigo::cargarAnimaciones() {
     QPixmap spriteSheet(":/sprites/Pictures/soldados.png");
 
@@ -48,12 +49,12 @@ void Enemigo::cargarAnimaciones() {
         framesDerecha.append(spriteSheet.copy(i * w, 2 * h, w, h));
 }
 
+// Movimiento general del enemigo (scroll, patrullaje y animación)
 void Enemigo::mover() {
-    // Desplazamiento general por scroll
-    posX -= 3;
+    posX -= 3;          // Efecto scroll
     setX(posX);
 
-    // 🎯 Detección de Goku
+    // Detección de Goku para comenzar disparo
     if (gokuDetectado) {
         float distancia = std::abs(gokuDetectado->x() - x());
 
@@ -63,7 +64,7 @@ void Enemigo::mover() {
 
             if (!disparando) {
                 disparando = true;
-                timerDisparo->start(1000);  // dispara cada 1s
+                timerDisparo->start(1000);  // Dispara cada 1 segundo
             }
         } else {
             estado = Patrullando;
@@ -74,7 +75,7 @@ void Enemigo::mover() {
         }
     }
 
-    // 🎞️ Animación de frames
+    // Animación de caminar
     contador++;
     if (contador >= velocidadAnimacion) {
         QVector<QPixmap>& frames = (direccion == -1) ? framesIzquierda : framesDerecha;
@@ -83,7 +84,7 @@ void Enemigo::mover() {
         contador = 0;
     }
 
-    // 🚶‍♂️ Movimiento lateral si está patrullando
+    // Movimiento de patrullaje si no está disparando
     if (estado == Patrullando) {
         posX += direccion * velocidadMovimiento;
         setX(posX);
@@ -93,12 +94,11 @@ void Enemigo::mover() {
     }
 }
 
+// Disparo del enemigo
 void Enemigo::disparar(QGraphicsScene* escena) {
-    // No disparar si el juego está pausado
-    if (pausado || direccion != -1) return;
-    if (direccion != -1) return; // Solo dispara si está mirando a la izquierda
+    if (pausado || direccion != -1) return;  // Solo dispara si mira a la izquierda
 
-    // Crear el proyectil visual
+    // Crear el proyectil rojo
     QGraphicsEllipseItem* proyectilSoldado = new QGraphicsEllipseItem(0, 0, 15, 15);
     proyectilSoldado->setBrush(Qt::red);
     proyectilSoldado->setZValue(1);
@@ -109,7 +109,7 @@ void Enemigo::disparar(QGraphicsScene* escena) {
     proyectilSoldado->setPos(posDisparoX, posDisparoY);
     escena->addItem(proyectilSoldado);
 
-    // Timer para mover el proyectil
+    // Movimiento del proyectil con temporizador
     QTimer* t = new QTimer(this);
     connect(t, &QTimer::timeout, [=]() mutable {
         if (!proyectilSoldado || !proyectilSoldado->scene()) {
@@ -118,13 +118,13 @@ void Enemigo::disparar(QGraphicsScene* escena) {
             return;
         }
 
-        proyectilSoldado->moveBy(-20, 0); // más rápido
+        proyectilSoldado->moveBy(-20, 0);  // Se desplaza más rápido
 
         if (proyectilSoldado->x() < -100) {
             if (scene()) scene()->removeItem(proyectilSoldado);
             delete proyectilSoldado;
 
-            // Limpiar de la lista
+            // Eliminar de la lista de proyectiles activos
             for (int i = 0; i < proyectilesActivos.size(); ++i) {
                 if (proyectilesActivos[i].first == proyectilSoldado) {
                     QTimer* tmp = proyectilesActivos[i].second;
@@ -140,10 +140,11 @@ void Enemigo::disparar(QGraphicsScene* escena) {
     });
     t->start(30);
 
-    // Guardar para eliminar después
+    // Registrar en la lista de proyectiles activos
     proyectilesActivos.append(qMakePair(proyectilSoldado, t));
 }
 
+// Elimina todos los proyectiles activos (cuando el enemigo muere)
 void Enemigo::eliminarProyectiles() {
     for (const auto& par : proyectilesActivos) {
         auto proyectil = par.first;
@@ -160,6 +161,7 @@ void Enemigo::eliminarProyectiles() {
     proyectilesActivos.clear();
 }
 
+// Pausa los temporizadores de los proyectiles
 void Enemigo::detenerProyectiles() {
     for (auto& par : proyectilesActivos) {
         if (par.second) {
@@ -168,6 +170,7 @@ void Enemigo::detenerProyectiles() {
     }
 }
 
+// Reanuda el movimiento de proyectiles
 void Enemigo::reanudarProyectiles() {
     for (auto& par : proyectilesActivos) {
         if (par.second) {
@@ -176,16 +179,15 @@ void Enemigo::reanudarProyectiles() {
     }
 }
 
+// Pausar o reanudar comportamiento completo del enemigo
 void Enemigo::setPausado(bool pausa) {
     pausado = pausa;
     if (pausado) {
-        // Detener el timer de disparo y los proyectiles existentes
         if (timerDisparo && timerDisparo->isActive()) {
             timerDisparo->stop();
         }
         detenerProyectiles();
     } else {
-        // Reanudar solo si estaba disparando
         if (disparando && timerDisparo) {
             timerDisparo->start(1000);
         }
