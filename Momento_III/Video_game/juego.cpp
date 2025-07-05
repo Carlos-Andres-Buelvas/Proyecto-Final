@@ -285,7 +285,7 @@ void Juego::actualizar() {
 
     // Asegurar que Goku no se quede atrás
     if (goku->x() < 700) {
-        goku->setX(goku->x() + velocidadScroll * 1);
+        goku->setX(goku->x() + velocidadScroll * 2);
     }
 
     // Scroll del fondo
@@ -344,6 +344,7 @@ void Juego::actualizar() {
     for (int i = 0; i < enemigos.size(); ++i) {
         if (goku->collidesWithItem(enemigos[i])) {
             goku->animarCaida();
+            mostrarGameOver();
             // Puedes mostrar alguna animación, sonido o mensaje
             qDebug() << "Goku ha colisionado con un enemigo.";
             // Aquí puedes reducir vida, reiniciar juego, o lo que necesites
@@ -360,6 +361,7 @@ void Juego::actualizar() {
 
             if (proyectil && goku->collidesWithItem(proyectil)) {
                 //goku->animarCaida();
+                //mostrarGameOver();
                 qDebug() << "Goku ha sido golpeado por un disparo enemigo.";
                 return;
             }
@@ -396,12 +398,12 @@ void Juego::actualizar() {
         if (goku->collidesWithItem(o)) {
             qreal obstY = o->y();
             qreal gokuY = goku->y();
-            //qDebug() << obstY << gokuY;
             qDebug() << std::abs(obstY - gokuY);
 
             // ⚠️ Tolerancia para colisión en el suelo
             if (std::abs(obstY - gokuY) < 390) {
                 goku->animarCaida();
+                mostrarGameOver();
                 qDebug() << "✅ Goku ha chocado con obstáculo en el suelo.";
                 return;
             }
@@ -420,8 +422,8 @@ void Juego::actualizar() {
 
                 if (obstSobrePlataforma && gokuSobrePlataforma &&
                     p->collidesWithItem(o) && p->collidesWithItem(goku)) {
-
                     goku->animarCaida();
+                    mostrarGameOver();
                     qDebug() << "✅ Goku ha chocado con obstáculo sobre plataforma.";
                     return;
                 }
@@ -462,11 +464,6 @@ void Juego::actualizar() {
             }
         }
     }
-
-    // Dentro de Juego::actualizar(): TRONCO
-    //if (!troncosGiratorios.isEmpty() && QRandomGenerator::global()->bounded(0, 100) > 95) {
-    //        actualizarTroncosGiratorios();
-    //  }
 }
 
 void Juego::generarEnemigo() {
@@ -886,6 +883,7 @@ void Juego::actualizarTronco() {
     // 3. Detección de colisión con Goku (PRIMERO verifica esto)
     if (troncoActual.sprite->collidesWithItem(goku)) {
         goku->animarCaida();
+        mostrarGameOver();
         qDebug() << "Goku golpeado por el tronco";
 
         // Eliminar tronco y programar nuevo
@@ -1252,6 +1250,107 @@ void Juego::actualizarDecoracion()
             decoracionPalmeras.append(palmera);
         }
     }
+}
+
+void Juego::mostrarGameOver() {
+    detenerTodo();
+
+    // Mostrar mensaje de Game Over
+    QGraphicsTextItem* gameOverText = new QGraphicsTextItem("GAME OVER");
+    gameOverText->setDefaultTextColor(Qt::red);
+    gameOverText->setFont(QFont(dragonBallFont, 72, QFont::Bold));
+
+    QGraphicsDropShadowEffect* shadow = new QGraphicsDropShadowEffect();
+    shadow->setBlurRadius(10);
+    shadow->setColor(Qt::black);
+    shadow->setOffset(5, 5);
+    gameOverText->setGraphicsEffect(shadow);
+
+    gameOverText->setPos(width()/2 - gameOverText->boundingRect().width()/2,
+                         height()/2 - 100);
+    gameOverText->setZValue(1000);
+    escena->addItem(gameOverText);
+
+    // Emitir señal para notificar a MainWindow
+    emit gameOver();
+}
+
+void Juego::reiniciarJuego() {
+    // Limpiar todos los elementos del juego
+    detenerTodo();
+
+    // Limpiar enemigos
+    for (auto enemigo : enemigos) {
+        enemigo->eliminarProyectiles();
+        escena->removeItem(enemigo);
+        delete enemigo;
+    }
+    enemigos.clear();
+
+    // Limpiar cápsulas
+    for (auto capsula : capsulas) {
+        escena->removeItem(capsula);
+        delete capsula;
+    }
+    capsulas.clear();
+
+    // Limpiar plataformas
+    for (auto plataforma : plataformas) {
+        escena->removeItem(plataforma);
+        delete plataforma;
+    }
+    plataformas.clear();
+
+    // Limpiar obstáculos
+    for (auto obstaculo : obstaculos) {
+        escena->removeItem(obstaculo);
+        delete obstaculo;
+    }
+    obstaculos.clear();
+
+    // Limpiar cuerdas
+    for (auto& cuerda : cuerdas) {
+        escena->removeItem(cuerda.cuerdaItem);
+        if (cuerda.gokuSprite) escena->removeItem(cuerda.gokuSprite);
+        delete cuerda.cuerdaItem;
+        delete cuerda.gokuSprite;
+    }
+    cuerdas.clear();
+
+    // Reiniciar tronco
+    if (troncoActual.sprite) {
+        escena->removeItem(troncoActual.sprite);
+        delete troncoActual.sprite;
+        troncoActual.sprite = nullptr;
+    }
+
+    // Reiniciar variables de estado
+    velocidadScroll = 3.0;
+    soldadosEliminados = 0;
+    pausado = false;
+    gokuEnCuerda = false;
+
+    // Reiniciar Goku
+    goku->setPos(0, 450);
+    goku->setVisible(true);
+
+    // Reiniciar contador de soldados (usando el mismo formato que en el constructor)
+    contadorSoldados->setHtml(
+        "<div style='color: #ffcc00; font-family: \"" + dragonBallFont + "\"; font-size: 18px; "
+                                                                         "font-weight: bold; text-shadow: 3px 3px 5px #000000; letter-spacing: 2px;'>"
+                                                                         "ENEMIGOS: <span style='color: #ffffff;'>0</span>/" + QString::number(OBJETIVO_SOLDADOS) +
+        "</div>"
+        );
+
+    // Reiniciar barra de energía
+    actualizarBarraEnergia();
+
+    // Volver a generar elementos iniciales
+    generarPlataforma();
+    QTimer::singleShot(7000, this, &Juego::generarTroncoUnico);
+
+    // Iniciar juego nuevamente
+    iniciar();
 }
 
 Juego::~Juego() {

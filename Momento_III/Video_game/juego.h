@@ -30,10 +30,13 @@ public:
     bool estaPausado() const { return pausado; }
     void detenerTodo();
     void reanudarTodo();
+    void mostrarGameOver();
+    void reiniciarJuego();
     ~Juego();
 
 signals:
     void salirAlMenu();
+    void gameOver();
 
 private slots:
     void actualizar();

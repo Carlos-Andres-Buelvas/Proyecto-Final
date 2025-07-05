@@ -82,6 +82,50 @@ void MainWindow::on_newGameButton_clicked() {
             this->show();
         });
 
+        // Nueva conexión para manejar game over
+        connect(juego, &Juego::gameOver, this, [this]() {
+            juego->hide();
+            this->show();
+
+            // Mostrar mensaje de game over con opciones
+            QMessageBox msgBox;
+            msgBox.setWindowTitle("Game Over");
+            msgBox.setText("¡Has perdido! ¿Qué quieres hacer?");
+
+            QPushButton *reintentarButton = msgBox.addButton("Reintentar", QMessageBox::ActionRole);
+            QPushButton *menuButton = msgBox.addButton("Menú Principal", QMessageBox::ActionRole);
+            msgBox.setDefaultButton(reintentarButton);
+
+            // Estilo personalizado para el QMessageBox
+            msgBox.setStyleSheet(
+                "QMessageBox {"
+                "   background-color: #2c3e50;"
+                "   color: white;"
+                "}"
+                "QMessageBox QLabel {"
+                "   color: white;"
+                "   font: bold 16px;"
+                "}"
+                "QMessageBox QPushButton {"
+                "   background-color: #e74c3c;"
+                "   color: white;"
+                "   border-radius: 5px;"
+                "   padding: 5px 10px;"
+                "   min-width: 80px;"
+                "}"
+                "QMessageBox QPushButton:hover {"
+                "   background-color: #c0392b;"
+                "}"
+                );
+
+            msgBox.exec();
+
+            if (msgBox.clickedButton() == reintentarButton) {
+                on_newGameButton_clicked(); // Llama recursivamente para reiniciar
+            }
+            // Si elige menuButton, ya estamos en el menú principal
+        });
+
         this->hide();
 
         // Crear texto del título con estilo Dragon Ball
