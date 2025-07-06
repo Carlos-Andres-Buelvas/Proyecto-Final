@@ -5,6 +5,7 @@
 #include <QTimer>
 #include <QRandomGenerator>
 #include <cmath>
+#include <QDebug>
 
 // Constructor del enemigo
 Enemigo::Enemigo(float x, float y, float ancho, float alto, Goku* gokuRef)
@@ -33,6 +34,18 @@ Enemigo::Enemigo(float x, float y, float ancho, float alto, Goku* gokuRef)
             disparar(scene());
         }
     });
+
+//NIVEL 2:
+
+    // Dirección inicial aleatoria
+    QStringList direcciones = { "arriba", "abajo", "izquierda", "derecha" };
+    direccionActual = direcciones.at(QRandomGenerator::global()->bounded(4));
+
+    // Timer para patrullar
+    timerPatrulla = new QTimer(this);
+    connect(timerPatrulla, &QTimer::timeout, this, &Enemigo::patrullar);
+    timerPatrulla->start(100);  // cada 100 ms
+
 }
 
 // Cargar frames de la hoja de sprites
@@ -192,5 +205,55 @@ void Enemigo::setPausado(bool pausa) {
             timerDisparo->start(1000);
         }
         reanudarProyectiles();
+    }
+}
+
+//NIVEL 2:
+
+void Enemigo::disparar2(QGraphicsScene* escena) {
+    // implementación temporal vacía para compilar
+}
+
+void Enemigo::cargarAnimacionesNivel2(int tileW, int tileH) {
+    QPixmap spriteSheet(":/sprites/Pictures/soldados.png");
+    int frameW = 100;
+    int frameH = 100;
+
+    framesArriba.clear();
+    framesAbajo.clear();
+    framesIzquierda.clear();
+    framesDerecha.clear();
+
+    for (int i = 0; i < 3; ++i) {
+        framesAbajo.append(spriteSheet.copy(i * frameW, 0 * frameH, frameW, frameH).scaled(tileW, tileH, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+        framesIzquierda.append(spriteSheet.copy(i * frameW, 1 * frameH, frameW, frameH).scaled(tileW, tileH, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+        framesDerecha.append(spriteSheet.copy(i * frameW, 2 * frameH, frameW, frameH).scaled(tileW, tileH, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+        framesArriba.append(spriteSheet.copy(i * frameW, 3 * frameH, frameW, frameH).scaled(tileW, tileH, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    }
+
+    setPixmap(framesAbajo[0]);
+}
+
+
+void Enemigo::patrullar() {
+    qDebug()<<"Patrullando";
+    // Probar próxima posición sin moverse aún
+    int paso = 4;
+    QPointF nuevaPos = pos();
+
+    if (direccionActual == "arriba") nuevaPos.ry() -= paso;
+    else if (direccionActual == "abajo") nuevaPos.ry() += paso;
+    else if (direccionActual == "izquierda") nuevaPos.rx() -= paso;
+    else if (direccionActual == "derecha") nuevaPos.rx() += paso;
+
+    // Si no choca con muro, avanzar
+    if (!colisionaConMuro(nuevaPos, scene())) {
+        mover2(direccionActual);
+    } else {
+        // Cambiar de dirección si choca
+        QStringList nuevasDirecciones = { "arriba", "abajo", "izquierda", "derecha" };
+        nuevasDirecciones.removeAll(direccionActual); // evitar repetir
+
+        direccionActual = nuevasDirecciones.at(QRandomGenerator::global()->bounded(nuevasDirecciones.size()));
     }
 }

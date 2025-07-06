@@ -17,6 +17,10 @@ Goku::Goku(float x, float y, float ancho, float alto)
 
     disparoTimer = new QTimer(this);
     connect(disparoTimer, &QTimer::timeout, this, &Goku::animarDisparoFrame);
+
+//NIVEL 2:
+    setFlag(QGraphicsItem::ItemIsFocusable);
+    setFocus();
 }
 
 // Cargar animaciones (correr, caer, disparo, cuerda)
@@ -249,4 +253,44 @@ bool Goku::estaForzandoCaida() const {
 // Cancela el estado de caída forzada
 void Goku::cancelarCaidaForzada() {
     forzarCaidaManual = false;
+}
+
+//NIVEL 2
+
+void Goku::cargarAnimacionesNivel2() {
+    QPixmap sheet(":/sprites/Pictures/goku_pixel.png");
+    int originalW = 150;
+    int originalH = 150;
+
+    // Tamaño final deseado según tu mapa (ajústalo si hiciste más columnas/filas)
+    int tileW = 55;
+    int tileH = 38;
+
+    framesArriba.clear();
+    framesAbajo.clear();
+    framesIzquierda.clear();
+    framesDerecha.clear();
+
+    for (int i = 0; i < 4; ++i) {
+        framesAbajo.append(sheet.copy(i * originalW, 0 * originalH, originalW, originalH).scaled(tileW, tileH, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+        framesIzquierda.append(sheet.copy(i * originalW, 1 * originalH, originalW, originalH).scaled(tileW, tileH, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+        framesDerecha.append(sheet.copy(i * originalW, 2 * originalH, originalW, originalH).scaled(tileW, tileH, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+        framesArriba.append(sheet.copy(i * originalW, 3 * originalH, originalW, originalH).scaled(tileW, tileH, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    }
+
+    setPixmap(framesAbajo[0]);
+}
+
+void Goku::disparar2(QGraphicsScene* escena) {
+    // implementación temporal vacía para compilar
+}
+
+void Goku::keyPressEvent(QKeyEvent* event) {
+    switch (event->key()) {
+    case Qt::Key_W: mover2("arriba"); break;
+    case Qt::Key_S: mover2("abajo"); break;
+    case Qt::Key_A: mover2("izquierda"); break;
+    case Qt::Key_D: mover2("derecha"); break;
+    default: break;
+    }
 }

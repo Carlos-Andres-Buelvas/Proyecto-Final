@@ -12,6 +12,7 @@ SOURCES += \
     enemigo.cpp \
     goku.cpp \
     juego.cpp \
+    juego2.cpp \
     main.cpp \
     mainwindow.cpp \
     personaje.cpp
@@ -20,6 +21,7 @@ HEADERS += \
     enemigo.h \
     goku.h \
     juego.h \
+    juego2.h \
     mainwindow.h \
     personaje.h
 

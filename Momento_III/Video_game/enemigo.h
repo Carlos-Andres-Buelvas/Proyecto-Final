@@ -26,6 +26,14 @@ public:
 
     QVector<QPair<QGraphicsEllipseItem*, QTimer*>> proyectilesActivos; // Proyectiles en escena
 
+//NIVEL 2:
+    void disparar2(QGraphicsScene* escena) override;
+    void cargarAnimacionesNivel2(int tileW, int tileH);
+
+private slots:
+//NIVEL 2:
+    void patrullar();
+
 private:
     void cargarAnimaciones();                    // Carga sprites de movimiento
     void iniciarDisparo();                       // Inicia ciclo de disparo
@@ -35,9 +43,6 @@ private:
     EstadoEnemigo estado = Patrullando;
 
     Goku* gokuDetectado = nullptr;               // Referencia a Goku para detección
-
-    QVector<QPixmap> framesIzquierda;            // Animaciones hacia la izquierda
-    QVector<QPixmap> framesDerecha;              // Animaciones hacia la derecha
 
     int direccion;                               // -1: izquierda, 1: derecha
     int frameActual;                             // Frame actual de la animación
@@ -49,6 +54,11 @@ private:
     bool disparando = false;                     // Si actualmente está disparando
 
     QTimer* timerDisparo;                        // Temporizador para disparar
+
+//NIVEL 2
+    QTimer* timerPatrulla;
+    QString direccionActual;
+    Personaje* objetivo;  // Goku
 };
 
 #endif // ENEMIGO_H

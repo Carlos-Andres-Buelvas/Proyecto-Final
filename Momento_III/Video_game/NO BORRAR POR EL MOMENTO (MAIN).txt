@@ -1,4 +1,3 @@
-/*
 #include "mainwindow.h"
 #include <QApplication>
 
@@ -12,16 +11,3 @@ int main(int argc, char *argv[])
 
     return a.exec();             // Ejecuta el bucle principal de eventos
 }
-*/
-#include <QApplication>
-#include "juego2.h"
-
-int main(int argc, char *argv[]) {
-    QApplication a(argc, argv);
-
-    Juego2* juego2 = new Juego2();
-    juego2->show();
-
-    return a.exec();
-}
-

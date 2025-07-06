@@ -53,6 +53,11 @@ public:
     bool teclaWSostenida = false;    // Si W está presionada
     bool cayendoLento = false;       // Control de caída suave
 
+//NIVEL 2:
+    void disparar2(QGraphicsScene* escena) override;
+    void keyPressEvent(QKeyEvent* event) override;
+    void cargarAnimacionesNivel2();
+
 private:
     // Animaciones
     QVector<QPixmap> framesCorrer;
