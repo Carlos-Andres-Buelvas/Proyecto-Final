@@ -32,7 +32,7 @@
         <file>Pictures/palmera_2.png</file>
         <file>Pictures/palmera_3.png</file>
         <file>Pictures/palmera_4.png</file>
-        <file>Pictures/fondo_nivel2.jpg</file>
         <file>Pictures/textura_roca.png</file>
+        <file>Pictures/fondo_nivel2.jpg</file>
     </qresource>
 </RCC>

@@ -15,10 +15,6 @@ public:
     void cargarMapa(const QString& archivo);
     Goku* goku = nullptr;
 
-    //static Juego2* instancia;
-    //static void registrarInstancia(Juego2* ref);
-    //static Juego2* obtenerInstancia();
-
     void actualizarBarraEnergia();
     void eliminarEnemigo(Enemigo* enemigo);
 private slots:
@@ -39,7 +35,7 @@ private:
     void abrirPuerta();
 
 
-    QGraphicsRectItem* fondoEnergia = nullptr;
+    //QGraphicsRectItem* fondoEnergia = nullptr;
     QGraphicsRectItem* barraEnergia = nullptr;
     QGraphicsTextItem* textoLlaves = nullptr;
 

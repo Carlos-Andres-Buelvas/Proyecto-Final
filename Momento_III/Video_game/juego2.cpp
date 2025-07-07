@@ -4,6 +4,9 @@
 #include <QTextStream>
 #include <QDebug>
 #include <QMessageBox>
+#include <QTimeLine>
+#include <QGraphicsColorizeEffect>
+#include <QFontDatabase>
 
 Juego2::Juego2(QWidget* parent) : QGraphicsView(parent) {
     escena = new QGraphicsScene(this);
@@ -12,6 +15,22 @@ Juego2::Juego2(QWidget* parent) : QGraphicsView(parent) {
     setFixedSize(1280, 680);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
+    // 🎯 Cargar fuente Dragon Ball
+    QString dragonBallFont;
+    int fontId = QFontDatabase::addApplicationFont(":/fondos/Pictures/db_font.ttf");
+    if (fontId == -1) {
+        qDebug() << "Error al cargar la fuente Dragon Ball";
+        dragonBallFont = "Arial";
+    } else {
+        QStringList fontFamilies = QFontDatabase::applicationFontFamilies(fontId);
+        if (!fontFamilies.isEmpty()) {
+            dragonBallFont = fontFamilies.first();
+        } else {
+            qDebug() << "No se encontraron familias de fuentes";
+            dragonBallFont = "Arial";
+        }
+    }
 
     // 🔶 Fondo de nivel 2
     QPixmap fondo(":/fondos/Pictures/fondo_nivel2.jpg");
@@ -24,28 +43,40 @@ Juego2::Juego2(QWidget* parent) : QGraphicsView(parent) {
 
     cargarMapa("");
 
-    // 🔋 Barra de energía casera
-    fondoEnergia = escena->addRect(0, 0, 104, 14, QPen(Qt::black), QBrush(Qt::black));
-    fondoEnergia->setZValue(10);
-    fondoEnergia->setPos(10, 40);
-
-    barraEnergia = escena->addRect(0, 0, 0, 10, QPen(Qt::gray), QBrush(Qt::gray));
+    // 🔋 Barra de energía visual estilo nivel 1
+    barraEnergia = new QGraphicsRectItem(25, 25, 0, 20);
+    QLinearGradient gradEnergia(0, 0, 200, 0);
+    gradEnergia.setColorAt(0, QColor(255, 255, 0));    // amarillo
+    gradEnergia.setColorAt(0.5, QColor(255, 165, 0));  // naranja
+    gradEnergia.setColorAt(1, QColor(255, 0, 0));      // rojo
+    barraEnergia->setBrush(QBrush(gradEnergia));
+    barraEnergia->setPen(QPen(QColor(255, 215, 0), 2));  // borde dorado
     barraEnergia->setZValue(11);
-    barraEnergia->setPos(12, 42);
+    barraEnergia->setPos(1050, 0);
+    escena->addItem(barraEnergia);
 
-    // 🔑 Texto de llaves
-    textoLlaves = new QGraphicsTextItem("Llaves: 0/4");
-    textoLlaves->setDefaultTextColor(Qt::white);
-    textoLlaves->setFont(QFont("Arial", 14, QFont::Bold));
+    // 🟨 Texto "ENERGIA" con fuente Dragon Ball
+    QGraphicsTextItem* energiaText = new QGraphicsTextItem("ENERGIA");
+    energiaText->setDefaultTextColor(QColor(255, 215, 0));
+    energiaText->setFont(QFont(dragonBallFont, 16, QFont::Bold));
+    energiaText->setPos(1070, 0);
+    energiaText->setZValue(12);
+    escena->addItem(energiaText);
+
+    // 🔑 Texto de llaves con fuente Dragon Ball
+    textoLlaves = new QGraphicsTextItem();
+    textoLlaves->setHtml(
+        "<div style='color: #ffcc00; font-family: \"" + dragonBallFont + "\"; font-size: 18px; "
+                                                                         "font-weight: bold; text-shadow: 3px 3px 5px #000000; letter-spacing: 2px;'>"
+                                                                         "LLAVES: <span style='color: #ffffff;'>0</span>/4</div>"
+        );
     textoLlaves->setZValue(12);
-    textoLlaves->setPos(10, 10);
+    textoLlaves->setPos(1070, 40);  // 📍 Evita solaparse con barra energía
     escena->addItem(textoLlaves);
 
     QTimer* timerActualizar = new QTimer(this);
     connect(timerActualizar, &QTimer::timeout, this, &Juego2::actualizar);
     timerActualizar->start(100);  // cada 100 ms
-
-    //Juego2::registrarInstancia(this);
 }
 
 void Juego2::actualizar() {
@@ -231,13 +262,37 @@ void Juego2::cargarMapa(const QString&) {
 void Juego2::actualizarBarraEnergia() {
     if (!goku || !barraEnergia) return;
 
-    int energia = goku->obtenerEnergia();  // de 0 a 100
-    barraEnergia->setRect(0, 0, energia, 10);
+    float porcentaje = static_cast<float>(goku->obtenerEnergia()) / 100.0f;
+    QRectF targetRect(25, 25, porcentaje * 200, 20);  // ancho dinámico
 
-    if (energia >= 100)
-        barraEnergia->setBrush(Qt::yellow);  // llena
-    else
-        barraEnergia->setBrush(Qt::gray);    // vacía o en proceso
+    QTimeLine* anim = new QTimeLine(200, this);  // 200ms de animación
+    anim->setFrameRange(0, 100);
+
+    QRectF rectInicio = barraEnergia->rect();  // valor actual
+
+    connect(anim, &QTimeLine::frameChanged, [=](int frame) {
+        qreal progress = anim->currentValue();
+        QRectF interpolado(
+            rectInicio.x(),
+            rectInicio.y(),
+            rectInicio.width() + (targetRect.width() - rectInicio.width()) * progress,
+            rectInicio.height()
+            );
+        barraEnergia->setRect(interpolado);
+    });
+
+    connect(anim, &QTimeLine::finished, anim, &QTimeLine::deleteLater);
+    anim->start();
+
+    // Efecto brillante cuando está llena
+    if (goku->puedeDisparar()) {
+        QGraphicsColorizeEffect* efecto = new QGraphicsColorizeEffect(this);
+        efecto->setColor(QColor(255, 255, 255, 150));
+        barraEnergia->setGraphicsEffect(efecto);
+        QTimer::singleShot(500, this, [=]() {
+            barraEnergia->setGraphicsEffect(nullptr);
+        });
+    }
 }
 
 void Juego2::actualizarContadorLlaves() {
@@ -253,17 +308,7 @@ void Juego2::abrirPuerta() {
         puerta = nullptr;
     }
 }
-/*
-Juego2* Juego2::instancia = nullptr;
 
-void Juego2::registrarInstancia(Juego2* ref) {
-    instancia = ref;
-}
-
-Juego2* Juego2::obtenerInstancia() {
-    return instancia;
-}
-*/
 void Juego2::eliminarEnemigo(Enemigo* enemigo) {
     if (!enemigo) return;
 

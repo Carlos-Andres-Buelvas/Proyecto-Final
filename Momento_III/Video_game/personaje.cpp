@@ -101,9 +101,12 @@ void Personaje::disparar2(QGraphicsScene* escena) {
         });
 
         timer->start(20);
-        //
         goku->reiniciarEnergia();
-        emit actualizarBarraEnergiaSignal();
+
+        QTimer::singleShot(1, goku, [=](){
+            emit actualizarBarraEnergiaSignal();
+        });
+
 
     } else if (tipo == "enemigo") {
         if (proyectilesActivos.size() >= 30) return;
