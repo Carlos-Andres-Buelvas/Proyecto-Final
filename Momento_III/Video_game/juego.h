@@ -42,6 +42,7 @@ public:
 signals:
     void salirAlMenu();   // Vuelve a MainWindow
     void gameOver();      // Señal de finalización
+    void nivelCompletado();  // 🔔 Nivel 1 finalizado
 
 private slots:
     void actualizar();             // Ciclo principal
@@ -96,7 +97,7 @@ private:
     bool pPresionado = false;
     bool gokuEnCuerda = false;
     int soldadosEliminados = 0;
-    const int OBJETIVO_SOLDADOS = 5;
+    const int OBJETIVO_SOLDADOS = 3;
 
     // Estructura de la cuerda
     struct Cuerda {

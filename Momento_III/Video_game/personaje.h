@@ -19,9 +19,12 @@ public:
 //NIVEL 2:
 
     // Nuevos métodos para nivel 2 (cenital)
-    virtual void mover2(const QString& direccion);
-    virtual void disparar2(QGraphicsScene* escena) = 0;
+    void mover2(const QString& direccion);
+    void disparar2(QGraphicsScene* escena);
     bool colisionaConMuro(const QPointF& nuevaPos, QGraphicsScene* escena);
+
+signals:
+    void actualizarBarraEnergiaSignal();
 
 protected:
     // Atributos físicos y visuales del personaje
@@ -35,6 +38,10 @@ protected:
     QVector<QPixmap> framesAbajo;
     QVector<QPixmap> framesIzquierda;
     QVector<QPixmap> framesDerecha;
+
+    //QVector<QGraphicsItem*> proyectilesActivos;
+    QVector<QPair<QGraphicsEllipseItem*, QTimer*>> proyectilesActivos;
+    QString tipo;
 };
 
 #endif // PERSONAJE_H

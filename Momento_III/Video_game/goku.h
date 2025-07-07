@@ -33,7 +33,7 @@ public:
     void reiniciarEnergia() { energia = 0; }
     void aumentarEnergia(int cantidad) {
         energia += cantidad;
-        if (energia > energiaMaxima) energia = energiaMaxima;
+        if (energia >= energiaMaxima) energia = energiaMaxima;
     }
     int obtenerEnergia() const { return energia; }
 
@@ -54,9 +54,10 @@ public:
     bool cayendoLento = false;       // Control de caída suave
 
 //NIVEL 2:
-    void disparar2(QGraphicsScene* escena) override;
+    //void disparar2(QGraphicsScene* escena) override;
     void keyPressEvent(QKeyEvent* event) override;
     void cargarAnimacionesNivel2();
+    QString direccionActual = "derecha";
 
 private:
     // Animaciones

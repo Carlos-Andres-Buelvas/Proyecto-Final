@@ -21,6 +21,7 @@ Goku::Goku(float x, float y, float ancho, float alto)
 //NIVEL 2:
     setFlag(QGraphicsItem::ItemIsFocusable);
     setFocus();
+    tipo = "goku";
 }
 
 // Cargar animaciones (correr, caer, disparo, cuerda)
@@ -281,16 +282,17 @@ void Goku::cargarAnimacionesNivel2() {
     setPixmap(framesAbajo[0]);
 }
 
-void Goku::disparar2(QGraphicsScene* escena) {
-    // implementación temporal vacía para compilar
-}
-
 void Goku::keyPressEvent(QKeyEvent* event) {
     switch (event->key()) {
     case Qt::Key_W: mover2("arriba"); break;
     case Qt::Key_S: mover2("abajo"); break;
     case Qt::Key_A: mover2("izquierda"); break;
     case Qt::Key_D: mover2("derecha"); break;
+    case Qt::Key_P:
+        if (energia >= 100) {
+            disparar2(scene());
+        }
+        break;
     default: break;
     }
 }

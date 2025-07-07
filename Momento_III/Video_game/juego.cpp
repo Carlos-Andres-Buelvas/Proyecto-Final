@@ -1,5 +1,6 @@
 #include "juego.h"
 #include "enemigo.h"
+#include "mainwindow.h"
 #include <QGraphicsPixmapItem>
 #include <QKeyEvent>
 #include <QRandomGenerator>
@@ -238,6 +239,9 @@ Juego::Juego(QWidget *parent) : QGraphicsView(parent), timerAnimacionCuerda(null
     timerGameOver = new QTimer(this);
     timerGameOver->setSingleShot(true);
     connect(timerGameOver, &QTimer::timeout, this, &Juego::mostrarMenuGameOver);
+
+    this->show();
+    this->setFocus();
 }
 
 void Juego::iniciar() {
@@ -479,7 +483,7 @@ void Juego::generarEnemigo() {
         int y = 510; // Valor de Y para el suelo (ajusta según necesites)
 
         // Crear el enemigo
-        Enemigo* enemigo = new Enemigo(x, y, 100, 100, goku);
+        Enemigo* enemigo = new Enemigo(x, y, 100, 100, goku, false);
         enemigo->setPos(x, y);
         escena->addItem(enemigo);
         enemigos.append(enemigo);
@@ -541,19 +545,23 @@ void Juego::aumentarContadorSoldados() {
 
     if (soldadosEliminados >= OBJETIVO_SOLDADOS) {
         detenerTodo();
-        QGraphicsTextItem* nivelCompletado = new QGraphicsTextItem("NIVEL COMPLETADO");
-        nivelCompletado->setDefaultTextColor(QColor(255, 215, 0));
-        nivelCompletado->setFont(QFont(dragonBallFont, 36));
-        nivelCompletado->setPos(width()/2 - nivelCompletado->boundingRect().width()/2, height()/2 - 50);
+        QGraphicsTextItem* textoNivelCompletado = new QGraphicsTextItem("NIVEL COMPLETADO");
+        textoNivelCompletado->setDefaultTextColor(QColor(255, 215, 0));
+        textoNivelCompletado->setFont(QFont(dragonBallFont, 36));
+        textoNivelCompletado->setPos(width()/2 - textoNivelCompletado->boundingRect().width()/2, height()/2 - 50);
 
         QGraphicsDropShadowEffect* shadow = new QGraphicsDropShadowEffect();
         shadow->setBlurRadius(10);
         shadow->setColor(Qt::black);
         shadow->setOffset(5, 5);
-        nivelCompletado->setGraphicsEffect(shadow);
+        textoNivelCompletado->setGraphicsEffect(shadow);
 
-        nivelCompletado->setZValue(1001);
-        escena->addItem(nivelCompletado);
+        textoNivelCompletado->setZValue(1001);
+        escena->addItem(textoNivelCompletado);
+
+        QTimer::singleShot(2000, this, [this]() {
+            emit nivelCompletado();  // 🔔 Notifica que debe iniciar el nivel 2
+        });
     }
 }
 

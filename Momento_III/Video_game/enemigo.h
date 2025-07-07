@@ -13,7 +13,7 @@ class Enemigo : public Personaje {
     Q_OBJECT
 
 public:
-    Enemigo(float x, float y, float ancho, float alto, Goku* gokuRef);
+    Enemigo(float x, float y, float ancho, float alto, Goku* gokuRef, bool esNivel2 = false);
 
     void mover() override;                        // Movimiento del enemigo
     void disparar(QGraphicsScene* escena) override; // Disparo si detecta a Goku
@@ -27,8 +27,15 @@ public:
     QVector<QPair<QGraphicsEllipseItem*, QTimer*>> proyectilesActivos; // Proyectiles en escena
 
 //NIVEL 2:
-    void disparar2(QGraphicsScene* escena) override;
     void cargarAnimacionesNivel2(int tileW, int tileH);
+    QTimer* timerDisparo2 = nullptr;      // Para controlar la frecuencia de disparo
+    int tiempoEsperaDisparo = 2000;      // 2 segundos de espera entre disparos
+
+
+    int getFrameActual() const;
+    Personaje* getGoku() const;
+    void setDisparandoNivel2(bool valor);
+    bool isDisparandoNivel2() const;
 
 private slots:
 //NIVEL 2:
@@ -58,7 +65,10 @@ private:
 //NIVEL 2
     QTimer* timerPatrulla;
     QString direccionActual;
-    Personaje* objetivo;  // Goku
+    Personaje* goku;  // Goku
+
+    bool disparandoNivel2 = false;
+
 };
 
 #endif // ENEMIGO_H

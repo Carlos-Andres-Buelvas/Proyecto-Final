@@ -8,7 +8,7 @@
 #include <QDebug>
 
 // Constructor del enemigo
-Enemigo::Enemigo(float x, float y, float ancho, float alto, Goku* gokuRef)
+Enemigo::Enemigo(float x, float y, float ancho, float alto, Goku* gokuRef, bool esNivel2)
     : Personaje(x, y, ancho, alto),
     gokuDetectado(gokuRef),
     direccion(1),
@@ -20,32 +20,49 @@ Enemigo::Enemigo(float x, float y, float ancho, float alto, Goku* gokuRef)
     disparando(false),
     timerDisparo(new QTimer(this))
 {
-    this->ancho *= 1.5;
-    this->alto *= 1.5;
+    if (!esNivel2) {
+        this->ancho *= 1.5;
+        this->alto *= 1.5;
 
-    cargarAnimaciones();
-    setPixmap(framesDerecha[0].scaled(this->ancho, this->alto, Qt::KeepAspectRatio, Qt::SmoothTransformation));
-    posX = x;
-    posY = y;
+        cargarAnimaciones();
+        setPixmap(framesDerecha[0].scaled(this->ancho, this->alto, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+        posX = x;
+        posY = y;
 
-    // Inicia el disparo cuando el temporizador lo indique
-    connect(timerDisparo, &QTimer::timeout, this, [=]() {
-        if (scene()) {
-            disparar(scene());
-        }
-    });
+        // Inicia el disparo cuando el temporizador lo indique
+        connect(timerDisparo, &QTimer::timeout, this, [=]() {
+            if (scene()) {
+                disparar(scene());
+            }
+        });
+    }
 
 //NIVEL 2:
 
-    // Dirección inicial aleatoria
-    QStringList direcciones = { "arriba", "abajo", "izquierda", "derecha" };
-    direccionActual = direcciones.at(QRandomGenerator::global()->bounded(4));
+    else {
+        tipo = "enemigo";
+        goku = gokuRef;
+        // Dirección inicial aleatoria
+        QStringList direcciones = { "arriba", "abajo", "izquierda", "derecha" };
+        direccionActual = direcciones.at(QRandomGenerator::global()->bounded(4));
 
-    // Timer para patrullar
-    timerPatrulla = new QTimer(this);
-    connect(timerPatrulla, &QTimer::timeout, this, &Enemigo::patrullar);
-    timerPatrulla->start(100);  // cada 100 ms
+        // Timer para patrullar
+        timerPatrulla = new QTimer(this);
+        connect(timerPatrulla, &QTimer::timeout, this, &Enemigo::patrullar);
+        timerPatrulla->start(100);  // cada 100 ms
 
+        timerDisparo2 = new QTimer(this);
+        timerDisparo2->setInterval(tiempoEsperaDisparo);
+        connect(timerDisparo2, &QTimer::timeout, this, [this]() {
+            if (this->goku && this->scene()){
+                qreal distancia = QLineF(this->pos(), this->goku->pos()).length();
+                if (distancia < 250) {
+                    this->disparar2(scene());
+                }
+            }
+        });
+        timerDisparo2->start();
+    }
 }
 
 // Cargar frames de la hoja de sprites
@@ -210,10 +227,6 @@ void Enemigo::setPausado(bool pausa) {
 
 //NIVEL 2:
 
-void Enemigo::disparar2(QGraphicsScene* escena) {
-    // implementación temporal vacía para compilar
-}
-
 void Enemigo::cargarAnimacionesNivel2(int tileW, int tileH) {
     QPixmap spriteSheet(":/sprites/Pictures/soldados.png");
     int frameW = 100;
@@ -234,9 +247,8 @@ void Enemigo::cargarAnimacionesNivel2(int tileW, int tileH) {
     setPixmap(framesAbajo[0]);
 }
 
-
 void Enemigo::patrullar() {
-    qDebug()<<"Patrullando";
+    if (disparandoNivel2) return;
     // Probar próxima posición sin moverse aún
     int paso = 4;
     QPointF nuevaPos = pos();
@@ -256,4 +268,20 @@ void Enemigo::patrullar() {
 
         direccionActual = nuevasDirecciones.at(QRandomGenerator::global()->bounded(nuevasDirecciones.size()));
     }
+}
+
+int Enemigo::getFrameActual() const{
+    return frameActual;
+}
+
+Personaje* Enemigo::getGoku() const {
+    return goku;
+}
+
+void Enemigo::setDisparandoNivel2(bool valor) {
+    disparandoNivel2 = valor;
+}
+
+bool Enemigo::isDisparandoNivel2() const {
+    return disparandoNivel2;
 }

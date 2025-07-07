@@ -13,13 +13,19 @@ class Juego2 : public QGraphicsView {
 public:
     explicit Juego2(QWidget* parent = nullptr);
     void cargarMapa(const QString& archivo);
+    Goku* goku = nullptr;
 
+    //static Juego2* instancia;
+    //static void registrarInstancia(Juego2* ref);
+    //static Juego2* obtenerInstancia();
+
+    void actualizarBarraEnergia();
+    void eliminarEnemigo(Enemigo* enemigo);
 private slots:
     void actualizar();
 
 private:
     QGraphicsScene* escena;
-    Goku* goku;
     QVector<Enemigo*> enemigos;
     QVector<QGraphicsPixmapItem*> llaves;
     QVector<QGraphicsPixmapItem*> capsulas;
@@ -31,6 +37,15 @@ private:
 
     void verificarVictoria();
     void abrirPuerta();
+
+
+    QGraphicsRectItem* fondoEnergia = nullptr;
+    QGraphicsRectItem* barraEnergia = nullptr;
+    QGraphicsTextItem* textoLlaves = nullptr;
+
+    void actualizarContadorLlaves();
+
+    bool nivelCompletado = false;
 };
 
 #endif // JUEGO2_H

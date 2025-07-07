@@ -5,6 +5,7 @@
 #include <QFontDatabase>  // Para manejo de fuentes personalizadas
 #include <QMessageBox>    // Para mostrar alertas o mensajes
 #include "juego.h"        // Incluye la clase principal del juego
+#include "juego2.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -15,6 +16,8 @@ class MainWindow : public QMainWindow {
 
 public:
     explicit MainWindow(QWidget *parent = nullptr);  // Constructor
+    void iniciarNivel1();
+    void iniciarNivel2(); // 🔹 Nuevo
     ~MainWindow();                                    // Destructor
 
 private slots:
@@ -22,10 +25,14 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    Juego* juego;                     // Referencia al objeto del juego
+    Juego* juego = nullptr;          // Referencia al objeto del juego
+    Juego2* juego2 = nullptr;
     QString dragonBallFont;          // Nombre de la fuente personalizada
 
     QString loadDragonBallFont();    // Carga y retorna la fuente Dragon Ball
+
+    void aplicarEstilosMenu();  // Aplica estilo y fuente a botones
+    void volverAlMenu();        // Retorna al menú principal
 };
 
 #endif // MAINWINDOW_H
