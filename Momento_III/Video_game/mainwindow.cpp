@@ -176,25 +176,88 @@ void MainWindow::on_newGameButton_clicked() {
 }
 
 void MainWindow::iniciarNivel2() {
-    if (juego) {
-        juego->hide();
-        setCentralWidget(nullptr);
-        juego->deleteLater();
-        juego = nullptr;
+    if (juego2) {
+        delete juego2;
+        juego2 = nullptr;
     }
 
-    juego2 = new Juego2(this);
-    setCentralWidget(juego2);
-    resize(1280, 680);
-    setFixedSize(1280, 680);
-    juego2->setFocusPolicy(Qt::StrongFocus);
-    juego2->setFocus();
+    try {
+        juego2 = new Juego2(this);
+        setCentralWidget(juego2);
+        resize(1280, 680);
+        setFixedSize(1280, 680);
+        juego2->setFocus();
+
+        juego2->mostrarTituloNivel();
+
+        disconnect(juego2, nullptr, this, nullptr);  // 👈 Detiene conexiones anteriores
+
+        connect(juego2, &Juego2::gameOver, this, [this]() {
+            if (!juego2) return;  // Por seguridad
+
+            juego2->hide();
+
+            static bool mostrado = false;
+            if (mostrado) return;
+            mostrado = true;
+
+            QMessageBox msgBox;
+            msgBox.setWindowTitle("Game Over");
+            msgBox.setText("¡Has perdido! ¿Qué quieres hacer?");
+
+            QPushButton *reintentar = msgBox.addButton("Reintentar", QMessageBox::AcceptRole);
+            QPushButton *menu = msgBox.addButton("Menú Principal", QMessageBox::RejectRole);
+            msgBox.setDefaultButton(reintentar);
+
+            msgBox.setStyleSheet(R"(
+        QMessageBox {
+            background-color: #2c3e50;
+            color: white;
+        }
+        QMessageBox QLabel {
+            color: white;
+            font: bold 16px;
+        }
+        QMessageBox QPushButton {
+            background-color: #e74c3c;
+            color: white;
+            border-radius: 5px;
+            padding: 5px 10px;
+            min-width: 80px;
+        }
+        QMessageBox QPushButton:hover {
+            background-color: #c0392b;
+        }
+    )");
+
+            msgBox.exec();
+            mostrado = false;
+
+            if (msgBox.clickedButton() == reintentar) {
+                iniciarNivel2();
+            } else {
+                volverAlMenu();
+            }
+        });
+
+    } catch (...) {
+        qCritical() << "Error desconocido al iniciar el nivel 2";
+        QMessageBox::critical(this, "Error", "No se pudo iniciar el nivel 2.");
+    }
 }
 
 void MainWindow::volverAlMenu() {
-    setCentralWidget(nullptr);  // Limpia el juego
-    delete juego;
-    juego = nullptr;
+    setCentralWidget(nullptr);
+
+    if (juego) {
+        delete juego;
+        juego = nullptr;
+    }
+
+    if (juego2) {
+        delete juego2;
+        juego2 = nullptr;
+    }
 
     // Vuelve al menú principal
     ui->setupUi(this);          // Recarga interfaz original

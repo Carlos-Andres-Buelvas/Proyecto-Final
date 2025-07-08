@@ -3,7 +3,7 @@
 #include <QApplication>
 #include <QScreen>
 
-#define DESARROLLO_NIVEL2  // 🔁 Comenta esta línea para volver al menú normal
+//#define DESARROLLO_NIVEL2  // 🔁 Comenta esta línea para volver al menú normal
 
 int main(int argc, char *argv[]) {
     QApplication a(argc, argv);

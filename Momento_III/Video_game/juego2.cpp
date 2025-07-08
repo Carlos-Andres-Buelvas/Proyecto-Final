@@ -17,7 +17,6 @@ Juego2::Juego2(QWidget* parent) : QGraphicsView(parent) {
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
     // 🎯 Cargar fuente Dragon Ball
-    QString dragonBallFont;
     int fontId = QFontDatabase::addApplicationFont(":/fondos/Pictures/db_font.ttf");
     if (fontId == -1) {
         qDebug() << "Error al cargar la fuente Dragon Ball";
@@ -115,6 +114,7 @@ void Juego2::actualizar() {
     for (Enemigo* enemigo : enemigos) {
         if (goku->collidesWithItem(enemigo)) {
             qDebug() << "Goku fue tocado por un soldado. GAME OVER.";
+            mostrarGameOver();
             // 🔻 Aquí puedes reiniciar el nivel o mostrar pantalla de derrota
             // ejemplo futuro: emit gameOver();
             return;
@@ -297,7 +297,13 @@ void Juego2::actualizarBarraEnergia() {
 
 void Juego2::actualizarContadorLlaves() {
     if (textoLlaves) {
-        textoLlaves->setPlainText(QString("Llaves: %1/%2").arg(llavesRecogidas).arg(TOTAL_LLAVES));
+        textoLlaves->setHtml(
+            "<div style='color: #ffcc00; font-family: \"" + dragonBallFont + "\"; font-size: 18px; "
+                                                                             "font-weight: bold; text-shadow: 3px 3px 5px #000000; letter-spacing: 2px;'>"
+                                                                             "LLAVES: <span style='color: #ffffff;'>" + QString::number(llavesRecogidas) + "</span>/" +
+            QString::number(TOTAL_LLAVES) +
+            "</div>"
+            );
     }
 }
 
@@ -307,6 +313,29 @@ void Juego2::abrirPuerta() {
         delete puerta;
         puerta = nullptr;
     }
+
+    // 🟨 Mostrar mensaje animado "PUERTA ABIERTA"
+    QGraphicsTextItem* mensajePuerta = new QGraphicsTextItem("PUERTA ABIERTA");
+    mensajePuerta->setDefaultTextColor(QColor(255, 215, 0));  // color dorado
+    mensajePuerta->setFont(QFont(dragonBallFont, 32, QFont::Bold));
+
+    mensajePuerta->setZValue(1001);
+    mensajePuerta->setPos(width()/2 - mensajePuerta->boundingRect().width()/2, height()/2 - 60);
+
+    // Sombra
+    QGraphicsDropShadowEffect* sombra = new QGraphicsDropShadowEffect();
+    sombra->setBlurRadius(8);
+    sombra->setColor(Qt::black);
+    sombra->setOffset(4, 4);
+    mensajePuerta->setGraphicsEffect(sombra);
+
+    escena->addItem(mensajePuerta);
+
+    // Eliminar mensaje después de 2.5 segundos
+    QTimer::singleShot(2500, this, [=]() {
+        escena->removeItem(mensajePuerta);
+        delete mensajePuerta;
+    });
 }
 
 void Juego2::eliminarEnemigo(Enemigo* enemigo) {
@@ -316,4 +345,64 @@ void Juego2::eliminarEnemigo(Enemigo* enemigo) {
     enemigos.removeOne(enemigo);
     escena->removeItem(enemigo);
     delete enemigo;
+}
+
+void Juego2::mostrarGameOver() {
+    if (gameOverMostrado) return;  // ✅ Evita duplicación
+    gameOverMostrado = true;
+
+    QGraphicsTextItem* textoGameOver = new QGraphicsTextItem("GAME OVER");
+    textoGameOver->setDefaultTextColor(Qt::red);
+    textoGameOver->setFont(QFont(dragonBallFont, 72, QFont::Bold));
+
+    QGraphicsDropShadowEffect* sombra = new QGraphicsDropShadowEffect();
+    sombra->setBlurRadius(10);
+    sombra->setColor(Qt::black);
+    sombra->setOffset(5, 5);
+    textoGameOver->setGraphicsEffect(sombra);
+
+    textoGameOver->setPos(width() / 2 - textoGameOver->boundingRect().width() / 2,
+                          height() / 2 - 100);
+    textoGameOver->setZValue(1000);
+    escena->addItem(textoGameOver);
+
+    // Emitir la señal SOLO UNA VEZ después de 3 segundos
+    QTimer::singleShot(3000, this, [this]() {
+        emit gameOver();  // ✅ Solo se emite una vez
+    });
+}
+
+void Juego2::iniciar() {
+    // Comienza el juego (activar timers, etc.)
+    // Por ahora vacío, pero lo puedes llenar si es necesario.
+}
+
+void Juego2::agregarItemEscena(QGraphicsItem* item) {
+    if (escena) escena->addItem(item);
+}
+
+void Juego2::removerItemEscena(QGraphicsItem* item) {
+    if (escena && item) escena->removeItem(item);
+}
+
+void Juego2::mostrarTituloNivel() {
+    QGraphicsTextItem* titulo = new QGraphicsTextItem("Nivel 2: Rescate de Bulma");
+    titulo->setFont(QFont(dragonBallFont, 24, QFont::Bold));
+    titulo->setDefaultTextColor(QColor(255, 215, 0));
+
+    QGraphicsDropShadowEffect* sombra = new QGraphicsDropShadowEffect();
+    sombra->setBlurRadius(10);
+    sombra->setColor(Qt::black);
+    sombra->setOffset(5, 5);
+    titulo->setGraphicsEffect(sombra);
+
+    agregarItemEscena(titulo);
+    QRectF rect = titulo->boundingRect();
+    titulo->setPos(width()/2 - rect.width()/2, height()/2 - rect.height()/2);
+
+    QTimer::singleShot(3000, this, [=]() {
+        removerItemEscena(titulo);
+        delete titulo;
+        iniciar();  // 🔁 activa juego después del título
+    });
 }

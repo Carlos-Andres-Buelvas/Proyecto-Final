@@ -17,6 +17,15 @@ public:
 
     void actualizarBarraEnergia();
     void eliminarEnemigo(Enemigo* enemigo);
+    void mostrarGameOver();
+    void iniciar();  // Llamado después del título
+    void agregarItemEscena(QGraphicsItem* item);
+    void removerItemEscena(QGraphicsItem* item);
+    void mostrarTituloNivel();
+
+signals:
+    void gameOver();
+
 private slots:
     void actualizar();
 
@@ -42,6 +51,9 @@ private:
     void actualizarContadorLlaves();
 
     bool nivelCompletado = false;
+    bool gameOverMostrado = false;
+
+    QString dragonBallFont;
 };
 
 #endif // JUEGO2_H

@@ -16,7 +16,6 @@ class MainWindow : public QMainWindow {
 
 public:
     explicit MainWindow(QWidget *parent = nullptr);  // Constructor
-    void iniciarNivel1();
     void iniciarNivel2(); // 🔹 Nuevo
     ~MainWindow();                                    // Destructor
 
