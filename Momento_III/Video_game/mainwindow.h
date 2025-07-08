@@ -4,6 +4,9 @@
 #include <QMainWindow>
 #include <QFontDatabase>  // Para manejo de fuentes personalizadas
 #include <QMessageBox>    // Para mostrar alertas o mensajes
+#include <QMediaPlayer>
+#include <QAudioOutput>
+#include <QUrl>
 #include "juego.h"        // Incluye la clase principal del juego
 #include "juego2.h"
 
@@ -32,6 +35,9 @@ private:
 
     void aplicarEstilosMenu();  // Aplica estilo y fuente a botones
     void volverAlMenu();        // Retorna al menú principal
+
+    QMediaPlayer* musicaMenu = nullptr;
+    QAudioOutput* salidaAudioMenu = nullptr;
 };
 
 #endif // MAINWINDOW_H

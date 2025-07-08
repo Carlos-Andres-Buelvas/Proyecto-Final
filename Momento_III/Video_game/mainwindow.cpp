@@ -28,6 +28,15 @@ MainWindow::MainWindow(QWidget *parent)
     // Cargar fuente Dragon Ball
     dragonBallFont = loadDragonBallFont();
     aplicarEstilosMenu();
+
+    // Reproducir música del menú principal
+    musicaMenu = new QMediaPlayer(this);
+    salidaAudioMenu = new QAudioOutput(this);
+    musicaMenu->setSource(QUrl("qrc:/sounds/Sounds/musica_menu.mp3"));
+    salidaAudioMenu->setVolume(1.0);  // entre 0 y 100
+    musicaMenu->setAudioOutput(salidaAudioMenu);
+    musicaMenu->setLoops(QMediaPlayer::Infinite);
+    musicaMenu->play();
 }
 
 QString MainWindow::loadDragonBallFont() {
@@ -80,6 +89,7 @@ void MainWindow::on_newGameButton_clicked() {
         juego = nullptr;
     }
 
+    if (musicaMenu) musicaMenu->stop();
     try {
         juego = new Juego(this);
         setCentralWidget(juego);

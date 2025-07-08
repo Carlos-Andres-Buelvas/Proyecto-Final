@@ -35,4 +35,14 @@
         <file>Pictures/textura_roca.png</file>
         <file>Pictures/fondo_nivel2.jpg</file>
     </qresource>
+    <qresource prefix="/sounds">
+        <file>Sounds/derrota.mp3</file>
+        <file>Sounds/disparo.wav</file>
+        <file>Sounds/kakaroto.mp3</file>
+        <file>Sounds/musica_menu.mp3</file>
+        <file>Sounds/musica_nivel1.mp3</file>
+        <file>Sounds/musica_nivel2.mp3</file>
+        <file>Sounds/Salto.wav</file>
+        <file>Sounds/victoria.wav</file>
+    </qresource>
 </RCC>

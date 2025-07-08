@@ -15,6 +15,8 @@
 #include <QGraphicsColorizeEffect>
 #include <QGraphicsItemAnimation>
 #include <QGraphicsProxyWidget>
+#include <QMediaPlayer>
+#include <QAudioOutput>
 
 Juego::Juego(QWidget *parent) : QGraphicsView(parent), timerAnimacionCuerda(nullptr),
     timerGeneracionCuerdas(nullptr), btnContinuar(nullptr), btnSalir(nullptr),
