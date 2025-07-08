@@ -37,6 +37,9 @@ public:
     void setDisparandoNivel2(bool valor);
     bool isDisparandoNivel2() const;
 
+    void detener();
+    void reanudar();
+
 private slots:
 //NIVEL 2:
     void patrullar();

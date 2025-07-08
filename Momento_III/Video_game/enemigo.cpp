@@ -285,3 +285,23 @@ void Enemigo::setDisparandoNivel2(bool valor) {
 bool Enemigo::isDisparandoNivel2() const {
     return disparandoNivel2;
 }
+
+void Enemigo::detener() {
+    if (timerPatrulla && timerPatrulla->isActive())
+        timerPatrulla->stop();
+
+    if (timerDisparo2 && timerDisparo2->isActive())
+        timerDisparo2->stop();
+
+    detenerProyectiles();
+}
+
+void Enemigo::reanudar() {
+    if (timerPatrulla && !timerPatrulla->isActive())
+        timerPatrulla->start(100);  // misma frecuencia de antes
+
+    if (timerDisparo2 && !timerDisparo2->isActive())
+        timerDisparo2->start();
+
+    reanudarProyectiles();
+}

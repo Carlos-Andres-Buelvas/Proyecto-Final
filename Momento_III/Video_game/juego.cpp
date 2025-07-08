@@ -1026,7 +1026,7 @@ void Juego::togglePausa() {
         escena->addItem(overlay);
 
         // Texto "PAUSA" (como ya lo tienes)
-        QGraphicsTextItem* pausaText = new QGraphicsTextItem("PAUSA");
+        QGraphicsTextItem* pausaText = new QGraphicsTextItem("PAUSE");
         pausaText->setDefaultTextColor(QColor(255, 215, 0));
         pausaText->setFont(QFont(dragonBallFont, 58, QFont::Bold));
         // ... (configuración de sombra y posición)

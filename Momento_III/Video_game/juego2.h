@@ -5,6 +5,8 @@
 #include <QGraphicsScene>
 #include <QTimer>
 #include <QSet>
+#include <QPushButton>
+#include <QGraphicsProxyWidget>
 #include "goku.h"
 #include "enemigo.h"
 
@@ -22,9 +24,12 @@ public:
     void agregarItemEscena(QGraphicsItem* item);
     void removerItemEscena(QGraphicsItem* item);
     void mostrarTituloNivel();
+    void reanudarTodo();
+    void detenerTodo();
 
 signals:
     void gameOver();
+    void salirAlMenu();
 
 private slots:
     void actualizar();
@@ -52,6 +57,18 @@ private:
 
     bool nivelCompletado = false;
     bool gameOverMostrado = false;
+    bool enPausa = false;
+
+    QTimer* timerActualizar = nullptr;
+    bool pausado = false;
+
+    QPushButton* btnContinuar = nullptr;
+    QPushButton* btnSalir = nullptr;
+    QGraphicsProxyWidget* proxyContinuar = nullptr;
+    QGraphicsProxyWidget* proxySalir = nullptr;
+
+    void togglePausa();
+    void configurarBotonesPausa();
 
     QString dragonBallFont;
 };

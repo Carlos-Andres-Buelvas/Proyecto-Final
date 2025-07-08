@@ -25,6 +25,7 @@ public:
 
 signals:
     void actualizarBarraEnergiaSignal();
+    void gokuDerrotado();
 
 protected:
     // Atributos físicos y visuales del personaje

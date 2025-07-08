@@ -171,6 +171,12 @@ void Personaje::disparar2(QGraphicsScene* escena) {
 
                         // 🔻 Aquí puedes mostrar derrota o reiniciar el nivel
                         qDebug() << "Goku fue alcanzado por un disparo. Fin del juego.";
+                        // Espera 100 ms antes de emitir Game Over
+                        QObject* parentView = escena->views().isEmpty() ? nullptr : escena->views().first();
+                        Juego2* juego2 = qobject_cast<Juego2*>(parentView);
+                        if (juego2) {
+                            juego2->mostrarGameOver();
+                            }
                         return;
                     }
                 }

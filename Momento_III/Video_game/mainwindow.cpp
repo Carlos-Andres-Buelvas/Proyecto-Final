@@ -188,6 +188,8 @@ void MainWindow::iniciarNivel2() {
         setFixedSize(1280, 680);
         juego2->setFocus();
 
+        connect(juego2, &Juego2::salirAlMenu, this, &MainWindow::volverAlMenu);
+
         juego2->mostrarTituloNivel();
 
         disconnect(juego2, nullptr, this, nullptr);  // 👈 Detiene conexiones anteriores

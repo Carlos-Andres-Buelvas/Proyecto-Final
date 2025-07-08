@@ -73,12 +73,38 @@ Juego2::Juego2(QWidget* parent) : QGraphicsView(parent) {
     textoLlaves->setPos(1070, 40);  // 📍 Evita solaparse con barra energía
     escena->addItem(textoLlaves);
 
-    QTimer* timerActualizar = new QTimer(this);
+    // 🟡 Botón de pausa
+    QPushButton* botonPausa = new QPushButton(this);
+    botonPausa->setGeometry(0, 0, 120, 50);
+    botonPausa->setIconSize(QSize(120, 50));
+    botonPausa->setText("PAUSA");
+    botonPausa->setStyleSheet(
+        "QPushButton {"
+        "   background-color: transparent;"
+        "   border: none;"
+        "   color: #ffcc00;"
+        "   font: bold 18px '" + dragonBallFont + "';"
+                           "   padding: 0px;"
+                           "   text-shadow: 2px 2px 4px #000000;"
+                           "}"
+                           "QPushButton:hover {"
+                           "   color: #ffffff;"
+                           "}"
+                           "QPushButton:pressed {"
+                           "   color: #ff9900;"
+                           "   padding-top: 2px;"
+                           "   padding-left: 2px;"
+                           "}"
+        );
+    connect(botonPausa, &QPushButton::clicked, this, &Juego2::togglePausa);
+
+    timerActualizar = new QTimer(this);
     connect(timerActualizar, &QTimer::timeout, this, &Juego2::actualizar);
     timerActualizar->start(100);  // cada 100 ms
 }
 
 void Juego2::actualizar() {
+    if (enPausa) return;
     // 1. Revisar colisiones con cápsulas
     for (int i = 0; i < capsulas.size(); ++i) {
         QGraphicsPixmapItem* capsula = capsulas[i];
@@ -125,6 +151,8 @@ void Juego2::actualizar() {
     if (llavesRecogidas == TOTAL_LLAVES && bulma && !nivelCompletado) {
         if (goku->collidesWithItem(bulma)) {
             nivelCompletado = true;
+
+            enPausa = true;
 
             // Mostrar mensaje de victoria
             QMessageBox::information(this, "¡Victoria!", "¡Has rescatado a Bulma!\n¡Felicidades!");
@@ -206,6 +234,7 @@ void Juego2::cargarMapa(const QString&) {
             case 'G': {
                 goku = new Goku(x, y, tileWidth, tileHeight);
                 connect(goku, &Goku::actualizarBarraEnergiaSignal, this, &Juego2::actualizarBarraEnergia);
+                connect(goku, &Personaje::gokuDerrotado, this, &Juego2::mostrarGameOver);
                 goku->cargarAnimacionesNivel2(); // Sprite cenital
                 goku->setZValue(2);
                 escena->addItem(goku);
@@ -348,8 +377,10 @@ void Juego2::eliminarEnemigo(Enemigo* enemigo) {
 }
 
 void Juego2::mostrarGameOver() {
-    if (gameOverMostrado) return;  // ✅ Evita duplicación
+    if (gameOverMostrado) return;
     gameOverMostrado = true;
+
+    enPausa = true;  // ⏸️ Detener todo
 
     QGraphicsTextItem* textoGameOver = new QGraphicsTextItem("GAME OVER");
     textoGameOver->setDefaultTextColor(Qt::red);
@@ -366,9 +397,11 @@ void Juego2::mostrarGameOver() {
     textoGameOver->setZValue(1000);
     escena->addItem(textoGameOver);
 
-    // Emitir la señal SOLO UNA VEZ después de 3 segundos
-    QTimer::singleShot(3000, this, [this]() {
-        emit gameOver();  // ✅ Solo se emite una vez
+    detenerTodo();
+
+    QTimer::singleShot(3000, this, [this, textoGameOver]() {
+        escena->removeItem(textoGameOver);
+        emit gameOver();  // solo se emite una vez
     });
 }
 
@@ -386,6 +419,8 @@ void Juego2::removerItemEscena(QGraphicsItem* item) {
 }
 
 void Juego2::mostrarTituloNivel() {
+    enPausa = true;  // ⏸️ Pausar juego mientras se muestra el título
+
     QGraphicsTextItem* titulo = new QGraphicsTextItem("Nivel 2: Rescate de Bulma");
     titulo->setFont(QFont(dragonBallFont, 24, QFont::Bold));
     titulo->setDefaultTextColor(QColor(255, 215, 0));
@@ -403,6 +438,128 @@ void Juego2::mostrarTituloNivel() {
     QTimer::singleShot(3000, this, [=]() {
         removerItemEscena(titulo);
         delete titulo;
-        iniciar();  // 🔁 activa juego después del título
+
+        enPausa = false;  // ▶️ Reanudar juego
+        iniciar();        // Comienza el nivel
     });
+}
+
+void Juego2::togglePausa() {
+    pausado = !pausado;
+
+    if (pausado) {
+        detenerTodo();  // ✅ Detener enemigos, Goku y timer
+
+        // Fondo semitransparente
+        QGraphicsRectItem* overlay = new QGraphicsRectItem(0, 0, width(), height());
+        overlay->setBrush(QColor(0, 0, 0, 180));
+        overlay->setZValue(999);
+        overlay->setData(0, "pausa_overlay");
+        escena->addItem(overlay);
+
+        // Texto "PAUSA"
+        QGraphicsTextItem* pausaText = new QGraphicsTextItem("PAUSE");
+        pausaText->setDefaultTextColor(QColor(255, 215, 0));
+        pausaText->setFont(QFont(dragonBallFont, 58, QFont::Bold));
+        pausaText->setZValue(1001);
+        pausaText->setPos(width()/2 - pausaText->boundingRect().width()/2, height()/2 - 120);
+        pausaText->setData(0, "pausa_overlay");
+        escena->addItem(pausaText);
+
+        if (!btnContinuar) {
+            configurarBotonesPausa();
+        } else {
+            proxyContinuar->show();
+            proxySalir->show();
+        }
+
+    } else {
+        // Quitar overlay
+        for (QGraphicsItem* item : escena->items()) {
+            if (item->data(0).toString() == "pausa_overlay") {
+                escena->removeItem(item);
+                delete item;
+            }
+        }
+
+        if (proxyContinuar) proxyContinuar->hide();
+        if (proxySalir) proxySalir->hide();
+
+        reanudarTodo();  // ✅ Reanudar lógica
+    }
+}
+
+void Juego2::configurarBotonesPausa() {
+    btnContinuar = new QPushButton("CONTINUAR");
+    btnContinuar->setObjectName("btnPausa");
+    btnContinuar->setFont(QFont(dragonBallFont, 20, QFont::Bold));
+    btnContinuar->setStyleSheet(
+        "QPushButton#btnPausa {"
+        "   background-color: #ff9900;"
+        "   color: white;"
+        "   border: 3px solid #ffcc00;"
+        "   border-radius: 15px;"
+        "   padding: 10px 25px;"
+        "   min-width: 200px;"
+        "}"
+        "QPushButton#btnPausa:hover {"
+        "   background-color: #ffaa33;"
+        "   border-color: #ffffff;"
+        "}"
+        );
+
+    btnSalir = new QPushButton("SALIR AL MENÚ");
+    btnSalir->setObjectName("btnPausa");
+    btnSalir->setFont(QFont(dragonBallFont, 20, QFont::Bold));
+    btnSalir->setStyleSheet(
+        "QPushButton#btnPausa {"
+        "   background-color: #cc0000;"
+        "   color: white;"
+        "   border: 3px solid #ff4444;"
+        "   border-radius: 15px;"
+        "   padding: 10px 25px;"
+        "   min-width: 200px;"
+        "}"
+        "QPushButton#btnPausa:hover {"
+        "   background-color: #ff4444;"
+        "   border-color: #ffffff;"
+        "}"
+        );
+
+    proxyContinuar = escena->addWidget(btnContinuar);
+    proxyContinuar->setPos(width()/2 - btnContinuar->width()/2, height()/2 + 30);
+    proxyContinuar->setZValue(1002);
+
+    proxySalir = escena->addWidget(btnSalir);
+    proxySalir->setPos(width()/2 - btnSalir->width()/2, height()/2 + 110);
+    proxySalir->setZValue(1002);
+
+    // 🔁 Conexión botón CONTINUAR
+    connect(btnContinuar, &QPushButton::clicked, this, &Juego2::togglePausa);
+
+    // ✅ Conexión botón SALIR AL MENÚ con pausa previa
+    connect(btnSalir, &QPushButton::clicked, this, [this]() {
+        if (pausado) togglePausa();  // ⬅️ Quitar el overlay de pausa
+        emit salirAlMenu();          // ⬅️ Emitir señal al MainWindow
+    });
+}
+
+void Juego2::detenerTodo() {
+    if (goku) goku->setEnabled(false);  // Desactiva teclado
+
+    for (Enemigo* enemigo : enemigos) {
+        if (enemigo) enemigo->detener();  // ✅ nuevo método
+    }
+
+    if (timerActualizar) timerActualizar->stop();  // Pausar colisiones
+}
+
+void Juego2::reanudarTodo() {
+    if (goku) goku->setEnabled(true);  // Reactiva teclado
+
+    for (Enemigo* enemigo : enemigos) {
+        if (enemigo) enemigo->reanudar();  // ✅ nuevo método
+    }
+
+    if (timerActualizar) timerActualizar->start();
 }
