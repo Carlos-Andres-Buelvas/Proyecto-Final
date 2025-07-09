@@ -54,10 +54,14 @@ public:
     bool cayendoLento = false;       // Control de caída suave
 
 //NIVEL 2:
-    //void disparar2(QGraphicsScene* escena) override;
-    void keyPressEvent(QKeyEvent* event) override;
     void cargarAnimacionesNivel2();
     QString direccionActual = "derecha";
+    void setEnabled(bool enabled) { m_enabled = enabled; }
+    bool isEnabled() const { return m_enabled; }
+
+protected:
+    void keyPressEvent(QKeyEvent* event) override;
+    //void keyReleaseEvent(QKeyEvent* event) override;
 
 private:
     // Animaciones
@@ -91,6 +95,9 @@ private:
     // Métodos internos
     void cargarAnimaciones();        // Carga los sprites
     void actualizarSprite();         // Aplica el frame actual
+
+//NIVEL 2:
+    bool m_enabled = true;
 };
 
 #endif // GOKU_H

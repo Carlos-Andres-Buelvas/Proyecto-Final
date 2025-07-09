@@ -101,6 +101,10 @@ Juego2::Juego2(QWidget* parent) : QGraphicsView(parent) {
     timerActualizar = new QTimer(this);
     connect(timerActualizar, &QTimer::timeout, this, &Juego2::actualizar);
     timerActualizar->start(100);  // cada 100 ms
+
+    timerGameOver = new QTimer(this);
+    timerGameOver->setSingleShot(true);
+    connect(timerGameOver, &QTimer::timeout, this, &Juego2::mostrarMenuGameOver);
 }
 
 void Juego2::actualizar() {
@@ -148,9 +152,9 @@ void Juego2::actualizar() {
     }
 
     // 4. Verificar victoria al tocar a Bulma
-    if (llavesRecogidas == TOTAL_LLAVES && bulma && !nivelCompletado) {
+    if (llavesRecogidas == TOTAL_LLAVES && bulma && !m_nivelCompletado) {
         if (goku->collidesWithItem(bulma)) {
-            nivelCompletado = true;
+            m_nivelCompletado = true;
 
             enPausa = true;
 
@@ -377,32 +381,30 @@ void Juego2::eliminarEnemigo(Enemigo* enemigo) {
 }
 
 void Juego2::mostrarGameOver() {
-    if (gameOverMostrado) return;
-    gameOverMostrado = true;
-
-    enPausa = true;  // ⏸️ Detener todo
-
-    QGraphicsTextItem* textoGameOver = new QGraphicsTextItem("GAME OVER");
-    textoGameOver->setDefaultTextColor(Qt::red);
-    textoGameOver->setFont(QFont(dragonBallFont, 72, QFont::Bold));
-
-    QGraphicsDropShadowEffect* sombra = new QGraphicsDropShadowEffect();
-    sombra->setBlurRadius(10);
-    sombra->setColor(Qt::black);
-    sombra->setOffset(5, 5);
-    textoGameOver->setGraphicsEffect(sombra);
-
-    textoGameOver->setPos(width() / 2 - textoGameOver->boundingRect().width() / 2,
-                          height() / 2 - 100);
-    textoGameOver->setZValue(1000);
-    escena->addItem(textoGameOver);
-
     detenerTodo();
 
-    QTimer::singleShot(3000, this, [this, textoGameOver]() {
-        escena->removeItem(textoGameOver);
-        emit gameOver();  // solo se emite una vez
-    });
+    // Mostrar mensaje de Game Over
+    QGraphicsTextItem* gameOverText = new QGraphicsTextItem("GAME OVER");
+    gameOverText->setDefaultTextColor(Qt::red);
+    gameOverText->setFont(QFont(dragonBallFont, 72, QFont::Bold));
+
+    QGraphicsDropShadowEffect* shadow = new QGraphicsDropShadowEffect();
+    shadow->setBlurRadius(10);
+    shadow->setColor(Qt::black);
+    shadow->setOffset(5, 5);
+    gameOverText->setGraphicsEffect(shadow);
+
+    gameOverText->setPos(width()/2 - gameOverText->boundingRect().width()/2,
+                         height()/2 - 100);
+    gameOverText->setZValue(1000);
+    escena->addItem(gameOverText);
+
+    // Programar la emisión de la señal después de un breve retraso
+    timerGameOver->start(3000); // 3 segundos para ver el mensaje
+}
+
+void Juego2::mostrarMenuGameOver() {
+    emit gameOver(); // Ahora emitimos la señal después del retraso
 }
 
 void Juego2::iniciar() {
@@ -486,6 +488,7 @@ void Juego2::togglePausa() {
         if (proxySalir) proxySalir->hide();
 
         reanudarTodo();  // ✅ Reanudar lógica
+        if (goku) goku->setFocus();
     }
 }
 
@@ -541,6 +544,7 @@ void Juego2::configurarBotonesPausa() {
     connect(btnSalir, &QPushButton::clicked, this, [this]() {
         if (pausado) togglePausa();  // ⬅️ Quitar el overlay de pausa
         emit salirAlMenu();          // ⬅️ Emitir señal al MainWindow
+        detenerTodo();
     });
 }
 
@@ -555,10 +559,13 @@ void Juego2::detenerTodo() {
 }
 
 void Juego2::reanudarTodo() {
-    if (goku) goku->setEnabled(true);  // Reactiva teclado
+    if (goku) {
+        goku->setEnabled(true);  // Reactiva teclado
+        goku->setFocus();        // <-- ESTA ES LA LÍNEA CLAVE QUE FALTABA
+    }
 
     for (Enemigo* enemigo : enemigos) {
-        if (enemigo) enemigo->reanudar();  // ✅ nuevo método
+        if (enemigo) enemigo->reanudar();
     }
 
     if (timerActualizar) timerActualizar->start();

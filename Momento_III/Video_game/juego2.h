@@ -20,6 +20,7 @@ public:
     void actualizarBarraEnergia();
     void eliminarEnemigo(Enemigo* enemigo);
     void mostrarGameOver();
+    void mostrarMenuGameOver();
     void iniciar();  // Llamado después del título
     void agregarItemEscena(QGraphicsItem* item);
     void removerItemEscena(QGraphicsItem* item);
@@ -30,6 +31,7 @@ public:
 signals:
     void gameOver();
     void salirAlMenu();
+    void nivelCompletado();
 
 private slots:
     void actualizar();
@@ -55,11 +57,12 @@ private:
 
     void actualizarContadorLlaves();
 
-    bool nivelCompletado = false;
+    bool m_nivelCompletado = false;
     bool gameOverMostrado = false;
     bool enPausa = false;
 
     QTimer* timerActualizar = nullptr;
+    QTimer* timerGameOver;
     bool pausado = false;
 
     QPushButton* btnContinuar = nullptr;

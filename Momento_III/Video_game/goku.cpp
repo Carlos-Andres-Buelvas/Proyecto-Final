@@ -283,6 +283,8 @@ void Goku::cargarAnimacionesNivel2() {
 }
 
 void Goku::keyPressEvent(QKeyEvent* event) {
+    if (!m_enabled) return;  // <-- Ignorar eventos si está deshabilitado
+
     switch (event->key()) {
     case Qt::Key_W: mover2("arriba"); break;
     case Qt::Key_S: mover2("abajo"); break;

@@ -561,8 +561,10 @@ void Juego::aumentarContadorSoldados() {
         textoNivelCompletado->setZValue(1001);
         escena->addItem(textoNivelCompletado);
 
-        QTimer::singleShot(2000, this, [this]() {
-            emit nivelCompletado();  // 🔔 Notifica que debe iniciar el nivel 2
+        // Emitir señal después de un breve retraso
+        QTimer::singleShot(3000, this, [this]() {
+            emit nivelCompletado();
+            detenerTodo();
         });
     }
 }
@@ -1111,6 +1113,7 @@ void Juego::configurarBotonesPausa() {
     connect(btnSalir, &QPushButton::clicked, this, [this]() {
         emit salirAlMenu();
         togglePausa();
+        detenerTodo();
     });
 }
 

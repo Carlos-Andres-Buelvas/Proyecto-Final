@@ -35,6 +35,8 @@ private:
 
     void aplicarEstilosMenu();  // Aplica estilo y fuente a botones
     void volverAlMenu();        // Retorna al menú principal
+    void mostrarGameOverDialog();
+    void mostrarTituloNivel(const QString& titulo);
 
     QMediaPlayer* musicaMenu = nullptr;
     QAudioOutput* salidaAudioMenu = nullptr;

@@ -6,65 +6,26 @@
 #include <QFile>
 #include <QDebug>
 #include <QGraphicsDropShadowEffect>
-#include <QMessageBox>
+#include <QMessageBox>  // Mostrar mensajes al usuario
 
+// Constructor de MainWindow
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
     , juego(nullptr)
-    , juego2(nullptr)
 {
     ui->setupUi(this);
-    setFixedSize(800, 600);  // ⏹️ Tamaño fijo SOLO para el menú principal
-    // Centrar la ventana principal (menú)
-    QTimer::singleShot(0, this, [this]() {
-        QScreen* screen = QGuiApplication::primaryScreen();
-        QRect screenGeometry = screen->availableGeometry();
-        int x = (screenGeometry.width() - this->width()) / 2;
-        int y = (screenGeometry.height() - this->height()) / 2;
-        this->move(x, y);
-    });
 
-    // Cargar fuente Dragon Ball
+    // Cargar la fuente Dragon Ball
     dragonBallFont = loadDragonBallFont();
-    aplicarEstilosMenu();
 
-    // Reproducir música del menú principal
-    musicaMenu = new QMediaPlayer(this);
-    salidaAudioMenu = new QAudioOutput(this);
-    musicaMenu->setSource(QUrl("qrc:/sounds/Sounds/musica_menu.mp3"));
-    salidaAudioMenu->setVolume(1.0);  // entre 0 y 100
-    musicaMenu->setAudioOutput(salidaAudioMenu);
-    musicaMenu->setLoops(QMediaPlayer::Infinite);
-    musicaMenu->play();
-}
-
-QString MainWindow::loadDragonBallFont() {
-    QString fontPath = ":/fondos/Pictures/db_font.ttf";
-
-    if (!QFile::exists(fontPath)) {
-        qDebug() << "Error: No se encontró la fuente en" << fontPath;
-        return "Arial";
-    }
-
-    int fontId = QFontDatabase::addApplicationFont(fontPath);
-    if (fontId == -1) {
-        qDebug() << "Error al cargar fuente Dragon Ball";
-        return "Arial";
-    }
-
-    QStringList fontFamilies = QFontDatabase::applicationFontFamilies(fontId);
-    return fontFamilies.isEmpty() ? "Arial" : fontFamilies.first();
-}
-
-void MainWindow::aplicarEstilosMenu() {
-    if (!ui) return;  // Evita errores si UI no está inicializado
-
+    // Aplicar fuente personalizada a los botones
     QFont font(dragonBallFont, 18, QFont::Bold);
     ui->newGameButton->setFont(font);
     ui->continueButton->setFont(font);
 
-    QString style = R"(
+    // Estilo visual para botones
+    QString buttonStyle = R"(
         QPushButton {
             background-color: #ff9900;
             color: white;
@@ -79,208 +40,204 @@ void MainWindow::aplicarEstilosMenu() {
             border-color: #ffffff;
         }
     )";
-    ui->newGameButton->setStyleSheet(style);
-    ui->continueButton->setStyleSheet(style);
+    ui->newGameButton->setStyleSheet(buttonStyle);
+    ui->continueButton->setStyleSheet(buttonStyle);
 }
 
+// Carga la fuente personalizada desde el recurso
+QString MainWindow::loadDragonBallFont() {
+    QString fontPath = ":/fondos/Pictures/db_font.ttf";
+
+    if (!QFile::exists(fontPath)) {
+        qDebug() << "Error: No se encontró el archivo de fuente en" << fontPath;
+        return "Arial";
+    }
+
+    int fontId = QFontDatabase::addApplicationFont(fontPath);
+    if (fontId == -1) {
+        qDebug() << "Error al cargar la fuente Dragon Ball";
+        return "Arial";
+    }
+
+    QStringList fontFamilies = QFontDatabase::applicationFontFamilies(fontId);
+    if (fontFamilies.isEmpty()) {
+        qDebug() << "La fuente no contiene familias definidas";
+        return "Arial";
+    }
+
+    qDebug() << "Fuente Dragon Ball cargada correctamente:" << fontFamilies.first();
+    return fontFamilies.first();
+}
+
+// Slot al hacer clic en "Nuevo Juego"
 void MainWindow::on_newGameButton_clicked() {
     if (juego) {
         delete juego;
         juego = nullptr;
     }
 
-    if (musicaMenu) musicaMenu->stop();
     try {
-        juego = new Juego(this);
-        setCentralWidget(juego);
-        resize(1280, 680);
-        setFixedSize(1280, 680);
+        juego = new Juego();
+        juego->show();
 
-        // ✅ Centrar justo después de mostrar (en el próximo "tick" del evento loop)
-        QTimer::singleShot(0, this, [this]() {
-            QScreen* screen = QGuiApplication::primaryScreen();
-            QRect screenGeometry = screen->availableGeometry();  // Usa área disponible (excluye barra de tareas)
-            int x = (screenGeometry.width() - this->width()) / 2;
-            int y = (screenGeometry.height() - this->height()) / 2;
-            this->move(x, y);
+        // Conectar señal para volver al menú principal
+        connect(juego, &Juego::salirAlMenu, this, [this]() {
+            juego->hide();
+            this->show();
         });
 
-        setFixedSize(1280, 680);     // Evita redimensionar durante el juego
-        juego->setFocus();
-
-        // Conectar señales
-        connect(juego, &Juego::salirAlMenu, this, &MainWindow::volverAlMenu);
-        connect(juego, &Juego::nivelCompletado, this, &MainWindow::iniciarNivel2);
-
+        // Conectar señal de Game Over
         connect(juego, &Juego::gameOver, this, [this]() {
             juego->hide();
-
-            QMessageBox msgBox;
-            msgBox.setWindowTitle("Game Over");
-            msgBox.setText("¡Has perdido! ¿Qué quieres hacer?");
-
-            QPushButton *reintentar = msgBox.addButton("Reintentar", QMessageBox::AcceptRole);
-            QPushButton *menu = msgBox.addButton("Menú Principal", QMessageBox::RejectRole);
-            msgBox.setDefaultButton(reintentar);
-
-            msgBox.setStyleSheet(R"(
-                QMessageBox {
-                    background-color: #2c3e50;
-                    color: white;
-                }
-                QMessageBox QLabel {
-                    color: white;
-                    font: bold 16px;
-                }
-                QMessageBox QPushButton {
-                    background-color: #e74c3c;
-                    color: white;
-                    border-radius: 5px;
-                    padding: 5px 10px;
-                    min-width: 80px;
-                }
-                QMessageBox QPushButton:hover {
-                    background-color: #c0392b;
-                }
-            )");
-
-            msgBox.exec();
-
-            if (msgBox.clickedButton() == reintentar) {
-                on_newGameButton_clicked();
-            } else {
-                volverAlMenu();
-            }
+            mostrarGameOverDialog();
         });
 
-        // Título de nivel 1
-        QGraphicsTextItem* titulo = new QGraphicsTextItem("Nivel 1: Escape en la Isla");
-        QFont font(dragonBallFont, 24, QFont::Bold);
-        if (dragonBallFont == "Arial")
-            font.setLetterSpacing(QFont::AbsoluteSpacing, 2);
-
-        titulo->setFont(font);
-        titulo->setDefaultTextColor(QColor(255, 215, 0));
-        QGraphicsDropShadowEffect* sombra = new QGraphicsDropShadowEffect();
-        sombra->setBlurRadius(10);
-        sombra->setColor(Qt::black);
-        sombra->setOffset(5, 5);
-        titulo->setGraphicsEffect(sombra);
-        juego->agregarItemEscena(titulo);
-
-        QRectF rect = titulo->boundingRect();
-        titulo->setPos(juego->width()/2 - rect.width()/2, juego->height()/2 - rect.height()/2);
-
-        QTimer::singleShot(3000, [this, titulo]() {
-            if (juego) {
-                juego->removerItemEscena(titulo);
-                delete titulo;
-                juego->iniciar();
-            }
+        // Conectar señal de nivel completado
+        connect(juego, &Juego::nivelCompletado, this, [this]() {
+            juego->hide();
+            iniciarNivel2();
         });
 
-    } catch (...) {
-        qCritical() << "Error desconocido al iniciar el juego";
-        QMessageBox::critical(this, "Error", "No se pudo iniciar el juego.");
+        this->hide();
+
+        // Mostrar título del nivel
+        mostrarTituloNivel("Nivel 1: Escape en la Isla");
+
+    } catch (const std::exception& e) {
+        qCritical() << "Error al crear el juego:" << e.what();
+        QMessageBox::critical(this, "Error", tr("No se pudo iniciar el juego.\nDetalles: %1").arg(e.what()));
     }
 }
 
 void MainWindow::iniciarNivel2() {
-    if (juego2) {
-        delete juego2;
-        juego2 = nullptr;
-    }
+    Juego2* juego2 = new Juego2();
+    juego2->show();
 
-    try {
-        juego2 = new Juego2(this);
-        setCentralWidget(juego2);
-        resize(1280, 680);
-        setFixedSize(1280, 680);
-        juego2->setFocus();
+    // Conectar señal para volver al menú principal desde nivel 2
+    connect(juego2, &Juego2::salirAlMenu, this, [this, juego2]() {
+        juego2->hide();
+        this->show();
+        //delete juego2;
+    });
 
-        connect(juego2, &Juego2::salirAlMenu, this, &MainWindow::volverAlMenu);
+    // Mostrar título del nivel 2
+    QGraphicsTextItem* tituloNivel = new QGraphicsTextItem("Nivel 2: Rescate de Bulma");
+    QFont font(dragonBallFont, 24, QFont::Bold);
+    tituloNivel->setFont(font);
+    tituloNivel->setDefaultTextColor(QColor(255, 215, 0));
 
-        juego2->mostrarTituloNivel();
+    QGraphicsDropShadowEffect* shadow = new QGraphicsDropShadowEffect();
+    shadow->setBlurRadius(10);
+    shadow->setColor(Qt::black);
+    shadow->setOffset(5, 5);
+    tituloNivel->setGraphicsEffect(shadow);
 
-        disconnect(juego2, nullptr, this, nullptr);  // 👈 Detiene conexiones anteriores
+    juego2->agregarItemEscena(tituloNivel);
+    QRectF textRect = tituloNivel->boundingRect();
+    tituloNivel->setPos(
+        juego2->width()/2 - textRect.width()/2,
+        juego2->height()/2 - textRect.height()/2
+        );
 
-        connect(juego2, &Juego2::gameOver, this, [this]() {
-            if (!juego2) return;  // Por seguridad
+    // Quitar el título después de 3 segundos
+    QTimer::singleShot(3000, [juego2, tituloNivel]() {
+        juego2->removerItemEscena(tituloNivel);
+        delete tituloNivel;
+    });
+}
 
-            juego2->hide();
+void MainWindow::mostrarGameOverDialog() {
+    QMessageBox msgBox;
+    msgBox.setWindowTitle("Game Over");
+    msgBox.setText("¡Has perdido! ¿Qué quieres hacer?");
 
-            static bool mostrado = false;
-            if (mostrado) return;
-            mostrado = true;
+    QPushButton *reintentarButton = msgBox.addButton("Reintentar", QMessageBox::ActionRole);
+    QPushButton *menuButton = msgBox.addButton("Menú Principal", QMessageBox::ActionRole);
+    msgBox.setDefaultButton(reintentarButton);
 
-            QMessageBox msgBox;
-            msgBox.setWindowTitle("Game Over");
-            msgBox.setText("¡Has perdido! ¿Qué quieres hacer?");
+    msgBox.setStyleSheet(
+        "QMessageBox {"
+        "   background-color: #2c3e50;"
+        "   color: white;"
+        "}"
+        "QMessageBox QLabel {"
+        "   color: white;"
+        "   font: bold 16px;"
+        "}"
+        "QMessageBox QPushButton {"
+        "   background-color: #e74c3c;"
+        "   color: white;"
+        "   border-radius: 5px;"
+        "   padding: 5px 10px;"
+        "   min-width: 80px;"
+        "}"
+        "QMessageBox QPushButton:hover {"
+        "   background-color: #c0392b;"
+        "}"
+        );
 
-            QPushButton *reintentar = msgBox.addButton("Reintentar", QMessageBox::AcceptRole);
-            QPushButton *menu = msgBox.addButton("Menú Principal", QMessageBox::RejectRole);
-            msgBox.setDefaultButton(reintentar);
+    int result = msgBox.exec();
 
-            msgBox.setStyleSheet(R"(
-        QMessageBox {
-            background-color: #2c3e50;
-            color: white;
+    if (msgBox.clickedButton() == reintentarButton) {
+        // Reiniciar el nivel 1
+        if (juego) {
+            delete juego;
+            juego = nullptr;
         }
-        QMessageBox QLabel {
-            color: white;
-            font: bold 16px;
-        }
-        QMessageBox QPushButton {
-            background-color: #e74c3c;
-            color: white;
-            border-radius: 5px;
-            padding: 5px 10px;
-            min-width: 80px;
-        }
-        QMessageBox QPushButton:hover {
-            background-color: #c0392b;
-        }
-    )");
+        juego = new Juego();
+        juego->show();
 
-            msgBox.exec();
-            mostrado = false;
-
-            if (msgBox.clickedButton() == reintentar) {
-                iniciarNivel2();
-            } else {
-                volverAlMenu();
-            }
+        // Reconectar señales
+        connect(juego, &Juego::salirAlMenu, this, [this]() {
+            juego->hide();
+            this->show();
         });
 
-    } catch (...) {
-        qCritical() << "Error desconocido al iniciar el nivel 2";
-        QMessageBox::critical(this, "Error", "No se pudo iniciar el nivel 2.");
+        connect(juego, &Juego::gameOver, this, [this]() {
+            juego->hide();
+            mostrarGameOverDialog();
+        });
+
+        connect(juego, &Juego::nivelCompletado, this, &MainWindow::iniciarNivel2);
+
+        this->hide();
+        mostrarTituloNivel("Nivel 1: Escape en la Isla");
+    }
+    else if (msgBox.clickedButton() == menuButton) {
+        this->show(); // Solo mostrar menú principal
     }
 }
 
-void MainWindow::volverAlMenu() {
-    setCentralWidget(nullptr);
+void MainWindow::mostrarTituloNivel(const QString& titulo) {
+    QGraphicsTextItem* tituloItem = new QGraphicsTextItem(titulo);
+    QFont font(dragonBallFont, 24, QFont::Bold);
+    tituloItem->setFont(font);
+    tituloItem->setDefaultTextColor(QColor(255, 215, 0));
 
-    if (juego) {
-        delete juego;
-        juego = nullptr;
-    }
+    QGraphicsDropShadowEffect* shadow = new QGraphicsDropShadowEffect();
+    shadow->setBlurRadius(10);
+    shadow->setColor(Qt::black);
+    shadow->setOffset(5, 5);
+    tituloItem->setGraphicsEffect(shadow);
 
-    if (juego2) {
-        delete juego2;
-        juego2 = nullptr;
-    }
+    juego->agregarItemEscena(tituloItem);
+    QRectF textRect = tituloItem->boundingRect();
+    tituloItem->setPos(
+        juego->width()/2 - textRect.width()/2,
+        juego->height()/2 - textRect.height()/2
+        );
 
-    // Vuelve al menú principal
-    ui->setupUi(this);          // Recarga interfaz original
-    aplicarEstilosMenu();       // Aplica fuente y estilo
-    resize(800, 600);           // Vuelve a tamaño original del menú
-    setFixedSize(800, 600);
-    this->show();
+    QTimer::singleShot(3000, [this, tituloItem]() {
+        juego->removerItemEscena(tituloItem);
+        delete tituloItem;
+        juego->iniciar();
+    });
 }
 
+// Destructor de MainWindow
 MainWindow::~MainWindow() {
     delete ui;
-    delete juego;
-    delete juego2;
+    if (juego) {
+        delete juego;
+    }
 }
