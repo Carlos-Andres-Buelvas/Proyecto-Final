@@ -15,6 +15,9 @@
 #include <QGraphicsProxyWidget>
 #include <QTimeLine>
 #include <QGraphicsItemAnimation>
+#include <QMediaPlayer>
+#include <QAudioOutput>
+#include <QUrl>
 
 #include "goku.h"
 #include "enemigo.h"
@@ -164,6 +167,10 @@ private:
     void actualizarDecoracion();
     void iniciarAnimacionPajaro();
     void animarPajaro();
+
+    //Sonido
+    QMediaPlayer* musicaNivel1 = nullptr;
+    QAudioOutput* audioNivel1 = nullptr;
 
 protected:
     void keyPressEvent(QKeyEvent* event) override;

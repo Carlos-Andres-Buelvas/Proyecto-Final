@@ -7,6 +7,9 @@
 #include <QSet>
 #include <QPushButton>
 #include <QGraphicsProxyWidget>
+#include <QMediaPlayer>
+#include <QAudioOutput>
+#include <QUrl>
 #include "goku.h"
 #include "enemigo.h"
 
@@ -24,7 +27,6 @@ public:
     void iniciar();  // Llamado después del título
     void agregarItemEscena(QGraphicsItem* item);
     void removerItemEscena(QGraphicsItem* item);
-    void mostrarTituloNivel();
     void reanudarTodo();
     void detenerTodo();
 
@@ -74,6 +76,10 @@ private:
     void configurarBotonesPausa();
 
     QString dragonBallFont;
+
+    //Sonido
+    QMediaPlayer* musicaNivel2 = nullptr;
+    QAudioOutput* audioNivel2 = nullptr;
 };
 
 #endif // JUEGO2_H

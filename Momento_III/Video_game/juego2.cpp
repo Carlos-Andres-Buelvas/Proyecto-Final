@@ -16,6 +16,14 @@ Juego2::Juego2(QWidget* parent) : QGraphicsView(parent) {
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
+    musicaNivel2 = new QMediaPlayer(this);
+    audioNivel2 = new QAudioOutput(this);
+    musicaNivel2->setAudioOutput(audioNivel2);
+    musicaNivel2->setSource(QUrl("qrc:/sounds/Sounds/musica_nivel2.mp3"));
+    audioNivel2->setVolume(1.0);
+    musicaNivel2->setLoops(QMediaPlayer::Infinite);
+    musicaNivel2->play();
+
     // 🎯 Cargar fuente Dragon Ball
     int fontId = QFontDatabase::addApplicationFont(":/fondos/Pictures/db_font.ttf");
     if (fontId == -1) {
@@ -420,32 +428,6 @@ void Juego2::removerItemEscena(QGraphicsItem* item) {
     if (escena && item) escena->removeItem(item);
 }
 
-void Juego2::mostrarTituloNivel() {
-    enPausa = true;  // ⏸️ Pausar juego mientras se muestra el título
-
-    QGraphicsTextItem* titulo = new QGraphicsTextItem("Nivel 2: Rescate de Bulma");
-    titulo->setFont(QFont(dragonBallFont, 24, QFont::Bold));
-    titulo->setDefaultTextColor(QColor(255, 215, 0));
-
-    QGraphicsDropShadowEffect* sombra = new QGraphicsDropShadowEffect();
-    sombra->setBlurRadius(10);
-    sombra->setColor(Qt::black);
-    sombra->setOffset(5, 5);
-    titulo->setGraphicsEffect(sombra);
-
-    agregarItemEscena(titulo);
-    QRectF rect = titulo->boundingRect();
-    titulo->setPos(width()/2 - rect.width()/2, height()/2 - rect.height()/2);
-
-    QTimer::singleShot(3000, this, [=]() {
-        removerItemEscena(titulo);
-        delete titulo;
-
-        enPausa = false;  // ▶️ Reanudar juego
-        iniciar();        // Comienza el nivel
-    });
-}
-
 void Juego2::togglePausa() {
     pausado = !pausado;
 
@@ -545,6 +527,7 @@ void Juego2::configurarBotonesPausa() {
         if (pausado) togglePausa();  // ⬅️ Quitar el overlay de pausa
         emit salirAlMenu();          // ⬅️ Emitir señal al MainWindow
         detenerTodo();
+        if (musicaNivel2 && musicaNivel2->playbackState() == QMediaPlayer::PlayingState) musicaNivel2->stop();
     });
 }
 

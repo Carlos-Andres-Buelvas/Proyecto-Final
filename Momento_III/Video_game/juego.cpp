@@ -251,6 +251,14 @@ void Juego::iniciar() {
     int intervalo = QRandomGenerator::global()->bounded(10000, 15000); // Entre 10 y 15 segundos
     timerEnemigos->start(intervalo);
     generarTroncoUnico(); // Primer tronco
+    musicaNivel1 = new QMediaPlayer(this);
+    audioNivel1 = new QAudioOutput(this);
+    musicaNivel1->setAudioOutput(audioNivel1);
+    musicaNivel1->setSource(QUrl("qrc:/sounds/Sounds/musica_nivel1.mp3"));
+    audioNivel1->setVolume(1.0);
+    musicaNivel1->setLoops(QMediaPlayer::Infinite);
+    musicaNivel1->play();
+
 }
 
 void Juego::actualizar() {
@@ -565,6 +573,7 @@ void Juego::aumentarContadorSoldados() {
         QTimer::singleShot(3000, this, [this]() {
             emit nivelCompletado();
             detenerTodo();
+            if (musicaNivel1 && musicaNivel1->playbackState() == QMediaPlayer::PlayingState) musicaNivel1->stop();
         });
     }
 }
@@ -1114,6 +1123,7 @@ void Juego::configurarBotonesPausa() {
         emit salirAlMenu();
         togglePausa();
         detenerTodo();
+        if (musicaNivel1 && musicaNivel1->playbackState() == QMediaPlayer::PlayingState) musicaNivel1->stop();
     });
 }
 
@@ -1265,6 +1275,7 @@ void Juego::actualizarDecoracion()
 
 void Juego::mostrarGameOver() {
     detenerTodo();
+    if (musicaNivel1 && musicaNivel1->playbackState() == QMediaPlayer::PlayingState) musicaNivel1->stop();
 
     // Mostrar mensaje de Game Over
     QGraphicsTextItem* gameOverText = new QGraphicsTextItem("GAME OVER");
@@ -1385,6 +1396,8 @@ Juego::~Juego() {
         timerAnimacionPajaro->stop();
         delete timerAnimacionPajaro;
     }
+
+    if (musicaNivel1) musicaNivel1->stop();
 
     // ... resto de la limpieza ...
 }

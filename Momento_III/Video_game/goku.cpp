@@ -6,6 +6,9 @@
 #include <QBrush>
 #include <QGraphicsScene>
 #include <QDebug>
+#include <QMediaPlayer>
+#include <QAudioOutput>
+#include <QUrl>
 
 // Constructor de Goku
 Goku::Goku(float x, float y, float ancho, float alto)
@@ -58,6 +61,22 @@ void Goku::saltar() {
     velocidadY = -22;
     enSuelo = false;
     teclaWSostenida = true;
+/*
+    salto = new QMediaPlayer(this);
+    audioSalto = new QAudioOutput(this);
+    salto->setAudioOutput(audioSalto);
+    salto->setSource(QUrl("qrc:/sounds/Sounds/Salto.wav"));  // Verifica que el nombre esté en minúsculas
+    audioSalto->setVolume(70);
+    salto->play();
+
+    // Eliminarlos después de que termine el sonido para evitar fugas de memoria
+    connect(salto, &QMediaPlayer::mediaStatusChanged, salto, [=](QMediaPlayer::MediaStatus status) {
+        if (status == QMediaPlayer::EndOfMedia) {
+            salto->deleteLater();
+            audioSalto->deleteLater();
+        }
+    });
+*/
 }
 
 // Animación al correr (loop)
@@ -127,6 +146,13 @@ bool Goku::estaDisparando() const {
 
 // Disparo de Goku (lanza 3 proyectiles amarillos)
 void Goku::disparar(QGraphicsScene* escena) {
+    QMediaPlayer* sonidoDisparo = new QMediaPlayer;
+    QAudioOutput* audioDisparo = new QAudioOutput;
+    sonidoDisparo->setAudioOutput(audioDisparo);
+    sonidoDisparo->setSource(QUrl("qrc:/sounds/Sounds/disparo.wav"));
+    audioDisparo->setVolume(70);
+    sonidoDisparo->play();
+
     for (int i = 0; i < 3; ++i) {
         QGraphicsEllipseItem* proyectilGoku = new QGraphicsEllipseItem(0, 0, 30, 30);
         proyectilGoku->setBrush(Qt::yellow);

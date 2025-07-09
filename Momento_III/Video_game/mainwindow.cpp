@@ -18,30 +18,16 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Cargar la fuente Dragon Ball
     dragonBallFont = loadDragonBallFont();
+    aplicarEstilosMenu();
 
-    // Aplicar fuente personalizada a los botones
-    QFont font(dragonBallFont, 18, QFont::Bold);
-    ui->newGameButton->setFont(font);
-    ui->continueButton->setFont(font);
-
-    // Estilo visual para botones
-    QString buttonStyle = R"(
-        QPushButton {
-            background-color: #ff9900;
-            color: white;
-            border: 2px solid #ffcc00;
-            border-radius: 15px;
-            padding: 8px;
-            text-shadow: 2px 2px 4px #000000;
-        }
-        QPushButton:hover {
-            background-color: #ffaa33;
-            color: black;
-            border-color: #ffffff;
-        }
-    )";
-    ui->newGameButton->setStyleSheet(buttonStyle);
-    ui->continueButton->setStyleSheet(buttonStyle);
+    // Reproducir música del menú principal
+    musicaMenu = new QMediaPlayer(this);
+    salidaAudioMenu = new QAudioOutput(this);
+    musicaMenu->setSource(QUrl("qrc:/sounds/Sounds/musica_menu.mp3"));
+    salidaAudioMenu->setVolume(1.0);  // entre 0 y 100
+    musicaMenu->setAudioOutput(salidaAudioMenu);
+    musicaMenu->setLoops(QMediaPlayer::Infinite);
+    musicaMenu->play();
 }
 
 // Carga la fuente personalizada desde el recurso
@@ -69,6 +55,32 @@ QString MainWindow::loadDragonBallFont() {
     return fontFamilies.first();
 }
 
+void MainWindow::aplicarEstilosMenu() {
+    if (!ui) return;  // Evita errores si UI no está inicializado
+
+    QFont font(dragonBallFont, 18, QFont::Bold);
+    ui->newGameButton->setFont(font);
+    ui->continueButton->setFont(font);
+
+    QString style = R"(
+        QPushButton {
+            background-color: #ff9900;
+            color: white;
+            border: 2px solid #ffcc00;
+            border-radius: 15px;
+            padding: 8px;
+            text-shadow: 2px 2px 4px #000000;
+        }
+        QPushButton:hover {
+            background-color: #ffaa33;
+            color: black;
+            border-color: #ffffff;
+        }
+    )";
+    ui->newGameButton->setStyleSheet(style);
+    ui->continueButton->setStyleSheet(style);
+}
+
 // Slot al hacer clic en "Nuevo Juego"
 void MainWindow::on_newGameButton_clicked() {
     if (juego) {
@@ -76,6 +88,7 @@ void MainWindow::on_newGameButton_clicked() {
         juego = nullptr;
     }
 
+    if (musicaMenu && musicaMenu->playbackState() == QMediaPlayer::PlayingState) musicaMenu->stop();
     try {
         juego = new Juego();
         juego->show();
@@ -84,12 +97,14 @@ void MainWindow::on_newGameButton_clicked() {
         connect(juego, &Juego::salirAlMenu, this, [this]() {
             juego->hide();
             this->show();
+            if (musicaMenu)
+                musicaMenu->play();
         });
 
         // Conectar señal de Game Over
         connect(juego, &Juego::gameOver, this, [this]() {
             juego->hide();
-            mostrarGameOverDialog();
+            mostrarGameOverDialog(false);
         });
 
         // Conectar señal de nivel completado
@@ -101,7 +116,7 @@ void MainWindow::on_newGameButton_clicked() {
         this->hide();
 
         // Mostrar título del nivel
-        mostrarTituloNivel("Nivel 1: Escape en la Isla");
+        mostrarTituloNivel("Nivel 1: Escape en la Isla", juego);
 
     } catch (const std::exception& e) {
         qCritical() << "Error al crear el juego:" << e.what();
@@ -117,36 +132,22 @@ void MainWindow::iniciarNivel2() {
     connect(juego2, &Juego2::salirAlMenu, this, [this, juego2]() {
         juego2->hide();
         this->show();
+        if (musicaMenu)
+            musicaMenu->play();
         //delete juego2;
     });
 
-    // Mostrar título del nivel 2
-    QGraphicsTextItem* tituloNivel = new QGraphicsTextItem("Nivel 2: Rescate de Bulma");
-    QFont font(dragonBallFont, 24, QFont::Bold);
-    tituloNivel->setFont(font);
-    tituloNivel->setDefaultTextColor(QColor(255, 215, 0));
-
-    QGraphicsDropShadowEffect* shadow = new QGraphicsDropShadowEffect();
-    shadow->setBlurRadius(10);
-    shadow->setColor(Qt::black);
-    shadow->setOffset(5, 5);
-    tituloNivel->setGraphicsEffect(shadow);
-
-    juego2->agregarItemEscena(tituloNivel);
-    QRectF textRect = tituloNivel->boundingRect();
-    tituloNivel->setPos(
-        juego2->width()/2 - textRect.width()/2,
-        juego2->height()/2 - textRect.height()/2
-        );
-
-    // Quitar el título después de 3 segundos
-    QTimer::singleShot(3000, [juego2, tituloNivel]() {
-        juego2->removerItemEscena(tituloNivel);
-        delete tituloNivel;
+    // Conectar señal de Game Over
+    connect(juego2, &Juego2::gameOver, this, [this, juego2]() {
+        juego2->hide();
+        mostrarGameOverDialog(true); // true = nivel 2
     });
+
+    // Mostrar título del nivel 2
+    mostrarTituloNivel("Nivel 2: Rescate de Bulma", juego2, false); // El false indica que no tiene iniciar()
 }
 
-void MainWindow::mostrarGameOverDialog() {
+void MainWindow::mostrarGameOverDialog(bool esNivel2 = false) {
     QMessageBox msgBox;
     msgBox.setWindowTitle("Game Over");
     msgBox.setText("¡Has perdido! ¿Qué quieres hacer?");
@@ -179,36 +180,49 @@ void MainWindow::mostrarGameOverDialog() {
     int result = msgBox.exec();
 
     if (msgBox.clickedButton() == reintentarButton) {
-        // Reiniciar el nivel 1
-        if (juego) {
-            delete juego;
-            juego = nullptr;
+        if (esNivel2) {
+            // Reiniciar el nivel 2
+            if (juego2) {
+                delete juego2;
+                juego2 = nullptr;
+            }
+            iniciarNivel2(); // Usamos la función que ya teníamos
+        } else {
+            // Reiniciar el nivel 1
+            if (juego) {
+                delete juego;
+                juego = nullptr;
+            }
+            juego = new Juego();
+            juego->show();
+
+            // Reconectar señales
+            connect(juego, &Juego::salirAlMenu, this, [this]() {
+                juego->hide();
+                this->show();
+            });
+
+            connect(juego, &Juego::gameOver, this, [this]() {
+                juego->hide();
+                mostrarGameOverDialog(false); // false = nivel 1
+            });
+
+            connect(juego, &Juego::nivelCompletado, this, &MainWindow::iniciarNivel2);
+
+            this->hide();
+            mostrarTituloNivel("Nivel 1: Escape en la Isla", juego);
         }
-        juego = new Juego();
-        juego->show();
-
-        // Reconectar señales
-        connect(juego, &Juego::salirAlMenu, this, [this]() {
-            juego->hide();
-            this->show();
-        });
-
-        connect(juego, &Juego::gameOver, this, [this]() {
-            juego->hide();
-            mostrarGameOverDialog();
-        });
-
-        connect(juego, &Juego::nivelCompletado, this, &MainWindow::iniciarNivel2);
-
-        this->hide();
-        mostrarTituloNivel("Nivel 1: Escape en la Isla");
     }
     else if (msgBox.clickedButton() == menuButton) {
         this->show(); // Solo mostrar menú principal
+        if (musicaMenu)
+        musicaMenu->play();
     }
 }
 
-void MainWindow::mostrarTituloNivel(const QString& titulo) {
+void MainWindow::mostrarTituloNivel(const QString& titulo, QGraphicsView* vistaJuego, bool tieneIniciar) {
+    if (!vistaJuego) return;
+
     QGraphicsTextItem* tituloItem = new QGraphicsTextItem(titulo);
     QFont font(dragonBallFont, 24, QFont::Bold);
     tituloItem->setFont(font);
@@ -220,17 +234,30 @@ void MainWindow::mostrarTituloNivel(const QString& titulo) {
     shadow->setOffset(5, 5);
     tituloItem->setGraphicsEffect(shadow);
 
-    juego->agregarItemEscena(tituloItem);
+    // Usamos dynamic_cast para acceder a los métodos específicos
+    if (auto juegoPtr = dynamic_cast<Juego*>(vistaJuego)) {
+        juegoPtr->agregarItemEscena(tituloItem);
+    }
+    else if (auto juego2Ptr = dynamic_cast<Juego2*>(vistaJuego)) {
+        juego2Ptr->agregarItemEscena(tituloItem);
+    }
+
     QRectF textRect = tituloItem->boundingRect();
     tituloItem->setPos(
-        juego->width()/2 - textRect.width()/2,
-        juego->height()/2 - textRect.height()/2
+        vistaJuego->width()/2 - textRect.width()/2,
+        vistaJuego->height()/2 - textRect.height()/2
         );
 
-    QTimer::singleShot(3000, [this, tituloItem]() {
-        juego->removerItemEscena(tituloItem);
+    QTimer::singleShot(3000, [this, vistaJuego, tituloItem, tieneIniciar]() {
+        if (auto juegoPtr = dynamic_cast<Juego*>(vistaJuego)) {
+            juegoPtr->removerItemEscena(tituloItem);
+            if (tieneIniciar) juegoPtr->iniciar();
+        }
+        else if (auto juego2Ptr = dynamic_cast<Juego2*>(vistaJuego)) {
+            juego2Ptr->removerItemEscena(tituloItem);
+            // No llamamos a iniciar() para Juego2
+        }
         delete tituloItem;
-        juego->iniciar();
     });
 }
 
@@ -240,4 +267,9 @@ MainWindow::~MainWindow() {
     if (juego) {
         delete juego;
     }
+
+    if (musicaMenu)
+        delete musicaMenu;
+    if (salidaAudioMenu)
+        delete salidaAudioMenu;
 }
