@@ -47,7 +47,7 @@ private:
     QGraphicsPixmapItem* puerta;
 
     int llavesRecogidas = 0;
-    const int TOTAL_LLAVES = 4;
+    const int TOTAL_LLAVES = 1;
 
     void verificarVictoria();
     void abrirPuerta();

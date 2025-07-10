@@ -7,6 +7,10 @@
 #include <QDebug>
 #include <QGraphicsDropShadowEffect>
 #include <QMessageBox>  // Mostrar mensajes al usuario
+#include <QDialog>
+#include <QVBoxLayout>
+#include <QLabel>
+#include <QPushButton>
 
 // Constructor de MainWindow
 MainWindow::MainWindow(QWidget *parent)
@@ -60,7 +64,7 @@ void MainWindow::aplicarEstilosMenu() {
 
     QFont font(dragonBallFont, 18, QFont::Bold);
     ui->newGameButton->setFont(font);
-    ui->continueButton->setFont(font);
+    ui->informationButton->setFont(font);
 
     QString style = R"(
         QPushButton {
@@ -78,10 +82,10 @@ void MainWindow::aplicarEstilosMenu() {
         }
     )";
     ui->newGameButton->setStyleSheet(style);
-    ui->continueButton->setStyleSheet(style);
+    ui->informationButton->setStyleSheet(style);
 }
 
-// Slot al hacer clic en "Nuevo Juego"
+// Slot al hacer clic en "New Game"
 void MainWindow::on_newGameButton_clicked() {
     if (juego) {
         delete juego;
@@ -122,6 +126,88 @@ void MainWindow::on_newGameButton_clicked() {
         qCritical() << "Error al crear el juego:" << e.what();
         QMessageBox::critical(this, "Error", tr("No se pudo iniciar el juego.\nDetalles: %1").arg(e.what()));
     }
+}
+
+// Slot al hacer clic en "Information"
+void MainWindow::on_informationButton_clicked() {
+    QDialog* infoDialog = new QDialog(this);
+    infoDialog->setWindowTitle("Información del Juego");
+    infoDialog->setFixedSize(600, 500);
+    infoDialog->setStyleSheet("background-color: #2c3e50;");
+
+    QVBoxLayout* layout = new QVBoxLayout(infoDialog);
+
+    QLabel* infoLabel = new QLabel;
+    infoLabel->setTextFormat(Qt::RichText);
+    infoLabel->setOpenExternalLinks(true);  // 👈 Esto permite hacer clic en enlaces
+    infoLabel->setStyleSheet(R"(
+        QLabel {
+            color: white;
+            font: 14px 'Arial';
+        }
+        a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    )");
+
+    infoLabel->setText(R"(
+<b style='font-size:18px;'>PROYECTO FINAL - INFORMATICA II</b><br><br>
+
+<b>🎮 CREADOR:</b> Carlos Andrés Buelvas<br>
+<b>🧡 AGRADECIMIENTOS:</b> A los profesores, mis compañeros y... a Goku por aguantar tantos saltos mal calculados.<br><br>
+
+<b>📘 INSTRUCCIONES:</b><br>
+<b>Nivel 1 - Escape en la Isla</b><br>
+- <b>W</b>: Saltar (mantener para una caída lenta).<br>
+- <b>S</b>: Caer más rápido o bajarse de cuerdas/plataformas.<br>
+- <b>P</b>: Disparar cuando la energía esté al máximo.<br>
+- <b>Espacio</b>: Pausar el juego (¡sólo en este nivel!).<br><br>
+
+<b>Nivel 2 - Rescate de Bulma</b><br>
+- <b>W, A, S, D</b>: Mover a Goku por el laberinto.<br>
+- <b>P</b>: Disparar hasta 3 proyectiles cuando no estás recargando.<br>
+- Evita a los soldados y encuentra las 4 llaves para liberar a Bulma.<br><br>
+
+<b>⚠️ ADVERTENCIAS Y ERRORES:</b><br>
+- A veces los soldados tienen puntería de francotirador.<br>
+- El botón de "salir al menú" puede cerrar el juego inesperadamente.<br>
+- En el nivel 1 las gaviotas y palmeras son solamente decoración, preocupate por las rocas y troncos.<br>
+- Si algo falla, ¡respira como Goku cuando entrena con 1000 kilos encima!<br><br>
+
+<b>✨ CONSEJO:</b> Juega con energía, ¡como si estuvieras recargando un Kamehameha!<br><br>
+
+<b>🔗 ENLACES:</b><br>
+<a href='https://github.com/Carlos-Andres-Buelvas/Proyecto-Final'>Repositorio en GitHub</a><br>
+
+<center><i>“¡Gracias por jugar! Este proyecto fue hecho con esfuerzo, errores... y mucho café.”</i></center>
+)");
+
+    infoLabel->setWordWrap(true);
+    infoLabel->setAlignment(Qt::AlignTop);
+
+    QPushButton* cerrar = new QPushButton("Cerrar");
+    cerrar->setStyleSheet(R"(
+        QPushButton {
+            background-color: #e74c3c;
+            color: white;
+            border-radius: 6px;
+            padding: 6px 20px;
+            font-weight: bold;
+        }
+        QPushButton:hover {
+            background-color: #c0392b;
+        }
+    )");
+    connect(cerrar, &QPushButton::clicked, infoDialog, &QDialog::accept);
+
+    layout->addWidget(infoLabel);
+    layout->addWidget(cerrar, 0, Qt::AlignCenter);
+
+    infoDialog->exec();
 }
 
 void MainWindow::iniciarNivel2() {

@@ -319,6 +319,12 @@ void Goku::keyPressEvent(QKeyEvent* event) {
     case Qt::Key_P:
         if (energia >= 100) {
             disparar2(scene());
+            QMediaPlayer* sonidoDisparo = new QMediaPlayer;
+            QAudioOutput* audioDisparo = new QAudioOutput;
+            sonidoDisparo->setAudioOutput(audioDisparo);
+            sonidoDisparo->setSource(QUrl("qrc:/sounds/Sounds/disparo.wav"));
+            audioDisparo->setVolume(70);
+            sonidoDisparo->play();
         }
         break;
     default: break;

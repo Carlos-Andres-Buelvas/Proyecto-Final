@@ -7,6 +7,9 @@
 #include <QTimeLine>
 #include <QGraphicsColorizeEffect>
 #include <QFontDatabase>
+#include <QMediaPlayer>
+#include <QAudioOutput>
+#include <QUrl>
 
 Juego2::Juego2(QWidget* parent) : QGraphicsView(parent) {
     escena = new QGraphicsScene(this);
@@ -163,14 +166,44 @@ void Juego2::actualizar() {
     if (llavesRecogidas == TOTAL_LLAVES && bulma && !m_nivelCompletado) {
         if (goku->collidesWithItem(bulma)) {
             m_nivelCompletado = true;
-
             enPausa = true;
+            detenerTodo();
+            if (musicaNivel2 && musicaNivel2->playbackState() == QMediaPlayer::PlayingState) musicaNivel2->stop();
 
-            // Mostrar mensaje de victoria
-            QMessageBox::information(this, "¡Victoria!", "¡Has rescatado a Bulma!\n¡Felicidades!");
+            QMediaPlayer* victoria = new QMediaPlayer(this);
+            QAudioOutput* audioVictoria = new QAudioOutput(this);
+            victoria->setAudioOutput(audioVictoria);
+            victoria->setSource(QUrl("qrc:/sounds/Sounds/victoria.wav"));
+            audioVictoria->setVolume(100);
+            victoria->play();
 
-            // Aquí podrías cerrar el juego, regresar al menú, etc.
-            // Por ahora cerramos la ventana:
+            // Mostrar mensaje personalizado de victoria
+            QMessageBox msgBox;
+            msgBox.setWindowTitle("¡Misión cumplida!");
+            msgBox.setText("¡Has rescatado a Bulma!\n\nGoku, una vez más, salva el día.\n\nBulma te debe una... ¡otra vez!");
+
+            msgBox.setStyleSheet(
+                "QMessageBox {"
+                "   background-color: #2c3e50;"
+                "   color: white;"
+                "}"
+                "QMessageBox QLabel {"
+                "   color: white;"
+                "   font: bold 16px;"
+                "}"
+                "QMessageBox QPushButton {"
+                "   background-color: #27ae60;"
+                "   color: white;"
+                "   border-radius: 5px;"
+                "   padding: 5px 10px;"
+                "   min-width: 80px;"
+                "}"
+                "QMessageBox QPushButton:hover {"
+                "   background-color: #2ecc71;"
+                "}"
+                );
+
+            int result = msgBox.exec();
             close();
         }
     }
@@ -390,7 +423,14 @@ void Juego2::eliminarEnemigo(Enemigo* enemigo) {
 
 void Juego2::mostrarGameOver() {
     detenerTodo();
+    if (musicaNivel2 && musicaNivel2->playbackState() == QMediaPlayer::PlayingState) musicaNivel2->stop();
 
+    QMediaPlayer* derrota = new QMediaPlayer;
+    QAudioOutput* salidaDerrota = new QAudioOutput;
+    derrota->setAudioOutput(salidaDerrota);
+    derrota->setSource(QUrl("qrc:/sounds/Sounds/derrota.mp3"));
+    salidaDerrota->setVolume(80);
+    derrota->play();
     // Mostrar mensaje de Game Over
     QGraphicsTextItem* gameOverText = new QGraphicsTextItem("GAME OVER");
     gameOverText->setDefaultTextColor(Qt::red);

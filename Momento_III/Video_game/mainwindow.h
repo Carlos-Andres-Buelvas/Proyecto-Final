@@ -24,6 +24,7 @@ public:
 
 private slots:
     void on_newGameButton_clicked();  // Slot para iniciar el juego
+    void on_informationButton_clicked();  // Slot para información del juego
 
 private:
     Ui::MainWindow *ui;

@@ -555,6 +555,13 @@ void Juego::aumentarContadorSoldados() {
 
     if (soldadosEliminados >= OBJETIVO_SOLDADOS) {
         detenerTodo();
+        if (musicaNivel1 && musicaNivel1->playbackState() == QMediaPlayer::PlayingState) musicaNivel1->stop();
+        QMediaPlayer* victoria = new QMediaPlayer(this);
+        QAudioOutput* audioVictoria = new QAudioOutput(this);
+        victoria->setAudioOutput(audioVictoria);
+        victoria->setSource(QUrl("qrc:/sounds/Sounds/victoria.wav"));
+        audioVictoria->setVolume(80);
+        victoria->play();
         QGraphicsTextItem* textoNivelCompletado = new QGraphicsTextItem("NIVEL COMPLETADO");
         textoNivelCompletado->setDefaultTextColor(QColor(255, 215, 0));
         textoNivelCompletado->setFont(QFont(dragonBallFont, 36));
@@ -1276,6 +1283,12 @@ void Juego::actualizarDecoracion()
 void Juego::mostrarGameOver() {
     detenerTodo();
     if (musicaNivel1 && musicaNivel1->playbackState() == QMediaPlayer::PlayingState) musicaNivel1->stop();
+    QMediaPlayer* derrota = new QMediaPlayer;
+    QAudioOutput* salidaDerrota = new QAudioOutput;
+    derrota->setAudioOutput(salidaDerrota);
+    derrota->setSource(QUrl("qrc:/sounds/Sounds/derrota.mp3"));
+    salidaDerrota->setVolume(80);
+    derrota->play();
 
     // Mostrar mensaje de Game Over
     QGraphicsTextItem* gameOverText = new QGraphicsTextItem("GAME OVER");
