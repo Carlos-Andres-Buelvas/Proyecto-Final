@@ -10,6 +10,10 @@
 #include <QMediaPlayer>
 #include <QAudioOutput>
 #include <QUrl>
+#include <QDialog>
+#include <QMovie>
+#include <QVBoxLayout>
+#include <QLabel>
 
 Juego2::Juego2(QWidget* parent) : QGraphicsView(parent) {
     escena = new QGraphicsScene(this);
@@ -178,32 +182,51 @@ void Juego2::actualizar() {
             victoria->play();
 
             // Mostrar mensaje personalizado de victoria
-            QMessageBox msgBox;
-            msgBox.setWindowTitle("¡Misión cumplida!");
-            msgBox.setText("¡Has rescatado a Bulma!\n\nGoku, una vez más, salva el día.\n\nBulma te debe una... ¡otra vez!");
+            QDialog* victoriaDialog = new QDialog(this);
+            victoriaDialog->setWindowTitle("¡Misión cumplida!");
+            victoriaDialog->setStyleSheet(R"(
+    QDialog {
+        background-color: #2c3e50;
+    }
+    QLabel {
+        color: white;
+        font: bold 16px;
+    }
+    QPushButton {
+        background-color: #27ae60;
+        color: white;
+        border-radius: 5px;
+        padding: 5px 10px;
+        min-width: 80px;
+    }
+    QPushButton:hover {
+        background-color: #2ecc71;
+    }
+)");
 
-            msgBox.setStyleSheet(
-                "QMessageBox {"
-                "   background-color: #2c3e50;"
-                "   color: white;"
-                "}"
-                "QMessageBox QLabel {"
-                "   color: white;"
-                "   font: bold 16px;"
-                "}"
-                "QMessageBox QPushButton {"
-                "   background-color: #27ae60;"
-                "   color: white;"
-                "   border-radius: 5px;"
-                "   padding: 5px 10px;"
-                "   min-width: 80px;"
-                "}"
-                "QMessageBox QPushButton:hover {"
-                "   background-color: #2ecc71;"
-                "}"
-                );
+            QVBoxLayout* layout = new QVBoxLayout(victoriaDialog);
 
-            int result = msgBox.exec();
+            // 🎞️ Imagen GIF
+            QLabel* gifLabel = new QLabel;
+            QMovie* movie = new QMovie(":/fondos/Pictures/goku-zzz.gif");
+            gifLabel->setMovie(movie);
+            movie->start();
+
+            // 🎉 Mensaje
+            QLabel* mensaje = new QLabel("¡Has rescatado a Bulma!<br><br>Goku, una vez más, salva el día.<br><br>Bulma te debe una... <i>¡otra vez!</i>");
+            mensaje->setTextFormat(Qt::RichText);
+            mensaje->setAlignment(Qt::AlignCenter);
+
+            // ✔️ Botón cerrar
+            QPushButton* btnCerrar = new QPushButton("Cerrar");
+            connect(btnCerrar, &QPushButton::clicked, victoriaDialog, &QDialog::accept);
+
+            // Añadir al layout
+            layout->addWidget(gifLabel, 0, Qt::AlignCenter);
+            layout->addWidget(mensaje);
+            layout->addWidget(btnCerrar, 0, Qt::AlignCenter);
+
+            victoriaDialog->exec();
             close();
         }
     }
@@ -344,7 +367,7 @@ void Juego2::actualizarBarraEnergia() {
 
     QRectF rectInicio = barraEnergia->rect();  // valor actual
 
-    connect(anim, &QTimeLine::frameChanged, [=](int frame) {
+    connect(anim, &QTimeLine::frameChanged, [=](int) {
         qreal progress = anim->currentValue();
         QRectF interpolado(
             rectInicio.x(),

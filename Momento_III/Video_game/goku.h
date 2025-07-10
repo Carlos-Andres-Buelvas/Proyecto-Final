@@ -5,9 +5,6 @@
 #include <QVector>
 #include <QPixmap>
 #include <QGraphicsScene>
-#include <QMediaPlayer>
-#include <QAudioOutput>
-#include <QUrl>
 
 class Enemigo;
 
@@ -98,10 +95,6 @@ private:
     // Métodos internos
     void cargarAnimaciones();        // Carga los sprites
     void actualizarSprite();         // Aplica el frame actual
-
-    // Sonido
-    //QMediaPlayer* salto = nullptr;
-    //QAudioOutput* audioSalto = nullptr;
 
 //NIVEL 2:
     bool m_enabled = true;

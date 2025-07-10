@@ -7,7 +7,7 @@
 #include <QMediaPlayer>
 #include <QAudioOutput>
 #include <QUrl>
-#include "juego.h"        // Incluye la clase principal del juego
+#include "juego.h"
 #include "juego2.h"
 
 QT_BEGIN_NAMESPACE
@@ -28,7 +28,7 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    Juego* juego = nullptr;          // Referencia al objeto del juego
+    Juego* juego = nullptr;
     Juego2* juego2 = nullptr;
     QString dragonBallFont;          // Nombre de la fuente personalizada
 

@@ -45,7 +45,7 @@ public:
 signals:
     void salirAlMenu();   // Vuelve a MainWindow
     void gameOver();      // Señal de finalización
-    void nivelCompletado();  // 🔔 Nivel 1 finalizado
+    void nivelCompletado();  // Nivel 1 finalizado
 
 private slots:
     void actualizar();             // Ciclo principal

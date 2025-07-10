@@ -36,6 +36,7 @@
         <file>Pictures/fondo_nivel2.jpg</file>
         <file>Pictures/information.png</file>
         <file>Pictures/juegazo.png</file>
+        <file>Pictures/goku-zzz.gif</file>
     </qresource>
     <qresource prefix="/sounds">
         <file>Sounds/derrota.mp3</file>

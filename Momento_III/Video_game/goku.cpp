@@ -61,22 +61,6 @@ void Goku::saltar() {
     velocidadY = -22;
     enSuelo = false;
     teclaWSostenida = true;
-/*
-    salto = new QMediaPlayer(this);
-    audioSalto = new QAudioOutput(this);
-    salto->setAudioOutput(audioSalto);
-    salto->setSource(QUrl("qrc:/sounds/Sounds/Salto.wav"));  // Verifica que el nombre esté en minúsculas
-    audioSalto->setVolume(70);
-    salto->play();
-
-    // Eliminarlos después de que termine el sonido para evitar fugas de memoria
-    connect(salto, &QMediaPlayer::mediaStatusChanged, salto, [=](QMediaPlayer::MediaStatus status) {
-        if (status == QMediaPlayer::EndOfMedia) {
-            salto->deleteLater();
-            audioSalto->deleteLater();
-        }
-    });
-*/
 }
 
 // Animación al correr (loop)
@@ -289,7 +273,7 @@ void Goku::cargarAnimacionesNivel2() {
     int originalW = 150;
     int originalH = 150;
 
-    // Tamaño final deseado según tu mapa (ajústalo si hiciste más columnas/filas)
+    // Tamaño final deseado según el mapa
     int tileW = 55;
     int tileH = 38;
 

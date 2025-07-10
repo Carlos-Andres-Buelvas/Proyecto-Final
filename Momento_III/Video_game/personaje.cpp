@@ -69,7 +69,7 @@ void Personaje::disparar2(QGraphicsScene* escena) {
         connect(timer, &QTimer::timeout, [=]() mutable {
             bola->moveBy(dx, dy);
 
-            QList<QGraphicsItem*> colisiones = escena->items(bola->sceneBoundingRect());
+            QVector<QGraphicsItem*> colisiones = escena->items(bola->sceneBoundingRect());
             for (auto item : colisiones) {
                 if (item != bola && (item->data(0) == "muro" || item->data(0) == "enemigo")) {
                     escena->removeItem(bola);
@@ -83,7 +83,7 @@ void Personaje::disparar2(QGraphicsScene* escena) {
                         if (enemigo) {
                             Juego2* juego2 = qobject_cast<Juego2*>(escena->views().first());
                             if (juego2) {
-                                juego2->eliminarEnemigo(enemigo);  // ✅ limpio, seguro y público
+                                juego2->eliminarEnemigo(enemigo);  // limpio, seguro y público
                             }
                         }
                     }
@@ -149,7 +149,7 @@ void Personaje::disparar2(QGraphicsScene* escena) {
         connect(timer, &QTimer::timeout, [=]() mutable {
             bola->moveBy(dx, dy);
 
-            QList<QGraphicsItem*> colisiones = escena->items(bola->sceneBoundingRect());
+            QVector<QGraphicsItem*> colisiones = escena->items(bola->sceneBoundingRect());
             for (auto item : colisiones) {
                 if (item != bola) {
                     if (item->data(0) == "muro") {
@@ -169,7 +169,7 @@ void Personaje::disparar2(QGraphicsScene* escena) {
                         timer->stop();
                         delete timer;
 
-                        // 🔻 Aquí puedes mostrar derrota o reiniciar el nivel
+                        // Aquí puedes mostrar derrota o reiniciar el nivel
                         qDebug() << "Goku fue alcanzado por un disparo. Fin del juego.";
                         // Espera 100 ms antes de emitir Game Over
                         QObject* parentView = escena->views().isEmpty() ? nullptr : escena->views().first();
@@ -211,7 +211,7 @@ bool Personaje::colisionaConMuro(const QPointF& nuevaPos, QGraphicsScene* escena
         );
 
     // Verificamos si colisionaría con algún muro
-    QList<QGraphicsItem*> items = escena->items(rectNuevo);
+    QVector<QGraphicsItem*> items = escena->items(rectNuevo);
 
     for (QGraphicsItem* item : items) {
         if (item != this && (item->data(0) == "muro" || item->data(0) == "puerta")) {

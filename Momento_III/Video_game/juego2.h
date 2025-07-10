@@ -52,8 +52,6 @@ private:
     void verificarVictoria();
     void abrirPuerta();
 
-
-    //QGraphicsRectItem* fondoEnergia = nullptr;
     QGraphicsRectItem* barraEnergia = nullptr;
     QGraphicsTextItem* textoLlaves = nullptr;
 

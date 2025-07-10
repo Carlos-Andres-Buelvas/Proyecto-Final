@@ -139,7 +139,7 @@ void MainWindow::on_informationButton_clicked() {
 
     QLabel* infoLabel = new QLabel;
     infoLabel->setTextFormat(Qt::RichText);
-    infoLabel->setOpenExternalLinks(true);  // 👈 Esto permite hacer clic en enlaces
+    infoLabel->setOpenExternalLinks(true);  // Esto permite hacer clic en enlaces
     infoLabel->setStyleSheet(R"(
         QLabel {
             color: white;

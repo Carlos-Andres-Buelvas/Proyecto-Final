@@ -412,15 +412,15 @@ void Juego::actualizar() {
             qreal gokuY = goku->y();
             qDebug() << std::abs(obstY - gokuY);
 
-            // ⚠️ Tolerancia para colisión en el suelo
+            // Tolerancia para colisión en el suelo
             if (std::abs(obstY - gokuY) < 390) {
                 goku->animarCaida();
                 mostrarGameOver();
-                qDebug() << "✅ Goku ha chocado con obstáculo en el suelo.";
+                qDebug() << "Goku ha chocado con obstáculo en el suelo.";
                 return;
             }
 
-            // ✔️ Caso 2: obstáculo sobre plataforma — verificar plataforma común
+            // Caso 2: obstáculo sobre plataforma — verificar plataforma común
             for (auto p : plataformas) {
                 qreal platY = p->y();
                 qreal gokuBase = goku->y() + goku->boundingRect().height();
@@ -436,14 +436,14 @@ void Juego::actualizar() {
                     p->collidesWithItem(o) && p->collidesWithItem(goku)) {
                     goku->animarCaida();
                     mostrarGameOver();
-                    qDebug() << "✅ Goku ha chocado con obstáculo sobre plataforma.";
+                    qDebug() << "Goku ha chocado con obstáculo sobre plataforma.";
                     return;
                 }
             }
         }
     }
 
-    //GOKU CON  LA CUERDA
+    //GOKU CON LA CUERDA
     // Detección de colisión con cuerdas
     if (!gokuEnCuerda && goku->y() < 300) { // Solo verificar si está en altura de cuerdas
         for (Cuerda& cuerda : cuerdas) {
@@ -600,9 +600,9 @@ void Juego::generarPlataforma() {
         // Altura fija dependiendo de si hay 1 o 2
         int y;
         if (cantidad == 2) {
-            y = alturas[i];  // altura 0 → 250, altura 1 → 400
+            y = alturas[i];  // altura 0 → 450, altura 1 → 295
         } else {
-            y = alturas[QRandomGenerator::global()->bounded(alturas.size())];  // aleatorio entre 250 y 400
+            y = alturas[QRandomGenerator::global()->bounded(alturas.size())];  // aleatorio entre 295 y 450
         }
 
         int posX = baseX + i * 650;  // buena separación cuando hay 2
@@ -798,8 +798,6 @@ void Juego::soltarGokuDeCuerda(Cuerda& cuerda) {
     // Solución: Ajustar la posición X manualmente
     extremo.setX(extremo.x() + velocidadScroll + 10);
     goku->setVisible(true);
-    //goku->activarCaida();
-    //goku->forzarCaida();
 
     // Restablecer la cuerda
     cuerda.gokuAgarrado = false;
@@ -1008,6 +1006,7 @@ void Juego::detenerTodo() {
     timerObstaculos->stop();
     timerTroncos->stop();
     timerCapsulas->stop();
+    timerAnimacionPajaro->stop();
 
     // Pausar todos los enemigos y sus proyectiles
     for (Enemigo* enemigo : enemigos) {
@@ -1025,6 +1024,7 @@ void Juego::reanudarTodo() {
     timerObstaculos->start(7000);
     timerTroncos->start(16);
     timerCapsulas->start(3000);
+    timerAnimacionPajaro->start(40);
 
     // Reanudar enemigos y proyectiles
     for (Enemigo* enemigo : enemigos) {
@@ -1263,7 +1263,7 @@ void Juego::actualizarDecoracion()
         }
     }
 
-    // OPCIONAL: Generar palmeras nuevas con baja frecuencia
+    // Generar palmeras nuevas con baja frecuencia
     static int contador = 0;
     if (contador++ > 100 && decoracionPalmeras.size() < 8) { // Cada 100 frames
         contador = 0;
