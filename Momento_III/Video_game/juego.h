@@ -3,69 +3,87 @@
 
 #include <QGraphicsView>
 #include <QGraphicsScene>
+#include <QGraphicsItem>
 #include <QTimer>
 #include <QPushButton>
-#include <QFontDatabase>          // Para manejo de fuentes
-#include <QPropertyAnimation>     // Para animaciones
-#include <QEasingCurve>           // Para curvas de animación
-#include <QGraphicsEffect>        // Para efectos visuales
-#include <QGraphicsDropShadowEffect> // Para sombras
-#include <QGraphicsColorizeEffect>   // Para efecto de color
+#include <QFontDatabase>
+#include <QPropertyAnimation>
+#include <QEasingCurve>
+#include <QGraphicsEffect>
+#include <QGraphicsDropShadowEffect>
+#include <QGraphicsColorizeEffect>
 #include <QGraphicsProxyWidget>
 #include <QTimeLine>
 #include <QGraphicsItemAnimation>
+#include <QMediaPlayer>
+#include <QAudioOutput>
+#include <QUrl>
+
 #include "goku.h"
 #include "enemigo.h"
 
 class Juego : public QGraphicsView {
     Q_OBJECT
+
 public:
-    Juego(QWidget *parent = nullptr);
+    explicit Juego(QWidget *parent = nullptr);
+    ~Juego();
+
     void iniciar();
     void aumentarContadorSoldados();
     void pausarJuego();
-    void agregarItemEscena(QGraphicsItem* item);
-    void removerItemEscena(QGraphicsItem* item);
+    void reanudarTodo();
+    void detenerTodo();
     void togglePausa();
     bool estaPausado() const { return pausado; }
-    void detenerTodo();
-    void reanudarTodo();
+
+    void agregarItemEscena(QGraphicsItem* item);
+    void removerItemEscena(QGraphicsItem* item);
     void mostrarGameOver();
     void reiniciarJuego();
-    ~Juego();
 
 signals:
-    void salirAlMenu();
-    void gameOver();
+    void salirAlMenu();   // Vuelve a MainWindow
+    void gameOver();      // Señal de finalización
+    void nivelCompletado();  // Nivel 1 finalizado
 
 private slots:
-    void actualizar();
+    void actualizar();             // Ciclo principal
     void generarEnemigo();
     void generarPlataforma();
     void mostrarMenuGameOver();
 
 private:
-    // Elementos gráficos y escena
+    // Escena y UI
     QGraphicsScene* escena;
     QGraphicsRectItem* fondoBarra;
     QGraphicsRectItem* barraEnergia;
     QGraphicsTextItem* contadorSoldados;
-    QPushButton* botonPausa;
-    QString dragonBallFont;
 
-    // Personajes y objetos del juego
+    // Botones de pausa
+    QPushButton* botonPausa;
+    QPushButton* btnContinuar;
+    QPushButton* btnSalir;
+    QGraphicsProxyWidget* proxyContinuar;
+    QGraphicsProxyWidget* proxySalir;
+    void configurarBotonesPausa();
+
+    // Personajes y elementos del juego
     Goku* goku;
     QVector<Enemigo*> enemigos;
     QVector<QGraphicsPixmapItem*> capsulas;
     QVector<QGraphicsPixmapItem*> plataformas;
     QVector<QGraphicsPixmapItem*> obstaculos;
+    QVector<QGraphicsPixmapItem*> fondosScroll;
+
+    // Recursos gráficos cargados una vez
     QVector<QPixmap> imagenesPlataformas;
     QVector<QPixmap> imagenesTroncos;
     QVector<QPixmap> imagenesRocas;
     QVector<QPixmap> imagenesObstaculos;
-    QVector<QGraphicsPixmapItem*> fondosScroll;
+    QString dragonBallFont;
 
-    // Timers del juego
+    // Temporizadores
     QTimer* timerJuego;
     QTimer* timerEnemigos;
     QTimer* timerCapsulas;
@@ -76,15 +94,15 @@ private:
     QTimer* timerTroncos;
     QTimer* timerGameOver;
 
-    // Variables de estado
+    // Variables de control
     float velocidadScroll = 3.0;
-    bool gokuEnCuerda = false;
     bool pausado = false;
     bool pPresionado = false;
+    bool gokuEnCuerda = false;
     int soldadosEliminados = 0;
-    const int OBJETIVO_SOLDADOS = 5;
+    const int OBJETIVO_SOLDADOS = 1;
 
-    // Estructuras especiales
+    // Estructura de la cuerda
     struct Cuerda {
         QPointF origen;
         double largo = 215;
@@ -98,6 +116,7 @@ private:
     };
     QVector<Cuerda> cuerdas;
 
+    // Estructura del tronco giratorio
     struct TroncoGiratorio {
         QGraphicsPixmapItem* sprite;
         qreal velocidadY;
@@ -108,7 +127,7 @@ private:
     };
     TroncoGiratorio troncoActual;
 
-    // Métodos privados
+    // Métodos de juego
     void moverFondo();
     void actualizarBarraEnergia();
     void generarObstaculo();
@@ -120,6 +139,7 @@ private:
     void generarTroncoUnico();
     void actualizarTronco();
 
+    // Detección de colisión tronco-plataforma
     QGraphicsPixmapItem* detectarPlataformaSobre(TroncoGiratorio& tronco) {
         QRectF areaTronco = tronco.sprite->boundingRect().translated(tronco.sprite->pos());
         for (auto plataforma : plataformas) {
@@ -134,29 +154,23 @@ private:
         return nullptr;
     }
 
-    // Declaración de los miembros
-    QPushButton* btnContinuar;
-    QPushButton* btnSalir;
-    QGraphicsProxyWidget* proxyContinuar;
-    QGraphicsProxyWidget* proxySalir;
-
-    // Declaración del método
-    void configurarBotonesPausa();
-
-    // Métodos para decoración
-    void cargarAssetsDecoracion();
-    void generarDecoracionPalmeras();
-    void actualizarDecoracion();
-    void iniciarAnimacionPajaro();  // Añade esta declaración
-    void animarPajaro();
-
-    // Miembros para decoración
+    // Decoración visual
     QVector<QPixmap> spritesPalmeras;
     QVector<QGraphicsPixmapItem*> decoracionPalmeras;
     QGraphicsPixmapItem* pajaroItem;
     int frameActualPajaro;
-    QTimer* timerAnimacionPajaro;
     QVector<QPixmap> framesPajaro;
+    QTimer* timerAnimacionPajaro;
+
+    void cargarAssetsDecoracion();
+    void generarDecoracionPalmeras();
+    void actualizarDecoracion();
+    void iniciarAnimacionPajaro();
+    void animarPajaro();
+
+    //Sonido
+    QMediaPlayer* musicaNivel1 = nullptr;
+    QAudioOutput* audioNivel1 = nullptr;
 
 protected:
     void keyPressEvent(QKeyEvent* event) override;

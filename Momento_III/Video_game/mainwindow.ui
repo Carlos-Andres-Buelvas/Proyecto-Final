@@ -584,7 +584,7 @@ QPushButton:pressed {
      <string>New Game</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="continueButton">
+   <widget class="QPushButton" name="informationButton">
     <property name="geometry">
      <rect>
       <x>300</x>
@@ -612,7 +612,39 @@ QPushButton:pressed {
 </string>
     </property>
     <property name="text">
-     <string>Continue</string>
+     <string>Information</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="informationLabel">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>510</y>
+      <width>151</width>
+      <height>81</height>
+     </rect>
+    </property>
+    <property name="pixmap">
+     <pixmap resource="resources.qrc">:/fondos/Pictures/information.png</pixmap>
+    </property>
+    <property name="scaledContents">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="juegazoLabel">
+    <property name="geometry">
+     <rect>
+      <x>280</x>
+      <y>0</y>
+      <width>251</width>
+      <height>171</height>
+     </rect>
+    </property>
+    <property name="pixmap">
+     <pixmap resource="resources.qrc">:/fondos/Pictures/juegazo.png</pixmap>
+    </property>
+    <property name="scaledContents">
+     <bool>true</bool>
     </property>
    </widget>
   </widget>

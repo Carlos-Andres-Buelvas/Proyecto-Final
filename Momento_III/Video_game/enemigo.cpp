@@ -5,8 +5,10 @@
 #include <QTimer>
 #include <QRandomGenerator>
 #include <cmath>
+#include <QDebug>
 
-Enemigo::Enemigo(float x, float y, float ancho, float alto, Goku* gokuRef)
+// Constructor del enemigo
+Enemigo::Enemigo(float x, float y, float ancho, float alto, Goku* gokuRef, bool esNivel2)
     : Personaje(x, y, ancho, alto),
     gokuDetectado(gokuRef),
     direccion(1),
@@ -18,23 +20,52 @@ Enemigo::Enemigo(float x, float y, float ancho, float alto, Goku* gokuRef)
     disparando(false),
     timerDisparo(new QTimer(this))
 {
-    this->ancho *= 1.5;
-    this->alto *= 1.5;
+    if (!esNivel2) {
+        this->ancho *= 1.5;
+        this->alto *= 1.5;
 
-    cargarAnimaciones();
-    setPixmap(framesDerecha[0].scaled(this->ancho, this->alto, Qt::KeepAspectRatio, Qt::SmoothTransformation));
-    posX = x;
-    posY = y; //375 - alto + 170;
-    //setPos(posX, posY);
+        cargarAnimaciones();
+        setPixmap(framesDerecha[0].scaled(this->ancho, this->alto, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+        posX = x;
+        posY = y;
 
-    // conectar disparo al método heredado
-    connect(timerDisparo, &QTimer::timeout, this, [=]() {
-        if (scene()) {
-            disparar(scene());  // usa método heredado correctamente
-        }
-    });
+        // Inicia el disparo cuando el temporizador lo indique
+        connect(timerDisparo, &QTimer::timeout, this, [=]() {
+            if (scene()) {
+                disparar(scene());
+            }
+        });
+    }
+
+//NIVEL 2:
+
+    else {
+        tipo = "enemigo";
+        goku = gokuRef;
+        // Dirección inicial aleatoria
+        QStringList direcciones = { "arriba", "abajo", "izquierda", "derecha" };
+        direccionActual = direcciones.at(QRandomGenerator::global()->bounded(4));
+
+        // Timer para patrullar
+        timerPatrulla = new QTimer(this);
+        connect(timerPatrulla, &QTimer::timeout, this, &Enemigo::patrullar);
+        timerPatrulla->start(100);  // cada 100 ms
+
+        timerDisparo2 = new QTimer(this);
+        timerDisparo2->setInterval(tiempoEsperaDisparo);
+        connect(timerDisparo2, &QTimer::timeout, this, [this]() {
+            if (this->goku && this->scene()){
+                qreal distancia = QLineF(this->pos(), this->goku->pos()).length();
+                if (distancia < 250) {
+                    this->disparar2(scene());
+                }
+            }
+        });
+        timerDisparo2->start();
+    }
 }
 
+// Cargar frames de la hoja de sprites
 void Enemigo::cargarAnimaciones() {
     QPixmap spriteSheet(":/sprites/Pictures/soldados.png");
 
@@ -48,12 +79,12 @@ void Enemigo::cargarAnimaciones() {
         framesDerecha.append(spriteSheet.copy(i * w, 2 * h, w, h));
 }
 
+// Movimiento general del enemigo (scroll, patrullaje y animación)
 void Enemigo::mover() {
-    // Desplazamiento general por scroll
-    posX -= 3;
+    posX -= 3;          // Efecto scroll
     setX(posX);
 
-    // 🎯 Detección de Goku
+    // Detección de Goku para comenzar disparo
     if (gokuDetectado) {
         float distancia = std::abs(gokuDetectado->x() - x());
 
@@ -63,7 +94,7 @@ void Enemigo::mover() {
 
             if (!disparando) {
                 disparando = true;
-                timerDisparo->start(1000);  // dispara cada 1s
+                timerDisparo->start(1000);  // Dispara cada 1 segundo
             }
         } else {
             estado = Patrullando;
@@ -74,7 +105,7 @@ void Enemigo::mover() {
         }
     }
 
-    // 🎞️ Animación de frames
+    // Animación de caminar
     contador++;
     if (contador >= velocidadAnimacion) {
         QVector<QPixmap>& frames = (direccion == -1) ? framesIzquierda : framesDerecha;
@@ -83,7 +114,7 @@ void Enemigo::mover() {
         contador = 0;
     }
 
-    // 🚶‍♂️ Movimiento lateral si está patrullando
+    // Movimiento de patrullaje si no está disparando
     if (estado == Patrullando) {
         posX += direccion * velocidadMovimiento;
         setX(posX);
@@ -93,12 +124,11 @@ void Enemigo::mover() {
     }
 }
 
+// Disparo del enemigo
 void Enemigo::disparar(QGraphicsScene* escena) {
-    // No disparar si el juego está pausado
-    if (pausado || direccion != -1) return;
-    if (direccion != -1) return; // Solo dispara si está mirando a la izquierda
+    if (pausado || direccion != -1) return;  // Solo dispara si mira a la izquierda
 
-    // Crear el proyectil visual
+    // Crear el proyectil rojo
     QGraphicsEllipseItem* proyectilSoldado = new QGraphicsEllipseItem(0, 0, 15, 15);
     proyectilSoldado->setBrush(Qt::red);
     proyectilSoldado->setZValue(1);
@@ -109,7 +139,7 @@ void Enemigo::disparar(QGraphicsScene* escena) {
     proyectilSoldado->setPos(posDisparoX, posDisparoY);
     escena->addItem(proyectilSoldado);
 
-    // Timer para mover el proyectil
+    // Movimiento del proyectil con temporizador
     QTimer* t = new QTimer(this);
     connect(t, &QTimer::timeout, [=]() mutable {
         if (!proyectilSoldado || !proyectilSoldado->scene()) {
@@ -118,13 +148,13 @@ void Enemigo::disparar(QGraphicsScene* escena) {
             return;
         }
 
-        proyectilSoldado->moveBy(-20, 0); // más rápido
+        proyectilSoldado->moveBy(-20, 0);  // Se desplaza más rápido
 
         if (proyectilSoldado->x() < -100) {
             if (scene()) scene()->removeItem(proyectilSoldado);
             delete proyectilSoldado;
 
-            // Limpiar de la lista
+            // Eliminar de la lista de proyectiles activos
             for (int i = 0; i < proyectilesActivos.size(); ++i) {
                 if (proyectilesActivos[i].first == proyectilSoldado) {
                     QTimer* tmp = proyectilesActivos[i].second;
@@ -140,10 +170,11 @@ void Enemigo::disparar(QGraphicsScene* escena) {
     });
     t->start(30);
 
-    // Guardar para eliminar después
+    // Registrar en la lista de proyectiles activos
     proyectilesActivos.append(qMakePair(proyectilSoldado, t));
 }
 
+// Elimina todos los proyectiles activos (cuando el enemigo muere)
 void Enemigo::eliminarProyectiles() {
     for (const auto& par : proyectilesActivos) {
         auto proyectil = par.first;
@@ -160,6 +191,7 @@ void Enemigo::eliminarProyectiles() {
     proyectilesActivos.clear();
 }
 
+// Pausa los temporizadores de los proyectiles
 void Enemigo::detenerProyectiles() {
     for (auto& par : proyectilesActivos) {
         if (par.second) {
@@ -168,6 +200,7 @@ void Enemigo::detenerProyectiles() {
     }
 }
 
+// Reanuda el movimiento de proyectiles
 void Enemigo::reanudarProyectiles() {
     for (auto& par : proyectilesActivos) {
         if (par.second) {
@@ -176,19 +209,99 @@ void Enemigo::reanudarProyectiles() {
     }
 }
 
+// Pausar o reanudar comportamiento completo del enemigo
 void Enemigo::setPausado(bool pausa) {
     pausado = pausa;
     if (pausado) {
-        // Detener el timer de disparo y los proyectiles existentes
         if (timerDisparo && timerDisparo->isActive()) {
             timerDisparo->stop();
         }
         detenerProyectiles();
     } else {
-        // Reanudar solo si estaba disparando
         if (disparando && timerDisparo) {
             timerDisparo->start(1000);
         }
         reanudarProyectiles();
     }
+}
+
+//NIVEL 2:
+
+void Enemigo::cargarAnimacionesNivel2(int tileW, int tileH) {
+    QPixmap spriteSheet(":/sprites/Pictures/soldados.png");
+    int frameW = 100;
+    int frameH = 100;
+
+    framesArriba.clear();
+    framesAbajo.clear();
+    framesIzquierda.clear();
+    framesDerecha.clear();
+
+    for (int i = 0; i < 3; ++i) {
+        framesAbajo.append(spriteSheet.copy(i * frameW, 0 * frameH, frameW, frameH).scaled(tileW, tileH, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+        framesIzquierda.append(spriteSheet.copy(i * frameW, 1 * frameH, frameW, frameH).scaled(tileW, tileH, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+        framesDerecha.append(spriteSheet.copy(i * frameW, 2 * frameH, frameW, frameH).scaled(tileW, tileH, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+        framesArriba.append(spriteSheet.copy(i * frameW, 3 * frameH, frameW, frameH).scaled(tileW, tileH, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    }
+
+    setPixmap(framesAbajo[0]);
+}
+
+void Enemigo::patrullar() {
+    if (disparandoNivel2) return;
+    // Probar próxima posición sin moverse aún
+    int paso = 4;
+    QPointF nuevaPos = pos();
+
+    if (direccionActual == "arriba") nuevaPos.ry() -= paso;
+    else if (direccionActual == "abajo") nuevaPos.ry() += paso;
+    else if (direccionActual == "izquierda") nuevaPos.rx() -= paso;
+    else if (direccionActual == "derecha") nuevaPos.rx() += paso;
+
+    // Si no choca con muro, avanzar
+    if (!colisionaConMuro(nuevaPos, scene())) {
+        mover2(direccionActual);
+    } else {
+        // Cambiar de dirección si choca
+        QStringList nuevasDirecciones = { "arriba", "abajo", "izquierda", "derecha" };
+        nuevasDirecciones.removeAll(direccionActual); // evitar repetir
+
+        direccionActual = nuevasDirecciones.at(QRandomGenerator::global()->bounded(nuevasDirecciones.size()));
+    }
+}
+
+int Enemigo::getFrameActual() const{
+    return frameActual;
+}
+
+Personaje* Enemigo::getGoku() const {
+    return goku;
+}
+
+void Enemigo::setDisparandoNivel2(bool valor) {
+    disparandoNivel2 = valor;
+}
+
+bool Enemigo::isDisparandoNivel2() const {
+    return disparandoNivel2;
+}
+
+void Enemigo::detener() {
+    if (timerPatrulla && timerPatrulla->isActive())
+        timerPatrulla->stop();
+
+    if (timerDisparo2 && timerDisparo2->isActive())
+        timerDisparo2->stop();
+
+    detenerProyectiles();
+}
+
+void Enemigo::reanudar() {
+    if (timerPatrulla && !timerPatrulla->isActive())
+        timerPatrulla->start(100);  // misma frecuencia de antes
+
+    if (timerDisparo2 && !timerDisparo2->isActive())
+        timerDisparo2->start();
+
+    reanudarProyectiles();
 }

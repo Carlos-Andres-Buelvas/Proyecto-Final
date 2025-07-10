@@ -1,5 +1,6 @@
 #include "juego.h"
 #include "enemigo.h"
+#include "mainwindow.h"
 #include <QGraphicsPixmapItem>
 #include <QKeyEvent>
 #include <QRandomGenerator>
@@ -14,6 +15,8 @@
 #include <QGraphicsColorizeEffect>
 #include <QGraphicsItemAnimation>
 #include <QGraphicsProxyWidget>
+#include <QMediaPlayer>
+#include <QAudioOutput>
 
 Juego::Juego(QWidget *parent) : QGraphicsView(parent), timerAnimacionCuerda(nullptr),
     timerGeneracionCuerdas(nullptr), btnContinuar(nullptr), btnSalir(nullptr),
@@ -238,6 +241,9 @@ Juego::Juego(QWidget *parent) : QGraphicsView(parent), timerAnimacionCuerda(null
     timerGameOver = new QTimer(this);
     timerGameOver->setSingleShot(true);
     connect(timerGameOver, &QTimer::timeout, this, &Juego::mostrarMenuGameOver);
+
+    this->show();
+    this->setFocus();
 }
 
 void Juego::iniciar() {
@@ -245,6 +251,14 @@ void Juego::iniciar() {
     int intervalo = QRandomGenerator::global()->bounded(10000, 15000); // Entre 10 y 15 segundos
     timerEnemigos->start(intervalo);
     generarTroncoUnico(); // Primer tronco
+    musicaNivel1 = new QMediaPlayer(this);
+    audioNivel1 = new QAudioOutput(this);
+    musicaNivel1->setAudioOutput(audioNivel1);
+    musicaNivel1->setSource(QUrl("qrc:/sounds/Sounds/musica_nivel1.mp3"));
+    audioNivel1->setVolume(1.0);
+    musicaNivel1->setLoops(QMediaPlayer::Infinite);
+    musicaNivel1->play();
+
 }
 
 void Juego::actualizar() {
@@ -398,15 +412,15 @@ void Juego::actualizar() {
             qreal gokuY = goku->y();
             qDebug() << std::abs(obstY - gokuY);
 
-            // ⚠️ Tolerancia para colisión en el suelo
+            // Tolerancia para colisión en el suelo
             if (std::abs(obstY - gokuY) < 390) {
                 goku->animarCaida();
                 mostrarGameOver();
-                qDebug() << "✅ Goku ha chocado con obstáculo en el suelo.";
+                qDebug() << "Goku ha chocado con obstáculo en el suelo.";
                 return;
             }
 
-            // ✔️ Caso 2: obstáculo sobre plataforma — verificar plataforma común
+            // Caso 2: obstáculo sobre plataforma — verificar plataforma común
             for (auto p : plataformas) {
                 qreal platY = p->y();
                 qreal gokuBase = goku->y() + goku->boundingRect().height();
@@ -422,14 +436,14 @@ void Juego::actualizar() {
                     p->collidesWithItem(o) && p->collidesWithItem(goku)) {
                     goku->animarCaida();
                     mostrarGameOver();
-                    qDebug() << "✅ Goku ha chocado con obstáculo sobre plataforma.";
+                    qDebug() << "Goku ha chocado con obstáculo sobre plataforma.";
                     return;
                 }
             }
         }
     }
 
-    //GOKU CON  LA CUERDA
+    //GOKU CON LA CUERDA
     // Detección de colisión con cuerdas
     if (!gokuEnCuerda && goku->y() < 300) { // Solo verificar si está en altura de cuerdas
         for (Cuerda& cuerda : cuerdas) {
@@ -479,7 +493,7 @@ void Juego::generarEnemigo() {
         int y = 510; // Valor de Y para el suelo (ajusta según necesites)
 
         // Crear el enemigo
-        Enemigo* enemigo = new Enemigo(x, y, 100, 100, goku);
+        Enemigo* enemigo = new Enemigo(x, y, 100, 100, goku, false);
         enemigo->setPos(x, y);
         escena->addItem(enemigo);
         enemigos.append(enemigo);
@@ -541,19 +555,33 @@ void Juego::aumentarContadorSoldados() {
 
     if (soldadosEliminados >= OBJETIVO_SOLDADOS) {
         detenerTodo();
-        QGraphicsTextItem* nivelCompletado = new QGraphicsTextItem("NIVEL COMPLETADO");
-        nivelCompletado->setDefaultTextColor(QColor(255, 215, 0));
-        nivelCompletado->setFont(QFont(dragonBallFont, 36));
-        nivelCompletado->setPos(width()/2 - nivelCompletado->boundingRect().width()/2, height()/2 - 50);
+        if (musicaNivel1 && musicaNivel1->playbackState() == QMediaPlayer::PlayingState) musicaNivel1->stop();
+        QMediaPlayer* victoria = new QMediaPlayer(this);
+        QAudioOutput* audioVictoria = new QAudioOutput(this);
+        victoria->setAudioOutput(audioVictoria);
+        victoria->setSource(QUrl("qrc:/sounds/Sounds/victoria.wav"));
+        audioVictoria->setVolume(80);
+        victoria->play();
+        QGraphicsTextItem* textoNivelCompletado = new QGraphicsTextItem("NIVEL COMPLETADO");
+        textoNivelCompletado->setDefaultTextColor(QColor(255, 215, 0));
+        textoNivelCompletado->setFont(QFont(dragonBallFont, 36));
+        textoNivelCompletado->setPos(width()/2 - textoNivelCompletado->boundingRect().width()/2, height()/2 - 50);
 
         QGraphicsDropShadowEffect* shadow = new QGraphicsDropShadowEffect();
         shadow->setBlurRadius(10);
         shadow->setColor(Qt::black);
         shadow->setOffset(5, 5);
-        nivelCompletado->setGraphicsEffect(shadow);
+        textoNivelCompletado->setGraphicsEffect(shadow);
 
-        nivelCompletado->setZValue(1001);
-        escena->addItem(nivelCompletado);
+        textoNivelCompletado->setZValue(1001);
+        escena->addItem(textoNivelCompletado);
+
+        // Emitir señal después de un breve retraso
+        QTimer::singleShot(3000, this, [this]() {
+            emit nivelCompletado();
+            detenerTodo();
+            if (musicaNivel1 && musicaNivel1->playbackState() == QMediaPlayer::PlayingState) musicaNivel1->stop();
+        });
     }
 }
 
@@ -572,9 +600,9 @@ void Juego::generarPlataforma() {
         // Altura fija dependiendo de si hay 1 o 2
         int y;
         if (cantidad == 2) {
-            y = alturas[i];  // altura 0 → 250, altura 1 → 400
+            y = alturas[i];  // altura 0 → 450, altura 1 → 295
         } else {
-            y = alturas[QRandomGenerator::global()->bounded(alturas.size())];  // aleatorio entre 250 y 400
+            y = alturas[QRandomGenerator::global()->bounded(alturas.size())];  // aleatorio entre 295 y 450
         }
 
         int posX = baseX + i * 650;  // buena separación cuando hay 2
@@ -770,8 +798,6 @@ void Juego::soltarGokuDeCuerda(Cuerda& cuerda) {
     // Solución: Ajustar la posición X manualmente
     extremo.setX(extremo.x() + velocidadScroll + 10);
     goku->setVisible(true);
-    //goku->activarCaida();
-    //goku->forzarCaida();
 
     // Restablecer la cuerda
     cuerda.gokuAgarrado = false;
@@ -980,6 +1006,7 @@ void Juego::detenerTodo() {
     timerObstaculos->stop();
     timerTroncos->stop();
     timerCapsulas->stop();
+    timerAnimacionPajaro->stop();
 
     // Pausar todos los enemigos y sus proyectiles
     for (Enemigo* enemigo : enemigos) {
@@ -997,6 +1024,7 @@ void Juego::reanudarTodo() {
     timerObstaculos->start(7000);
     timerTroncos->start(16);
     timerCapsulas->start(3000);
+    timerAnimacionPajaro->start(40);
 
     // Reanudar enemigos y proyectiles
     for (Enemigo* enemigo : enemigos) {
@@ -1018,7 +1046,7 @@ void Juego::togglePausa() {
         escena->addItem(overlay);
 
         // Texto "PAUSA" (como ya lo tienes)
-        QGraphicsTextItem* pausaText = new QGraphicsTextItem("PAUSA");
+        QGraphicsTextItem* pausaText = new QGraphicsTextItem("PAUSE");
         pausaText->setDefaultTextColor(QColor(255, 215, 0));
         pausaText->setFont(QFont(dragonBallFont, 58, QFont::Bold));
         // ... (configuración de sombra y posición)
@@ -1101,6 +1129,8 @@ void Juego::configurarBotonesPausa() {
     connect(btnSalir, &QPushButton::clicked, this, [this]() {
         emit salirAlMenu();
         togglePausa();
+        detenerTodo();
+        if (musicaNivel1 && musicaNivel1->playbackState() == QMediaPlayer::PlayingState) musicaNivel1->stop();
     });
 }
 
@@ -1233,7 +1263,7 @@ void Juego::actualizarDecoracion()
         }
     }
 
-    // OPCIONAL: Generar palmeras nuevas con baja frecuencia
+    // Generar palmeras nuevas con baja frecuencia
     static int contador = 0;
     if (contador++ > 100 && decoracionPalmeras.size() < 8) { // Cada 100 frames
         contador = 0;
@@ -1252,6 +1282,13 @@ void Juego::actualizarDecoracion()
 
 void Juego::mostrarGameOver() {
     detenerTodo();
+    if (musicaNivel1 && musicaNivel1->playbackState() == QMediaPlayer::PlayingState) musicaNivel1->stop();
+    QMediaPlayer* derrota = new QMediaPlayer;
+    QAudioOutput* salidaDerrota = new QAudioOutput;
+    derrota->setAudioOutput(salidaDerrota);
+    derrota->setSource(QUrl("qrc:/sounds/Sounds/derrota.mp3"));
+    salidaDerrota->setVolume(80);
+    derrota->play();
 
     // Mostrar mensaje de Game Over
     QGraphicsTextItem* gameOverText = new QGraphicsTextItem("GAME OVER");
@@ -1372,6 +1409,8 @@ Juego::~Juego() {
         timerAnimacionPajaro->stop();
         delete timerAnimacionPajaro;
     }
+
+    if (musicaNivel1) musicaNivel1->stop();
 
     // ... resto de la limpieza ...
 }
