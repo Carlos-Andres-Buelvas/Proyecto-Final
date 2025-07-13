@@ -1,0 +1,236 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.14.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Proyecto Final - Informática II: Archivo de código fuente Entrada/enemigo.h</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript" src="clipboard.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript" src="cookie.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">Proyecto Final - Informática II
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generado por Doxygen 1.14.0 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+</script>
+<script type="text/javascript">
+$(function() { codefold.init(); });
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+$(function() {
+  initMenu('',true,false,'search.php','Buscar',true);
+  $(function() { init_search(); });
+});
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+$(function(){initNavTree('enemigo_8h_source.html','',''); });
+</script>
+<div id="container">
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Cargando...</div>
+<div class="SRStatus" id="Searching">Buscando...</div>
+<div class="SRStatus" id="NoMatches">Nada coincide</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">enemigo.h</div></div>
+</div><!--header-->
+<div class="contents">
+<a href="enemigo_8h.html">Ir a la documentación de este archivo.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#ifndef ENEMIGO_H</span></div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#define ENEMIGO_H</span></div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span> </div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &quot;<a class="code" href="personaje_8h.html">personaje.h</a>&quot;</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &lt;QVector&gt;</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &lt;QPixmap&gt;</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &lt;QTimer&gt;</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &lt;QGraphicsScene&gt;</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="keyword">class </span><a class="code hl_class" href="class_goku.html">Goku</a>;</div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span></div>
+<div class="foldopen" id="foldopen00018" data-start="{" data-end="};">
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno"><a class="line" href="class_enemigo.html">   18</a></span><span class="keyword">class </span><a class="code hl_function" href="class_enemigo.html#afc232954a452520a88645ad0915a2339">Enemigo</a> : <span class="keyword">public</span> <a class="code hl_function" href="class_personaje.html#ac788c154341f4805684d91929904d81f">Personaje</a> {</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>    Q_OBJECT</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    <a class="code hl_function" href="class_enemigo.html#afc232954a452520a88645ad0915a2339">Enemigo</a>(<span class="keywordtype">float</span> x, <span class="keywordtype">float</span> y, <span class="keywordtype">float</span> <a class="code hl_variable" href="class_personaje.html#a11782e62db98f05a5c49bfe80157118b">ancho</a>, <span class="keywordtype">float</span> <a class="code hl_variable" href="class_personaje.html#aaef6bf1b4161df811ffcabb26cdfa691">alto</a>, <a class="code hl_class" href="class_goku.html">Goku</a>* gokuRef, <span class="keywordtype">bool</span> esNivel2 = <span class="keyword">false</span>);</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span></div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_enemigo.html#ae614a11726de2ea4ae9cfd939cac2444">mover</a>() <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span></div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_enemigo.html#a611b87942a45c27b3dc53cf228c9eb9f">disparar</a>(QGraphicsScene* escena) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span></div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno"><a class="line" href="class_enemigo.html#ae7acbefd9318df426dd616f4e9a9fbd1">   40</a></span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="class_enemigo.html#ae7acbefd9318df426dd616f4e9a9fbd1">estaDisparando</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="class_enemigo.html#ab26efa313f9ee9fd73a012cfaa8c51fe">estado</a> == <a class="code hl_enumvalue" href="class_enemigo.html#a4e32029ef4688dd961fbe9c9a4f6e3d0abf799d24e9d76fced1a784f52b3cca5d">Disparando</a>; }</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span></div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_enemigo.html#aad7934a34c434d82a1e6cfabc09f93b6">eliminarProyectiles</a>();</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span></div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_enemigo.html#a1df71c955734f7f13c2f3b76a2f3f189">detenerProyectiles</a>();</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span></div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_enemigo.html#ad3e3126d2a4a183bb9fac634df2b185e">reanudarProyectiles</a>();</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span></div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_enemigo.html#a2ab226ada5aa9408380dd7a38f6d73df">setPausado</a>(<span class="keywordtype">bool</span> pausa);</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno"><a class="line" href="class_enemigo.html#a4c74261ca978d746e0e749fd1482ce6d">   54</a></span>    QVector&lt;QPair&lt;QGraphicsEllipseItem*, QTimer*&gt;&gt; <a class="code hl_variable" href="class_enemigo.html#a4c74261ca978d746e0e749fd1482ce6d">proyectilesActivos</a>; </div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span></div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_enemigo.html#af4dc966758dc93943b3ea1b93e877155">cargarAnimacionesNivel2</a>(<span class="keywordtype">int</span> tileW, <span class="keywordtype">int</span> tileH);</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span> </div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno"><a class="line" href="class_enemigo.html#a22a8a2bbbaeb8a562a8410e3725f8ff6">   63</a></span>    QTimer* <a class="code hl_variable" href="class_enemigo.html#a22a8a2bbbaeb8a562a8410e3725f8ff6">timerDisparo2</a> = <span class="keyword">nullptr</span>; </div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno"><a class="line" href="class_enemigo.html#aaf11e7fae6fdf6dbea7486829c125bcc">   64</a></span>    <span class="keywordtype">int</span> <a class="code hl_variable" href="class_enemigo.html#aaf11e7fae6fdf6dbea7486829c125bcc">tiempoEsperaDisparo</a> = 2000; </div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span></div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    <span class="keywordtype">int</span> <a class="code hl_function" href="class_enemigo.html#a3354895bf7199726910b5f41beb947e3">getFrameActual</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span></div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    <a class="code hl_function" href="class_personaje.html#ac788c154341f4805684d91929904d81f">Personaje</a>* <a class="code hl_function" href="class_enemigo.html#aac8fb721573df8e2e7ea15abf7052923">getGoku</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span></div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_enemigo.html#a5230a73814989bcd677b629a54ad752e">setDisparandoNivel2</a>(<span class="keywordtype">bool</span> valor);</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span></div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="class_enemigo.html#ad97f1e7e9382c60f46ccba4b4aed3bb4">isDisparandoNivel2</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span></div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_enemigo.html#ad72aef27011c1620ab43778e84896331">detener</a>();</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span></div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_enemigo.html#a773f4723a72c54cd3d9a3a7be9008793">reanudar</a>();</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span> </div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span><span class="keyword">private</span> slots:</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>    <span class="keywordtype">void</span> <a class="code hl_slot" href="class_enemigo.html#aeb8e360b8218c70bc5e88d504dfd80cf">patrullar</a>();</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span> </div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_enemigo.html#ac6b84463a13c5ccf70649dce27af86f0">cargarAnimaciones</a>();</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span></div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno"><a class="line" href="class_enemigo.html#a6e17ec6f85198a492e349ae2af5c772e">   93</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_enemigo.html#a6e17ec6f85198a492e349ae2af5c772e">iniciarDisparo</a>();</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span></div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno"><a class="line" href="class_enemigo.html#a928a39dfb0a9886a90c83b7911475b70">   96</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_enemigo.html#a928a39dfb0a9886a90c83b7911475b70">crearDisparo</a>();</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span></div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno"><a class="line" href="class_enemigo.html#a4e32029ef4688dd961fbe9c9a4f6e3d0abf799d24e9d76fced1a784f52b3cca5d">   99</a></span>    <span class="keyword">enum</span> <a class="code hl_enumeration" href="class_enemigo.html#a4e32029ef4688dd961fbe9c9a4f6e3d0">EstadoEnemigo</a> { <a class="code hl_enumvalue" href="class_enemigo.html#a4e32029ef4688dd961fbe9c9a4f6e3d0a9801f71283fd889defb7e62f7e814d75">Patrullando</a>, <a class="code hl_enumvalue" href="class_enemigo.html#a4e32029ef4688dd961fbe9c9a4f6e3d0abf799d24e9d76fced1a784f52b3cca5d">Disparando</a>, <a class="code hl_enumvalue" href="class_enemigo.html#a4e32029ef4688dd961fbe9c9a4f6e3d0abe33278ef86982761b0064039308c369">Muerto</a> };</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno"><a class="line" href="class_enemigo.html#ab26efa313f9ee9fd73a012cfaa8c51fe">  100</a></span>    <a class="code hl_enumeration" href="class_enemigo.html#a4e32029ef4688dd961fbe9c9a4f6e3d0">EstadoEnemigo</a> <a class="code hl_variable" href="class_enemigo.html#ab26efa313f9ee9fd73a012cfaa8c51fe">estado</a> = <a class="code hl_enumvalue" href="class_enemigo.html#a4e32029ef4688dd961fbe9c9a4f6e3d0a9801f71283fd889defb7e62f7e814d75">Patrullando</a>; </div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span> </div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno"><a class="line" href="class_enemigo.html#a73cc795acb1951544a4dc66514bbe775">  102</a></span>    <a class="code hl_class" href="class_goku.html">Goku</a>* <a class="code hl_variable" href="class_enemigo.html#a73cc795acb1951544a4dc66514bbe775">gokuDetectado</a> = <span class="keyword">nullptr</span>; </div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span> </div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno"><a class="line" href="class_enemigo.html#a42b43be82682cf680de5583ae13ddd85">  104</a></span>    <span class="keywordtype">int</span> <a class="code hl_variable" href="class_enemigo.html#a42b43be82682cf680de5583ae13ddd85">direccion</a>; </div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno"><a class="line" href="class_enemigo.html#a2552c6dbc009e87d8f995e6da54b4c6a">  105</a></span>    <span class="keywordtype">int</span> <a class="code hl_variable" href="class_enemigo.html#a2552c6dbc009e87d8f995e6da54b4c6a">frameActual</a>; </div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno"><a class="line" href="class_enemigo.html#a507122a0c68ec728888e27f5bedecd8d">  106</a></span>    <span class="keywordtype">int</span> <a class="code hl_variable" href="class_enemigo.html#a507122a0c68ec728888e27f5bedecd8d">contador</a>; </div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno"><a class="line" href="class_enemigo.html#a477876ce722e9a8cb7d184d2608916c0">  107</a></span>    <span class="keywordtype">int</span> <a class="code hl_variable" href="class_enemigo.html#a477876ce722e9a8cb7d184d2608916c0">velocidadAnimacion</a>; </div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno"><a class="line" href="class_enemigo.html#a0be2e1dbf53520a9715f00473c941164">  108</a></span>    <span class="keywordtype">float</span> <a class="code hl_variable" href="class_enemigo.html#a0be2e1dbf53520a9715f00473c941164">velocidadMovimiento</a>; </div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span> </div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno"><a class="line" href="class_enemigo.html#a0f91d21e0b7c86d9cb71d2a6642b6eb9">  110</a></span>    <span class="keywordtype">bool</span> <a class="code hl_variable" href="class_enemigo.html#a0f91d21e0b7c86d9cb71d2a6642b6eb9">pausado</a> = <span class="keyword">false</span>; </div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno"><a class="line" href="class_enemigo.html#a8f130bc859ef365dc4198cbac0b6ae3a">  111</a></span>    <span class="keywordtype">bool</span> <a class="code hl_variable" href="class_enemigo.html#a8f130bc859ef365dc4198cbac0b6ae3a">disparando</a> = <span class="keyword">false</span>; </div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span> </div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno"><a class="line" href="class_enemigo.html#a4d22af95899d7fbc9f25094047ffed91">  113</a></span>    QTimer* <a class="code hl_variable" href="class_enemigo.html#a4d22af95899d7fbc9f25094047ffed91">timerDisparo</a>; </div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span> </div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>    <span class="comment">// Nivel 2</span></div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno"><a class="line" href="class_enemigo.html#ae99726a699b4113616e7c39cf480d5cb">  116</a></span>    QTimer* <a class="code hl_variable" href="class_enemigo.html#ae99726a699b4113616e7c39cf480d5cb">timerPatrulla</a>; </div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno"><a class="line" href="class_enemigo.html#ab59c7931b57ae282d179ee00fd8ad822">  117</a></span>    QString <a class="code hl_variable" href="class_enemigo.html#ab59c7931b57ae282d179ee00fd8ad822">direccionActual</a>; </div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno"><a class="line" href="class_enemigo.html#a4f185a4eea10bf8f65ff5cd2dbb7e511">  118</a></span>    <a class="code hl_function" href="class_personaje.html#ac788c154341f4805684d91929904d81f">Personaje</a>* <a class="code hl_variable" href="class_enemigo.html#a4f185a4eea10bf8f65ff5cd2dbb7e511">goku</a>; </div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno"><a class="line" href="class_enemigo.html#ab500509a52f8df931b35d30c56e23431">  119</a></span>    <span class="keywordtype">bool</span> <a class="code hl_variable" href="class_enemigo.html#ab500509a52f8df931b35d30c56e23431">disparandoNivel2</a> = <span class="keyword">false</span>; </div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>};</div>
+</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span> </div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span><span class="preprocessor">#endif </span><span class="comment">// ENEMIGO_H</span></div>
+<div class="ttc" id="aclass_enemigo_html_a0be2e1dbf53520a9715f00473c941164"><div class="ttname"><a href="class_enemigo.html#a0be2e1dbf53520a9715f00473c941164">Enemigo::velocidadMovimiento</a></div><div class="ttdeci">float velocidadMovimiento</div><div class="ttdoc">Velocidad de patrullaje.</div><div class="ttdef"><b>Definition</b> enemigo.h:108</div></div>
+<div class="ttc" id="aclass_enemigo_html_a0f91d21e0b7c86d9cb71d2a6642b6eb9"><div class="ttname"><a href="class_enemigo.html#a0f91d21e0b7c86d9cb71d2a6642b6eb9">Enemigo::pausado</a></div><div class="ttdeci">bool pausado</div><div class="ttdoc">Indica si está pausado.</div><div class="ttdef"><b>Definition</b> enemigo.h:110</div></div>
+<div class="ttc" id="aclass_enemigo_html_a1df71c955734f7f13c2f3b76a2f3f189"><div class="ttname"><a href="class_enemigo.html#a1df71c955734f7f13c2f3b76a2f3f189">Enemigo::detenerProyectiles</a></div><div class="ttdeci">void detenerProyectiles()</div><div class="ttdoc">Detiene todos los proyectiles activos.</div><div class="ttdef"><b>Definition</b> enemigo.cpp:165</div></div>
+<div class="ttc" id="aclass_enemigo_html_a22a8a2bbbaeb8a562a8410e3725f8ff6"><div class="ttname"><a href="class_enemigo.html#a22a8a2bbbaeb8a562a8410e3725f8ff6">Enemigo::timerDisparo2</a></div><div class="ttdeci">QTimer * timerDisparo2</div><div class="ttdoc">Temporizador para controlar disparos en nivel 2.</div><div class="ttdef"><b>Definition</b> enemigo.h:63</div></div>
+<div class="ttc" id="aclass_enemigo_html_a2552c6dbc009e87d8f995e6da54b4c6a"><div class="ttname"><a href="class_enemigo.html#a2552c6dbc009e87d8f995e6da54b4c6a">Enemigo::frameActual</a></div><div class="ttdeci">int frameActual</div><div class="ttdoc">Frame actual de animación.</div><div class="ttdef"><b>Definition</b> enemigo.h:105</div></div>
+<div class="ttc" id="aclass_enemigo_html_a2ab226ada5aa9408380dd7a38f6d73df"><div class="ttname"><a href="class_enemigo.html#a2ab226ada5aa9408380dd7a38f6d73df">Enemigo::setPausado</a></div><div class="ttdeci">void setPausado(bool pausa)</div><div class="ttdoc">Cambia el estado de pausa del enemigo.</div><div class="ttdef"><b>Definition</b> enemigo.cpp:179</div></div>
+<div class="ttc" id="aclass_enemigo_html_a3354895bf7199726910b5f41beb947e3"><div class="ttname"><a href="class_enemigo.html#a3354895bf7199726910b5f41beb947e3">Enemigo::getFrameActual</a></div><div class="ttdeci">int getFrameActual() const</div><div class="ttdoc">Obtiene el frame actual de la animación.</div><div class="ttdef"><b>Definition</b> enemigo.cpp:226</div></div>
+<div class="ttc" id="aclass_enemigo_html_a42b43be82682cf680de5583ae13ddd85"><div class="ttname"><a href="class_enemigo.html#a42b43be82682cf680de5583ae13ddd85">Enemigo::direccion</a></div><div class="ttdeci">int direccion</div><div class="ttdoc">Dirección de movimiento (-1: izquierda, 1: derecha)</div><div class="ttdef"><b>Definition</b> enemigo.h:104</div></div>
+<div class="ttc" id="aclass_enemigo_html_a477876ce722e9a8cb7d184d2608916c0"><div class="ttname"><a href="class_enemigo.html#a477876ce722e9a8cb7d184d2608916c0">Enemigo::velocidadAnimacion</a></div><div class="ttdeci">int velocidadAnimacion</div><div class="ttdoc">Velocidad de cambio de frame.</div><div class="ttdef"><b>Definition</b> enemigo.h:107</div></div>
+<div class="ttc" id="aclass_enemigo_html_a4c74261ca978d746e0e749fd1482ce6d"><div class="ttname"><a href="class_enemigo.html#a4c74261ca978d746e0e749fd1482ce6d">Enemigo::proyectilesActivos</a></div><div class="ttdeci">QVector&lt; QPair&lt; QGraphicsEllipseItem *, QTimer * &gt; &gt; proyectilesActivos</div><div class="ttdoc">Proyectiles activos en escena.</div><div class="ttdef"><b>Definition</b> enemigo.h:54</div></div>
+<div class="ttc" id="aclass_enemigo_html_a4d22af95899d7fbc9f25094047ffed91"><div class="ttname"><a href="class_enemigo.html#a4d22af95899d7fbc9f25094047ffed91">Enemigo::timerDisparo</a></div><div class="ttdeci">QTimer * timerDisparo</div><div class="ttdoc">Temporizador de disparo (nivel 1)</div><div class="ttdef"><b>Definition</b> enemigo.h:113</div></div>
+<div class="ttc" id="aclass_enemigo_html_a4e32029ef4688dd961fbe9c9a4f6e3d0"><div class="ttname"><a href="class_enemigo.html#a4e32029ef4688dd961fbe9c9a4f6e3d0">Enemigo::EstadoEnemigo</a></div><div class="ttdeci">EstadoEnemigo</div><div class="ttdoc">Estados posibles del enemigo.</div><div class="ttdef"><b>Definition</b> enemigo.h:99</div></div>
+<div class="ttc" id="aclass_enemigo_html_a4e32029ef4688dd961fbe9c9a4f6e3d0a9801f71283fd889defb7e62f7e814d75"><div class="ttname"><a href="class_enemigo.html#a4e32029ef4688dd961fbe9c9a4f6e3d0a9801f71283fd889defb7e62f7e814d75">Enemigo::Patrullando</a></div><div class="ttdeci">@ Patrullando</div><div class="ttdef"><b>Definition</b> enemigo.h:99</div></div>
+<div class="ttc" id="aclass_enemigo_html_a4e32029ef4688dd961fbe9c9a4f6e3d0abe33278ef86982761b0064039308c369"><div class="ttname"><a href="class_enemigo.html#a4e32029ef4688dd961fbe9c9a4f6e3d0abe33278ef86982761b0064039308c369">Enemigo::Muerto</a></div><div class="ttdeci">@ Muerto</div><div class="ttdef"><b>Definition</b> enemigo.h:99</div></div>
+<div class="ttc" id="aclass_enemigo_html_a4e32029ef4688dd961fbe9c9a4f6e3d0abf799d24e9d76fced1a784f52b3cca5d"><div class="ttname"><a href="class_enemigo.html#a4e32029ef4688dd961fbe9c9a4f6e3d0abf799d24e9d76fced1a784f52b3cca5d">Enemigo::Disparando</a></div><div class="ttdeci">@ Disparando</div><div class="ttdef"><b>Definition</b> enemigo.h:99</div></div>
+<div class="ttc" id="aclass_enemigo_html_a4f185a4eea10bf8f65ff5cd2dbb7e511"><div class="ttname"><a href="class_enemigo.html#a4f185a4eea10bf8f65ff5cd2dbb7e511">Enemigo::goku</a></div><div class="ttdeci">Personaje * goku</div><div class="ttdoc">Referencia a Goku como Personaje (nivel 2)</div><div class="ttdef"><b>Definition</b> enemigo.h:118</div></div>
+<div class="ttc" id="aclass_enemigo_html_a507122a0c68ec728888e27f5bedecd8d"><div class="ttname"><a href="class_enemigo.html#a507122a0c68ec728888e27f5bedecd8d">Enemigo::contador</a></div><div class="ttdeci">int contador</div><div class="ttdoc">Contador para control de animación.</div><div class="ttdef"><b>Definition</b> enemigo.h:106</div></div>
+<div class="ttc" id="aclass_enemigo_html_a5230a73814989bcd677b629a54ad752e"><div class="ttname"><a href="class_enemigo.html#a5230a73814989bcd677b629a54ad752e">Enemigo::setDisparandoNivel2</a></div><div class="ttdeci">void setDisparandoNivel2(bool valor)</div><div class="ttdoc">Activa o desactiva el disparo en el nivel 2.</div><div class="ttdef"><b>Definition</b> enemigo.cpp:228</div></div>
+<div class="ttc" id="aclass_enemigo_html_a611b87942a45c27b3dc53cf228c9eb9f"><div class="ttname"><a href="class_enemigo.html#a611b87942a45c27b3dc53cf228c9eb9f">Enemigo::disparar</a></div><div class="ttdeci">void disparar(QGraphicsScene *escena) override</div><div class="ttdoc">Disparo del enemigo si detecta a Goku (nivel 1).</div><div class="ttdef"><b>Definition</b> enemigo.cpp:118</div></div>
+<div class="ttc" id="aclass_enemigo_html_a6e17ec6f85198a492e349ae2af5c772e"><div class="ttname"><a href="class_enemigo.html#a6e17ec6f85198a492e349ae2af5c772e">Enemigo::iniciarDisparo</a></div><div class="ttdeci">void iniciarDisparo()</div><div class="ttdoc">Inicia el proceso de disparo (nivel 1).</div></div>
+<div class="ttc" id="aclass_enemigo_html_a73cc795acb1951544a4dc66514bbe775"><div class="ttname"><a href="class_enemigo.html#a73cc795acb1951544a4dc66514bbe775">Enemigo::gokuDetectado</a></div><div class="ttdeci">Goku * gokuDetectado</div><div class="ttdoc">Referencia a Goku detectado (nivel 1)</div><div class="ttdef"><b>Definition</b> enemigo.h:102</div></div>
+<div class="ttc" id="aclass_enemigo_html_a773f4723a72c54cd3d9a3a7be9008793"><div class="ttname"><a href="class_enemigo.html#a773f4723a72c54cd3d9a3a7be9008793">Enemigo::reanudar</a></div><div class="ttdeci">void reanudar()</div><div class="ttdoc">Reanuda todas las actividades del enemigo.</div><div class="ttdef"><b>Definition</b> enemigo.cpp:239</div></div>
+<div class="ttc" id="aclass_enemigo_html_a8f130bc859ef365dc4198cbac0b6ae3a"><div class="ttname"><a href="class_enemigo.html#a8f130bc859ef365dc4198cbac0b6ae3a">Enemigo::disparando</a></div><div class="ttdeci">bool disparando</div><div class="ttdoc">Indica si está disparando.</div><div class="ttdef"><b>Definition</b> enemigo.h:111</div></div>
+<div class="ttc" id="aclass_enemigo_html_a928a39dfb0a9886a90c83b7911475b70"><div class="ttname"><a href="class_enemigo.html#a928a39dfb0a9886a90c83b7911475b70">Enemigo::crearDisparo</a></div><div class="ttdeci">void crearDisparo()</div><div class="ttdoc">Crea el proyectil real y lo lanza.</div></div>
+<div class="ttc" id="aclass_enemigo_html_aac8fb721573df8e2e7ea15abf7052923"><div class="ttname"><a href="class_enemigo.html#aac8fb721573df8e2e7ea15abf7052923">Enemigo::getGoku</a></div><div class="ttdeci">Personaje * getGoku() const</div><div class="ttdoc">Devuelve el puntero a Goku.</div><div class="ttdef"><b>Definition</b> enemigo.cpp:227</div></div>
+<div class="ttc" id="aclass_enemigo_html_aad7934a34c434d82a1e6cfabc09f93b6"><div class="ttname"><a href="class_enemigo.html#aad7934a34c434d82a1e6cfabc09f93b6">Enemigo::eliminarProyectiles</a></div><div class="ttdeci">void eliminarProyectiles()</div><div class="ttdoc">Elimina todos los proyectiles activos del enemigo.</div><div class="ttdef"><b>Definition</b> enemigo.cpp:153</div></div>
+<div class="ttc" id="aclass_enemigo_html_aaf11e7fae6fdf6dbea7486829c125bcc"><div class="ttname"><a href="class_enemigo.html#aaf11e7fae6fdf6dbea7486829c125bcc">Enemigo::tiempoEsperaDisparo</a></div><div class="ttdeci">int tiempoEsperaDisparo</div><div class="ttdoc">Tiempo de espera entre disparos (ms)</div><div class="ttdef"><b>Definition</b> enemigo.h:64</div></div>
+<div class="ttc" id="aclass_enemigo_html_ab26efa313f9ee9fd73a012cfaa8c51fe"><div class="ttname"><a href="class_enemigo.html#ab26efa313f9ee9fd73a012cfaa8c51fe">Enemigo::estado</a></div><div class="ttdeci">EstadoEnemigo estado</div><div class="ttdoc">Estado actual del enemigo.</div><div class="ttdef"><b>Definition</b> enemigo.h:100</div></div>
+<div class="ttc" id="aclass_enemigo_html_ab500509a52f8df931b35d30c56e23431"><div class="ttname"><a href="class_enemigo.html#ab500509a52f8df931b35d30c56e23431">Enemigo::disparandoNivel2</a></div><div class="ttdeci">bool disparandoNivel2</div><div class="ttdoc">Indica si está disparando (nivel 2)</div><div class="ttdef"><b>Definition</b> enemigo.h:119</div></div>
+<div class="ttc" id="aclass_enemigo_html_ab59c7931b57ae282d179ee00fd8ad822"><div class="ttname"><a href="class_enemigo.html#ab59c7931b57ae282d179ee00fd8ad822">Enemigo::direccionActual</a></div><div class="ttdeci">QString direccionActual</div><div class="ttdoc">Dirección actual en nivel 2 (&quot;arriba&quot;, &quot;izquierda&quot;...)</div><div class="ttdef"><b>Definition</b> enemigo.h:117</div></div>
+<div class="ttc" id="aclass_enemigo_html_ac6b84463a13c5ccf70649dce27af86f0"><div class="ttname"><a href="class_enemigo.html#ac6b84463a13c5ccf70649dce27af86f0">Enemigo::cargarAnimaciones</a></div><div class="ttdeci">void cargarAnimaciones()</div><div class="ttdoc">Carga las animaciones del enemigo para el nivel 1.</div><div class="ttdef"><b>Definition</b> enemigo.cpp:66</div></div>
+<div class="ttc" id="aclass_enemigo_html_ad3e3126d2a4a183bb9fac634df2b185e"><div class="ttname"><a href="class_enemigo.html#ad3e3126d2a4a183bb9fac634df2b185e">Enemigo::reanudarProyectiles</a></div><div class="ttdeci">void reanudarProyectiles()</div><div class="ttdoc">Reanuda todos los proyectiles activos.</div><div class="ttdef"><b>Definition</b> enemigo.cpp:172</div></div>
+<div class="ttc" id="aclass_enemigo_html_ad72aef27011c1620ab43778e84896331"><div class="ttname"><a href="class_enemigo.html#ad72aef27011c1620ab43778e84896331">Enemigo::detener</a></div><div class="ttdeci">void detener()</div><div class="ttdoc">Detiene todas las actividades del enemigo.</div><div class="ttdef"><b>Definition</b> enemigo.cpp:232</div></div>
+<div class="ttc" id="aclass_enemigo_html_ad97f1e7e9382c60f46ccba4b4aed3bb4"><div class="ttname"><a href="class_enemigo.html#ad97f1e7e9382c60f46ccba4b4aed3bb4">Enemigo::isDisparandoNivel2</a></div><div class="ttdeci">bool isDisparandoNivel2() const</div><div class="ttdoc">Indica si está disparando en nivel 2.</div><div class="ttdef"><b>Definition</b> enemigo.cpp:229</div></div>
+<div class="ttc" id="aclass_enemigo_html_ae614a11726de2ea4ae9cfd939cac2444"><div class="ttname"><a href="class_enemigo.html#ae614a11726de2ea4ae9cfd939cac2444">Enemigo::mover</a></div><div class="ttdeci">void mover() override</div><div class="ttdoc">Movimiento del enemigo (nivel 1).</div><div class="ttdef"><b>Definition</b> enemigo.cpp:80</div></div>
+<div class="ttc" id="aclass_enemigo_html_ae7acbefd9318df426dd616f4e9a9fbd1"><div class="ttname"><a href="class_enemigo.html#ae7acbefd9318df426dd616f4e9a9fbd1">Enemigo::estaDisparando</a></div><div class="ttdeci">bool estaDisparando() const</div><div class="ttdoc">Verifica si el enemigo está actualmente disparando.</div><div class="ttdef"><b>Definition</b> enemigo.h:40</div></div>
+<div class="ttc" id="aclass_enemigo_html_ae99726a699b4113616e7c39cf480d5cb"><div class="ttname"><a href="class_enemigo.html#ae99726a699b4113616e7c39cf480d5cb">Enemigo::timerPatrulla</a></div><div class="ttdeci">QTimer * timerPatrulla</div><div class="ttdoc">Temporizador de patrullaje (nivel 2)</div><div class="ttdef"><b>Definition</b> enemigo.h:116</div></div>
+<div class="ttc" id="aclass_enemigo_html_aeb8e360b8218c70bc5e88d504dfd80cf"><div class="ttname"><a href="class_enemigo.html#aeb8e360b8218c70bc5e88d504dfd80cf">Enemigo::patrullar</a></div><div class="ttdeci">void patrullar()</div><div class="ttdoc">Patrullaje automático en el nivel 2.</div><div class="ttdef"><b>Definition</b> enemigo.cpp:209</div></div>
+<div class="ttc" id="aclass_enemigo_html_af4dc966758dc93943b3ea1b93e877155"><div class="ttname"><a href="class_enemigo.html#af4dc966758dc93943b3ea1b93e877155">Enemigo::cargarAnimacionesNivel2</a></div><div class="ttdeci">void cargarAnimacionesNivel2(int tileW, int tileH)</div><div class="ttdoc">Carga las animaciones del enemigo para el nivel 2.</div><div class="ttdef"><b>Definition</b> enemigo.cpp:191</div></div>
+<div class="ttc" id="aclass_enemigo_html_afc232954a452520a88645ad0915a2339"><div class="ttname"><a href="class_enemigo.html#afc232954a452520a88645ad0915a2339">Enemigo::Enemigo</a></div><div class="ttdeci">Enemigo(float x, float y, float ancho, float alto, Goku *gokuRef, bool esNivel2=false)</div><div class="ttdoc">Constructor del Enemigo.</div><div class="ttdef"><b>Definition</b> enemigo.cpp:16</div></div>
+<div class="ttc" id="aclass_goku_html"><div class="ttname"><a href="class_goku.html">Goku</a></div><div class="ttdoc">La clase Goku representa al personaje principal controlado por el jugador.</div><div class="ttdef"><b>Definition</b> goku.h:17</div></div>
+<div class="ttc" id="aclass_personaje_html_a11782e62db98f05a5c49bfe80157118b"><div class="ttname"><a href="class_personaje.html#a11782e62db98f05a5c49bfe80157118b">Personaje::ancho</a></div><div class="ttdeci">float ancho</div><div class="ttdef"><b>Definition</b> personaje.h:77</div></div>
+<div class="ttc" id="aclass_personaje_html_aaef6bf1b4161df811ffcabb26cdfa691"><div class="ttname"><a href="class_personaje.html#aaef6bf1b4161df811ffcabb26cdfa691">Personaje::alto</a></div><div class="ttdeci">float alto</div><div class="ttdoc">Dimensiones del personaje.</div><div class="ttdef"><b>Definition</b> personaje.h:77</div></div>
+<div class="ttc" id="aclass_personaje_html_ac788c154341f4805684d91929904d81f"><div class="ttname"><a href="class_personaje.html#ac788c154341f4805684d91929904d81f">Personaje::Personaje</a></div><div class="ttdeci">Personaje(float x, float y, float ancho, float alto)</div><div class="ttdoc">Constructor base del personaje.</div><div class="ttdef"><b>Definition</b> personaje.cpp:14</div></div>
+<div class="ttc" id="apersonaje_8h_html"><div class="ttname"><a href="personaje_8h.html">personaje.h</a></div></div>
+</div><!-- fragment --></div><!-- contents -->
+</div><!-- doc-content -->
+</div><!-- container -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a href="dir_dd9dbe427e32f67ea3b2a2afb81ef03e.html">Entrada</a></li><li class="navelem"><a href="enemigo_8h.html">enemigo.h</a></li>
+    <li class="footer">Generado por <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.14.0 </li>
+  </ul>
+</div>
+</body>
+</html>

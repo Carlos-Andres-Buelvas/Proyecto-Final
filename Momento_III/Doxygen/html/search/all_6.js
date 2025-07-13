@@ -1,0 +1,23 @@
+var searchData=
+[
+  ['gameover_0',['gameOver',['../class_juego.html#a3126d5914b66f096b24a8bb1a7f0ce30',1,'Juego::gameOver()'],['../class_juego2.html#ac02c6c2e8ce2b7a0f4a6ac354b92dadc',1,'Juego2::gameOver()']]],
+  ['gameovermostrado_1',['gameOverMostrado',['../class_juego2.html#ad9b8c6717d53ca8e697f0ae33d2e0934',1,'Juego2']]],
+  ['generarcuerda_2',['generarCuerda',['../class_juego.html#a06c770b3b5ff67faf4020cb29569e9c4',1,'Juego']]],
+  ['generardecoracionpalmeras_3',['generarDecoracionPalmeras',['../class_juego.html#ab0e8ff68e867d4c32161591d3b2bb231',1,'Juego']]],
+  ['generarenemigo_4',['generarEnemigo',['../class_juego.html#a27b79a66264ccc971044886a907cc6d9',1,'Juego']]],
+  ['generarobstaculo_5',['generarObstaculo',['../class_juego.html#a7526e9c4ab7255879008f93566010529',1,'Juego']]],
+  ['generarplataforma_6',['generarPlataforma',['../class_juego.html#a4d77d2759fd6a51778098f13cc4663a9',1,'Juego']]],
+  ['generartroncounico_7',['generarTroncoUnico',['../class_juego.html#a64f0c260911c4ddc9855bcf361cc03d5',1,'Juego']]],
+  ['getframeactual_8',['getFrameActual',['../class_enemigo.html#a3354895bf7199726910b5f41beb947e3',1,'Enemigo']]],
+  ['getgoku_9',['getGoku',['../class_enemigo.html#aac8fb721573df8e2e7ea15abf7052923',1,'Enemigo']]],
+  ['goku_10',['Goku',['../class_goku.html',1,'Goku'],['../class_goku.html#a66b9a138cc56c958488b50016d671432',1,'Goku::Goku()']]],
+  ['goku_11',['goku',['../class_enemigo.html#a4f185a4eea10bf8f65ff5cd2dbb7e511',1,'Enemigo::goku'],['../class_juego.html#a1b97f4e410ef5013d27377300655b40a',1,'Juego::goku'],['../class_juego2.html#a027f0b4673b9b9f113b112eab7d710da',1,'Juego2::goku']]],
+  ['goku_2ecpp_12',['goku.cpp',['../goku_8cpp.html',1,'']]],
+  ['goku_2eh_13',['goku.h',['../goku_8h.html',1,'']]],
+  ['gokuagarrado_14',['gokuAgarrado',['../struct_juego_1_1_cuerda.html#a9033dc103266e5c98dad41f29ba3f1e4',1,'Juego::Cuerda']]],
+  ['gokuderrotado_15',['gokuDerrotado',['../class_personaje.html#a13458159f6e0bd24e12d02a873c461ed',1,'Personaje']]],
+  ['gokudetectado_16',['gokuDetectado',['../class_enemigo.html#a73cc795acb1951544a4dc66514bbe775',1,'Enemigo']]],
+  ['gokuencuerda_17',['gokuEnCuerda',['../class_juego.html#aa2e110bd1044d2b4f0771c86e35e45c2',1,'Juego']]],
+  ['gokusprite_18',['gokuSprite',['../struct_juego_1_1_cuerda.html#a4a60cc50445d756221a0c9324b63fcbc',1,'Juego::Cuerda']]],
+  ['gravedad_19',['gravedad',['../class_personaje.html#a0b5ee03448f0bbb7c460550095d3a0fd',1,'Personaje']]]
+];

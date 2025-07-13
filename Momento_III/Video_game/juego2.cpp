@@ -31,7 +31,7 @@ Juego2::Juego2(QWidget* parent) : QGraphicsView(parent) {
     musicaNivel2->setLoops(QMediaPlayer::Infinite);
     musicaNivel2->play();
 
-    // 🎯 Cargar fuente Dragon Ball
+    // Cargar fuente Dragon Ball
     int fontId = QFontDatabase::addApplicationFont(":/fondos/Pictures/db_font.ttf");
     if (fontId == -1) {
         qDebug() << "Error al cargar la fuente Dragon Ball";
@@ -46,7 +46,7 @@ Juego2::Juego2(QWidget* parent) : QGraphicsView(parent) {
         }
     }
 
-    // 🔶 Fondo de nivel 2
+    // Fondo de nivel 2
     QPixmap fondo(":/fondos/Pictures/fondo_nivel2.jpg");
     fondo = fondo.scaled(1280, 680, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
     QGraphicsPixmapItem* fondoItem = new QGraphicsPixmapItem(fondo);
@@ -57,7 +57,7 @@ Juego2::Juego2(QWidget* parent) : QGraphicsView(parent) {
 
     cargarMapa("");
 
-    // 🔋 Barra de energía visual estilo nivel 1
+    // Barra de energía visual estilo nivel 1
     barraEnergia = new QGraphicsRectItem(25, 25, 0, 20);
     QLinearGradient gradEnergia(0, 0, 200, 0);
     gradEnergia.setColorAt(0, QColor(255, 255, 0));    // amarillo
@@ -69,7 +69,7 @@ Juego2::Juego2(QWidget* parent) : QGraphicsView(parent) {
     barraEnergia->setPos(1050, 0);
     escena->addItem(barraEnergia);
 
-    // 🟨 Texto "ENERGIA" con fuente Dragon Ball
+    // Texto "ENERGIA" con fuente Dragon Ball
     QGraphicsTextItem* energiaText = new QGraphicsTextItem("ENERGIA");
     energiaText->setDefaultTextColor(QColor(255, 215, 0));
     energiaText->setFont(QFont(dragonBallFont, 16, QFont::Bold));
@@ -77,7 +77,7 @@ Juego2::Juego2(QWidget* parent) : QGraphicsView(parent) {
     energiaText->setZValue(12);
     escena->addItem(energiaText);
 
-    // 🔑 Texto de llaves con fuente Dragon Ball
+    // Texto de llaves con fuente Dragon Ball
     textoLlaves = new QGraphicsTextItem();
     textoLlaves->setHtml(
         "<div style='color: #ffcc00; font-family: \"" + dragonBallFont + "\"; font-size: 18px; "
@@ -85,10 +85,10 @@ Juego2::Juego2(QWidget* parent) : QGraphicsView(parent) {
                                                                          "LLAVES: <span style='color: #ffffff;'>0</span>/4</div>"
         );
     textoLlaves->setZValue(12);
-    textoLlaves->setPos(1070, 40);  // 📍 Evita solaparse con barra energía
+    textoLlaves->setPos(1070, 40);  // Evita solaparse con barra energía
     escena->addItem(textoLlaves);
 
-    // 🟡 Botón de pausa
+    // Botón de pausa
     QPushButton* botonPausa = new QPushButton(this);
     botonPausa->setGeometry(0, 0, 120, 50);
     botonPausa->setIconSize(QSize(120, 50));
@@ -132,8 +132,8 @@ void Juego2::actualizar() {
                 escena->removeItem(capsula);
                 delete capsula;
                 capsulas.remove(i);
-                goku->aumentarEnergia(100);  // ✅ una sola cápsula llena la barra
-                actualizarBarraEnergia();    // 🔁 si ya tienes la barra visual implementada
+                goku->aumentarEnergia(100);  // una sola cápsula llena la barra
+                actualizarBarraEnergia();    // si ya tienes la barra visual implementada
                 break;
             }
         }
@@ -160,8 +160,6 @@ void Juego2::actualizar() {
         if (goku->collidesWithItem(enemigo)) {
             qDebug() << "Goku fue tocado por un soldado. GAME OVER.";
             mostrarGameOver();
-            // 🔻 Aquí puedes reiniciar el nivel o mostrar pantalla de derrota
-            // ejemplo futuro: emit gameOver();
             return;
         }
     }
@@ -206,18 +204,18 @@ void Juego2::actualizar() {
 
             QVBoxLayout* layout = new QVBoxLayout(victoriaDialog);
 
-            // 🎞️ Imagen GIF
+            // Imagen GIF
             QLabel* gifLabel = new QLabel;
             QMovie* movie = new QMovie(":/fondos/Pictures/goku-zzz.gif");
             gifLabel->setMovie(movie);
             movie->start();
 
-            // 🎉 Mensaje
+            // Mensaje
             QLabel* mensaje = new QLabel("¡Has rescatado a Bulma!<br><br>Goku, una vez más, salva el día.<br><br>Bulma te debe una... <i>¡otra vez!</i>");
             mensaje->setTextFormat(Qt::RichText);
             mensaje->setAlignment(Qt::AlignCenter);
 
-            // ✔️ Botón cerrar
+            // Botón cerrar
             QPushButton* btnCerrar = new QPushButton("Cerrar");
             connect(btnCerrar, &QPushButton::clicked, victoriaDialog, &QDialog::accept);
 
@@ -263,14 +261,14 @@ void Juego2::cargarMapa(const QString&) {
     const int tileWidth = 1280 / 31;
     const int tileHeight = 680 / 23;
 
-    // 🔁 Carga de imágenes (una sola vez)
+    // Carga de imágenes (una sola vez)
     QPixmap imgMuro(":/fondos/Pictures/textura_roca.png");
     QPixmap imgLlave(":/sprites/Pictures/llave.png");
     QPixmap imgCapsula(":/sprites/Pictures/capsula.png");
     QPixmap imgPuerta(":/sprites/Pictures/puerta.png");
     QPixmap imgBulma(":/sprites/Pictures/bulma.png");
 
-    // 🔁 Escalar imágenes una vez
+    // Escalar imágenes una vez
     QPixmap scaledMuro = imgMuro.scaled(tileWidth, tileHeight);
     QPixmap scaledLlave = imgLlave.scaled(tileWidth, tileHeight);
     QPixmap scaledCapsula = imgCapsula.scaled(tileWidth, tileHeight);
@@ -411,7 +409,7 @@ void Juego2::abrirPuerta() {
         puerta = nullptr;
     }
 
-    // 🟨 Mostrar mensaje animado "PUERTA ABIERTA"
+    // Mostrar mensaje animado "PUERTA ABIERTA"
     QGraphicsTextItem* mensajePuerta = new QGraphicsTextItem("PUERTA ABIERTA");
     mensajePuerta->setDefaultTextColor(QColor(255, 215, 0));  // color dorado
     mensajePuerta->setFont(QFont(dragonBallFont, 32, QFont::Bold));
@@ -495,7 +493,7 @@ void Juego2::togglePausa() {
     pausado = !pausado;
 
     if (pausado) {
-        detenerTodo();  // ✅ Detener enemigos, Goku y timer
+        detenerTodo();  // Detener enemigos, Goku y timer
 
         // Fondo semitransparente
         QGraphicsRectItem* overlay = new QGraphicsRectItem(0, 0, width(), height());
@@ -532,7 +530,7 @@ void Juego2::togglePausa() {
         if (proxyContinuar) proxyContinuar->hide();
         if (proxySalir) proxySalir->hide();
 
-        reanudarTodo();  // ✅ Reanudar lógica
+        reanudarTodo();  // Reanudar lógica
         if (goku) goku->setFocus();
     }
 }
@@ -582,10 +580,10 @@ void Juego2::configurarBotonesPausa() {
     proxySalir->setPos(width()/2 - btnSalir->width()/2, height()/2 + 110);
     proxySalir->setZValue(1002);
 
-    // 🔁 Conexión botón CONTINUAR
+    // Conexión botón CONTINUAR
     connect(btnContinuar, &QPushButton::clicked, this, &Juego2::togglePausa);
 
-    // ✅ Conexión botón SALIR AL MENÚ con pausa previa
+    // Conexión botón SALIR AL MENÚ con pausa previa
     connect(btnSalir, &QPushButton::clicked, this, [this]() {
         if (pausado) togglePausa();  // ⬅️ Quitar el overlay de pausa
         emit salirAlMenu();          // ⬅️ Emitir señal al MainWindow
@@ -598,7 +596,7 @@ void Juego2::detenerTodo() {
     if (goku) goku->setEnabled(false);  // Desactiva teclado
 
     for (Enemigo* enemigo : enemigos) {
-        if (enemigo) enemigo->detener();  // ✅ nuevo método
+        if (enemigo) enemigo->detener();
     }
 
     if (timerActualizar) timerActualizar->stop();  // Pausar colisiones

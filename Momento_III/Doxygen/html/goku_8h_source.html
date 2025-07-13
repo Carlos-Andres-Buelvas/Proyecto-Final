@@ -1,0 +1,274 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.14.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Proyecto Final - Informática II: Archivo de código fuente Entrada/goku.h</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript" src="clipboard.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript" src="cookie.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">Proyecto Final - Informática II
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generado por Doxygen 1.14.0 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+</script>
+<script type="text/javascript">
+$(function() { codefold.init(); });
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+$(function() {
+  initMenu('',true,false,'search.php','Buscar',true);
+  $(function() { init_search(); });
+});
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+$(function(){initNavTree('goku_8h_source.html','',''); });
+</script>
+<div id="container">
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Cargando...</div>
+<div class="SRStatus" id="Searching">Buscando...</div>
+<div class="SRStatus" id="NoMatches">Nada coincide</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">goku.h</div></div>
+</div><!--header-->
+<div class="contents">
+<a href="goku_8h.html">Ir a la documentación de este archivo.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#ifndef GOKU_H</span></div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#define GOKU_H</span></div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span> </div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &quot;<a class="code" href="personaje_8h.html">personaje.h</a>&quot;</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &lt;QVector&gt;</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &lt;QPixmap&gt;</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &lt;QGraphicsScene&gt;</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="keyword">class </span><a class="code hl_class" href="class_enemigo.html">Enemigo</a>;</div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span></div>
+<div class="foldopen" id="foldopen00017" data-start="{" data-end="};">
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno"><a class="line" href="class_goku.html">   17</a></span><span class="keyword">class </span><a class="code hl_function" href="class_goku.html#a66b9a138cc56c958488b50016d671432">Goku</a> : <span class="keyword">public</span> <a class="code hl_function" href="class_personaje.html#ac788c154341f4805684d91929904d81f">Personaje</a> {</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>    Q_OBJECT</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    <a class="code hl_function" href="class_goku.html#a66b9a138cc56c958488b50016d671432">Goku</a>(<span class="keywordtype">float</span> x, <span class="keywordtype">float</span> y, <span class="keywordtype">float</span> <a class="code hl_variable" href="class_personaje.html#a11782e62db98f05a5c49bfe80157118b">ancho</a>, <span class="keywordtype">float</span> <a class="code hl_variable" href="class_personaje.html#aaef6bf1b4161df811ffcabb26cdfa691">alto</a>);</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span></div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_goku.html#a816deec7ea59394a78f10edee8942bc9">mover</a>() <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span></div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_goku.html#a6239d74de7b3c64af085420ae6e83576">disparar</a>(QGraphicsScene* escena) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span></div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_goku.html#a9053bbf4dca3cca4913f43e16c9d290a">saltar</a>();</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span></div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_goku.html#a3da66878a4800442366e34ccb2dcef23">acelerarCaida</a>();</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span></div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_goku.html#a21c5fe778c28aeef072dfc2ee4c78fee">animarCorrer</a>();</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span></div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_goku.html#ac2056679a7161434029f8aff478c8be5">animarCaida</a>();</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span></div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_goku.html#a7c034634e15a597a56c6d8bd2c05604f">animarDisparo</a>();</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span></div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_goku.html#a01871922efb53f807c0c464724725974">animarCuerda</a>();</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span></div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_goku.html#a765fb8d008cd206879fc45a5bb5021b6">animarDisparoFrame</a>();</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span></div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="class_goku.html#a0e71e52a72098e710aea563dc08f45ce">estaDisparando</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span></div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno"><a class="line" href="class_goku.html#a2cc54b240347e2a9f6958f253af0d1a9">   61</a></span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="class_goku.html#a2cc54b240347e2a9f6958f253af0d1a9">puedeDisparar</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="class_goku.html#ab6d69a1709c432a248bfb280bf142585">energia</a> &gt;= <a class="code hl_variable" href="class_goku.html#aa723ea9753637d4ddc31cf8562ffe886">energiaMaxima</a>; }</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span></div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno"><a class="line" href="class_goku.html#a3fa656b2ae725042f9b122316c8089dc">   64</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_goku.html#a3fa656b2ae725042f9b122316c8089dc">reiniciarEnergia</a>() { <a class="code hl_variable" href="class_goku.html#ab6d69a1709c432a248bfb280bf142585">energia</a> = 0; }</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span></div>
+<div class="foldopen" id="foldopen00070" data-start="{" data-end="}">
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno"><a class="line" href="class_goku.html#a07f55e8c97effea821af3dac0c1738bd">   70</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_goku.html#a07f55e8c97effea821af3dac0c1738bd">aumentarEnergia</a>(<span class="keywordtype">int</span> cantidad) {</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>        <a class="code hl_variable" href="class_goku.html#ab6d69a1709c432a248bfb280bf142585">energia</a> += cantidad;</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>        <span class="keywordflow">if</span> (<a class="code hl_variable" href="class_goku.html#ab6d69a1709c432a248bfb280bf142585">energia</a> &gt;= <a class="code hl_variable" href="class_goku.html#aa723ea9753637d4ddc31cf8562ffe886">energiaMaxima</a>) <a class="code hl_variable" href="class_goku.html#ab6d69a1709c432a248bfb280bf142585">energia</a> = <a class="code hl_variable" href="class_goku.html#aa723ea9753637d4ddc31cf8562ffe886">energiaMaxima</a>;</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    }</div>
+</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span></div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno"><a class="line" href="class_goku.html#a368726bae1eeec0cfc4f5ca8fafbd338">   76</a></span>    <span class="keywordtype">int</span> <a class="code hl_function" href="class_goku.html#a368726bae1eeec0cfc4f5ca8fafbd338">obtenerEnergia</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="class_goku.html#ab6d69a1709c432a248bfb280bf142585">energia</a>; }</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span></div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="class_goku.html#ad3b5fe914818b229992c47a4513c68ab">estaBajando</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span></div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="class_goku.html#a0c4c7d67b9e9d8477ced1d2fe7a178eb">estaEnSuelo</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span></div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_goku.html#a1f46eab94e32535d98947e41aab8f347">detenerCaida</a>();</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span></div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_goku.html#a7f4380fcd5774d952beef1691fbb02f5">activarCaida</a>();</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span></div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_goku.html#a798ecf29afd7bb9c50235f3e2a55fd44">forzarCaida</a>();</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span></div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="class_goku.html#a334a26b88003838a43324adde5a23431">estaForzandoCaida</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span></div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_goku.html#a1ba0a843941933d938ebbfd9dd28d37d">cancelarCaidaForzada</a>();</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span></div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_goku.html#a44602763797d011a8fa042fe32bc0c64">setListaEnemigos</a>(QVector&lt;Enemigo*&gt;* lista);</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span> </div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno"><a class="line" href="class_goku.html#a03802f1302e8e9ec559deaaf65235b46">  105</a></span>    <span class="keywordtype">bool</span> <a class="code hl_variable" href="class_goku.html#a03802f1302e8e9ec559deaaf65235b46">teclaWSostenida</a> = <span class="keyword">false</span>; </div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno"><a class="line" href="class_goku.html#a021b12be18e25398a1aea2d48e2f59af">  106</a></span>    <span class="keywordtype">bool</span> <a class="code hl_variable" href="class_goku.html#a021b12be18e25398a1aea2d48e2f59af">cayendoLento</a> = <span class="keyword">false</span>;    </div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span> </div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>    <span class="comment">// --- NIVEL 2 ---</span></div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span></div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_goku.html#a466fe45c5113fc856167552e14f56845">cargarAnimacionesNivel2</a>();</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span> </div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno"><a class="line" href="class_goku.html#a3e4b72e5306c150eb38bed7d010beafa">  113</a></span>    QString <a class="code hl_variable" href="class_goku.html#a3e4b72e5306c150eb38bed7d010beafa">direccionActual</a> = <span class="stringliteral">&quot;derecha&quot;</span>; </div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span></div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno"><a class="line" href="class_goku.html#a209768d5d4428c277a274d153ae08a55">  116</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_goku.html#a209768d5d4428c277a274d153ae08a55">setEnabled</a>(<span class="keywordtype">bool</span> enabled) { <a class="code hl_variable" href="class_goku.html#ab910b2a8aa310957fe9fa3c41eb5d4f6">m_enabled</a> = enabled; }</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span></div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno"><a class="line" href="class_goku.html#a81c1de5476c67a2b44a9b0843f10c46a">  119</a></span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="class_goku.html#a81c1de5476c67a2b44a9b0843f10c46a">isEnabled</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="class_goku.html#ab910b2a8aa310957fe9fa3c41eb5d4f6">m_enabled</a>; }</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span> </div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span><span class="keyword">protected</span>:</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_goku.html#a9fe9fb226a26b5589b177793a3209417">keyPressEvent</a>(QKeyEvent* event) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span> </div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>    <span class="comment">// void keyReleaseEvent(QKeyEvent* event) override;</span></div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span> </div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno"><a class="line" href="class_goku.html#a9913ac9e0cd40ef508b453b706c06fb5">  128</a></span>    QVector&lt;QPixmap&gt; <a class="code hl_variable" href="class_goku.html#a9913ac9e0cd40ef508b453b706c06fb5">framesCorrer</a>;     </div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno"><a class="line" href="class_goku.html#ac02c36d109d2471bdde56dd5ec558ea0">  129</a></span>    QVector&lt;QPixmap&gt; <a class="code hl_variable" href="class_goku.html#ac02c36d109d2471bdde56dd5ec558ea0">framesCaer</a>;       </div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno"><a class="line" href="class_goku.html#ab871de37708bc5d334ba5885a4fa7da9">  130</a></span>    QVector&lt;QPixmap&gt; <a class="code hl_variable" href="class_goku.html#ab871de37708bc5d334ba5885a4fa7da9">framesDisparo</a>;    </div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno"><a class="line" href="class_goku.html#a5f87e24f60a528fc2799efccead5b062">  131</a></span>    QPixmap <a class="code hl_variable" href="class_goku.html#a5f87e24f60a528fc2799efccead5b062">spriteCuerda</a>;              </div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span> </div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno"><a class="line" href="class_goku.html#aab279ed20b428126db33291890bd5d15">  133</a></span>    <span class="keywordtype">int</span> <a class="code hl_variable" href="class_goku.html#aab279ed20b428126db33291890bd5d15">frameActual</a>;                   </div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno"><a class="line" href="class_goku.html#a11fd111dd08c0534890b770cf90a1037">  134</a></span>    <span class="keywordtype">int</span> <a class="code hl_variable" href="class_goku.html#a11fd111dd08c0534890b770cf90a1037">contador</a>;                      </div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno"><a class="line" href="class_goku.html#ac5e13f1e4b00f80b9f5a53f01a9c39a0">  135</a></span>    <span class="keywordtype">int</span> <a class="code hl_variable" href="class_goku.html#ac5e13f1e4b00f80b9f5a53f01a9c39a0">velocidadAnimacion</a>;            </div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span> </div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno"><a class="line" href="class_goku.html#a54e059852ce32ec85a50c16732d164ba">  137</a></span>    <span class="keywordtype">bool</span> <a class="code hl_variable" href="class_goku.html#a54e059852ce32ec85a50c16732d164ba">disparando</a>;                   </div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno"><a class="line" href="class_goku.html#a6583a2fddb40d5d3cef4ad7850610e76">  138</a></span>    QTimer* <a class="code hl_variable" href="class_goku.html#a6583a2fddb40d5d3cef4ad7850610e76">disparoTimer</a>;              </div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno"><a class="line" href="class_goku.html#a232aec64f252b366a6dadcfefe6f865c">  139</a></span>    <span class="keywordtype">int</span> <a class="code hl_variable" href="class_goku.html#a232aec64f252b366a6dadcfefe6f865c">frameDisparoActual</a>;            </div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span> </div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno"><a class="line" href="class_goku.html#aa2c98f732aeffd2fcc926d8ab18d1bbc">  141</a></span>    <span class="keywordtype">bool</span> <a class="code hl_variable" href="class_goku.html#aa2c98f732aeffd2fcc926d8ab18d1bbc">enSuelo</a>;                      </div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span> </div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno"><a class="line" href="class_goku.html#ab6d69a1709c432a248bfb280bf142585">  143</a></span>    <span class="keywordtype">int</span> <a class="code hl_variable" href="class_goku.html#ab6d69a1709c432a248bfb280bf142585">energia</a> = 0;                   </div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno"><a class="line" href="class_goku.html#aa723ea9753637d4ddc31cf8562ffe886">  144</a></span>    <span class="keyword">const</span> <span class="keywordtype">int</span> <a class="code hl_variable" href="class_goku.html#aa723ea9753637d4ddc31cf8562ffe886">energiaMaxima</a> = 100;     </div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span> </div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno"><a class="line" href="class_goku.html#ac50050d3dd61735089bd4b11e712f0e9">  146</a></span>    QVector&lt;Enemigo*&gt;* <a class="code hl_variable" href="class_goku.html#ac50050d3dd61735089bd4b11e712f0e9">listaEnemigos</a> = <span class="keyword">nullptr</span>; </div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span> </div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno"><a class="line" href="class_goku.html#a6e37c42f9786e36ae31fb8e3b52218e8">  148</a></span>    <span class="keywordtype">bool</span> <a class="code hl_variable" href="class_goku.html#a6e37c42f9786e36ae31fb8e3b52218e8">forzarCaidaManual</a> = <span class="keyword">false</span>;    </div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span></div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_goku.html#a14a28360fb1f87a31ffef2854fd0d629">cargarAnimaciones</a>();</div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span></div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno"><a class="line" href="class_goku.html#a06dd88b1a582647a3058b91d10866406">  154</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_goku.html#a06dd88b1a582647a3058b91d10866406">actualizarSprite</a>();</div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span> </div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno"><a class="line" href="class_goku.html#ab910b2a8aa310957fe9fa3c41eb5d4f6">  156</a></span>    <span class="keywordtype">bool</span> <a class="code hl_variable" href="class_goku.html#ab910b2a8aa310957fe9fa3c41eb5d4f6">m_enabled</a> = <span class="keyword">true</span>; </div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>};</div>
+</div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span> </div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span><span class="preprocessor">#endif </span><span class="comment">// GOKU_H</span></div>
+<div class="ttc" id="aclass_enemigo_html"><div class="ttname"><a href="class_enemigo.html">Enemigo</a></div><div class="ttdoc">La clase Enemigo representa un personaje hostil que puede patrullar y disparar.</div><div class="ttdef"><b>Definition</b> enemigo.h:18</div></div>
+<div class="ttc" id="aclass_goku_html_a01871922efb53f807c0c464724725974"><div class="ttname"><a href="class_goku.html#a01871922efb53f807c0c464724725974">Goku::animarCuerda</a></div><div class="ttdeci">void animarCuerda()</div><div class="ttdoc">Ejecuta la animación cuando está colgado de la cuerda.</div><div class="ttdef"><b>Definition</b> goku.cpp:121</div></div>
+<div class="ttc" id="aclass_goku_html_a021b12be18e25398a1aea2d48e2f59af"><div class="ttname"><a href="class_goku.html#a021b12be18e25398a1aea2d48e2f59af">Goku::cayendoLento</a></div><div class="ttdeci">bool cayendoLento</div><div class="ttdoc">Controla si la caída es lenta (gravedad baja)</div><div class="ttdef"><b>Definition</b> goku.h:106</div></div>
+<div class="ttc" id="aclass_goku_html_a03802f1302e8e9ec559deaaf65235b46"><div class="ttname"><a href="class_goku.html#a03802f1302e8e9ec559deaaf65235b46">Goku::teclaWSostenida</a></div><div class="ttdeci">bool teclaWSostenida</div><div class="ttdoc">Indica si la tecla W está presionada.</div><div class="ttdef"><b>Definition</b> goku.h:105</div></div>
+<div class="ttc" id="aclass_goku_html_a06dd88b1a582647a3058b91d10866406"><div class="ttname"><a href="class_goku.html#a06dd88b1a582647a3058b91d10866406">Goku::actualizarSprite</a></div><div class="ttdeci">void actualizarSprite()</div><div class="ttdoc">Actualiza el sprite visible según el estado y frame actual.</div></div>
+<div class="ttc" id="aclass_goku_html_a07f55e8c97effea821af3dac0c1738bd"><div class="ttname"><a href="class_goku.html#a07f55e8c97effea821af3dac0c1738bd">Goku::aumentarEnergia</a></div><div class="ttdeci">void aumentarEnergia(int cantidad)</div><div class="ttdoc">Aumenta la energía en una cantidad determinada.</div><div class="ttdef"><b>Definition</b> goku.h:70</div></div>
+<div class="ttc" id="aclass_goku_html_a0c4c7d67b9e9d8477ced1d2fe7a178eb"><div class="ttname"><a href="class_goku.html#a0c4c7d67b9e9d8477ced1d2fe7a178eb">Goku::estaEnSuelo</a></div><div class="ttdeci">bool estaEnSuelo() const</div><div class="ttdoc">Verifica si está tocando el suelo.</div><div class="ttdef"><b>Definition</b> goku.cpp:219</div></div>
+<div class="ttc" id="aclass_goku_html_a0e71e52a72098e710aea563dc08f45ce"><div class="ttname"><a href="class_goku.html#a0e71e52a72098e710aea563dc08f45ce">Goku::estaDisparando</a></div><div class="ttdeci">bool estaDisparando() const</div><div class="ttdoc">Verifica si Goku está disparando.</div><div class="ttdef"><b>Definition</b> goku.cpp:130</div></div>
+<div class="ttc" id="aclass_goku_html_a11fd111dd08c0534890b770cf90a1037"><div class="ttname"><a href="class_goku.html#a11fd111dd08c0534890b770cf90a1037">Goku::contador</a></div><div class="ttdeci">int contador</div><div class="ttdoc">Contador para controlar velocidad de animación.</div><div class="ttdef"><b>Definition</b> goku.h:134</div></div>
+<div class="ttc" id="aclass_goku_html_a14a28360fb1f87a31ffef2854fd0d629"><div class="ttname"><a href="class_goku.html#a14a28360fb1f87a31ffef2854fd0d629">Goku::cargarAnimaciones</a></div><div class="ttdeci">void cargarAnimaciones()</div><div class="ttdoc">Carga los sprites desde archivo.</div><div class="ttdef"><b>Definition</b> goku.cpp:37</div></div>
+<div class="ttc" id="aclass_goku_html_a1ba0a843941933d938ebbfd9dd28d37d"><div class="ttname"><a href="class_goku.html#a1ba0a843941933d938ebbfd9dd28d37d">Goku::cancelarCaidaForzada</a></div><div class="ttdeci">void cancelarCaidaForzada()</div><div class="ttdoc">Cancela la caída forzada.</div><div class="ttdef"><b>Definition</b> goku.cpp:241</div></div>
+<div class="ttc" id="aclass_goku_html_a1f46eab94e32535d98947e41aab8f347"><div class="ttname"><a href="class_goku.html#a1f46eab94e32535d98947e41aab8f347">Goku::detenerCaida</a></div><div class="ttdeci">void detenerCaida()</div><div class="ttdoc">Detiene la caída (por contacto con plataforma).</div><div class="ttdef"><b>Definition</b> goku.cpp:223</div></div>
+<div class="ttc" id="aclass_goku_html_a209768d5d4428c277a274d153ae08a55"><div class="ttname"><a href="class_goku.html#a209768d5d4428c277a274d153ae08a55">Goku::setEnabled</a></div><div class="ttdeci">void setEnabled(bool enabled)</div><div class="ttdoc">Activa o desactiva al personaje.</div><div class="ttdef"><b>Definition</b> goku.h:116</div></div>
+<div class="ttc" id="aclass_goku_html_a21c5fe778c28aeef072dfc2ee4c78fee"><div class="ttname"><a href="class_goku.html#a21c5fe778c28aeef072dfc2ee4c78fee">Goku::animarCorrer</a></div><div class="ttdeci">void animarCorrer()</div><div class="ttdoc">Ejecuta la animación de correr.</div><div class="ttdef"><b>Definition</b> goku.cpp:72</div></div>
+<div class="ttc" id="aclass_goku_html_a232aec64f252b366a6dadcfefe6f865c"><div class="ttname"><a href="class_goku.html#a232aec64f252b366a6dadcfefe6f865c">Goku::frameDisparoActual</a></div><div class="ttdeci">int frameDisparoActual</div><div class="ttdoc">Frame actual del ciclo de disparo.</div><div class="ttdef"><b>Definition</b> goku.h:139</div></div>
+<div class="ttc" id="aclass_goku_html_a2cc54b240347e2a9f6958f253af0d1a9"><div class="ttname"><a href="class_goku.html#a2cc54b240347e2a9f6958f253af0d1a9">Goku::puedeDisparar</a></div><div class="ttdeci">bool puedeDisparar() const</div><div class="ttdoc">Verifica si Goku puede disparar.</div><div class="ttdef"><b>Definition</b> goku.h:61</div></div>
+<div class="ttc" id="aclass_goku_html_a334a26b88003838a43324adde5a23431"><div class="ttname"><a href="class_goku.html#a334a26b88003838a43324adde5a23431">Goku::estaForzandoCaida</a></div><div class="ttdeci">bool estaForzandoCaida() const</div><div class="ttdoc">Verifica si está forzando la caída.</div><div class="ttdef"><b>Definition</b> goku.cpp:237</div></div>
+<div class="ttc" id="aclass_goku_html_a368726bae1eeec0cfc4f5ca8fafbd338"><div class="ttname"><a href="class_goku.html#a368726bae1eeec0cfc4f5ca8fafbd338">Goku::obtenerEnergia</a></div><div class="ttdeci">int obtenerEnergia() const</div><div class="ttdoc">Obtiene la cantidad actual de energía.</div><div class="ttdef"><b>Definition</b> goku.h:76</div></div>
+<div class="ttc" id="aclass_goku_html_a3da66878a4800442366e34ccb2dcef23"><div class="ttname"><a href="class_goku.html#a3da66878a4800442366e34ccb2dcef23">Goku::acelerarCaida</a></div><div class="ttdeci">void acelerarCaida()</div><div class="ttdoc">Acelera la caída (por tecla S).</div><div class="ttdef"><b>Definition</b> goku.cpp:126</div></div>
+<div class="ttc" id="aclass_goku_html_a3e4b72e5306c150eb38bed7d010beafa"><div class="ttname"><a href="class_goku.html#a3e4b72e5306c150eb38bed7d010beafa">Goku::direccionActual</a></div><div class="ttdeci">QString direccionActual</div><div class="ttdoc">Dirección actual (nivel 2)</div><div class="ttdef"><b>Definition</b> goku.h:113</div></div>
+<div class="ttc" id="aclass_goku_html_a3fa656b2ae725042f9b122316c8089dc"><div class="ttname"><a href="class_goku.html#a3fa656b2ae725042f9b122316c8089dc">Goku::reiniciarEnergia</a></div><div class="ttdeci">void reiniciarEnergia()</div><div class="ttdoc">Reinicia la energía a cero.</div><div class="ttdef"><b>Definition</b> goku.h:64</div></div>
+<div class="ttc" id="aclass_goku_html_a44602763797d011a8fa042fe32bc0c64"><div class="ttname"><a href="class_goku.html#a44602763797d011a8fa042fe32bc0c64">Goku::setListaEnemigos</a></div><div class="ttdeci">void setListaEnemigos(QVector&lt; Enemigo * &gt; *lista)</div><div class="ttdoc">Asigna referencia a lista de enemigos cercanos para interacción.</div><div class="ttdef"><b>Definition</b> goku.cpp:211</div></div>
+<div class="ttc" id="aclass_goku_html_a466fe45c5113fc856167552e14f56845"><div class="ttname"><a href="class_goku.html#a466fe45c5113fc856167552e14f56845">Goku::cargarAnimacionesNivel2</a></div><div class="ttdeci">void cargarAnimacionesNivel2()</div><div class="ttdoc">Carga las animaciones para el modo laberinto (nivel 2).</div><div class="ttdef"><b>Definition</b> goku.cpp:246</div></div>
+<div class="ttc" id="aclass_goku_html_a54e059852ce32ec85a50c16732d164ba"><div class="ttname"><a href="class_goku.html#a54e059852ce32ec85a50c16732d164ba">Goku::disparando</a></div><div class="ttdeci">bool disparando</div><div class="ttdoc">Indica si está disparando.</div><div class="ttdef"><b>Definition</b> goku.h:137</div></div>
+<div class="ttc" id="aclass_goku_html_a5f87e24f60a528fc2799efccead5b062"><div class="ttname"><a href="class_goku.html#a5f87e24f60a528fc2799efccead5b062">Goku::spriteCuerda</a></div><div class="ttdeci">QPixmap spriteCuerda</div><div class="ttdoc">Sprite cuando está colgado de la cuerda.</div><div class="ttdef"><b>Definition</b> goku.h:131</div></div>
+<div class="ttc" id="aclass_goku_html_a6239d74de7b3c64af085420ae6e83576"><div class="ttname"><a href="class_goku.html#a6239d74de7b3c64af085420ae6e83576">Goku::disparar</a></div><div class="ttdeci">void disparar(QGraphicsScene *escena) override</div><div class="ttdoc">Disparo principal (nivel 1).</div><div class="ttdef"><b>Definition</b> goku.cpp:135</div></div>
+<div class="ttc" id="aclass_goku_html_a6583a2fddb40d5d3cef4ad7850610e76"><div class="ttname"><a href="class_goku.html#a6583a2fddb40d5d3cef4ad7850610e76">Goku::disparoTimer</a></div><div class="ttdeci">QTimer * disparoTimer</div><div class="ttdoc">Temporizador para control de disparo.</div><div class="ttdef"><b>Definition</b> goku.h:138</div></div>
+<div class="ttc" id="aclass_goku_html_a66b9a138cc56c958488b50016d671432"><div class="ttname"><a href="class_goku.html#a66b9a138cc56c958488b50016d671432">Goku::Goku</a></div><div class="ttdeci">Goku(float x, float y, float ancho, float alto)</div><div class="ttdoc">Constructor de Goku.</div><div class="ttdef"><b>Definition</b> goku.cpp:18</div></div>
+<div class="ttc" id="aclass_goku_html_a6e37c42f9786e36ae31fb8e3b52218e8"><div class="ttname"><a href="class_goku.html#a6e37c42f9786e36ae31fb8e3b52218e8">Goku::forzarCaidaManual</a></div><div class="ttdeci">bool forzarCaidaManual</div><div class="ttdoc">Indica si se está forzando la caída.</div><div class="ttdef"><b>Definition</b> goku.h:148</div></div>
+<div class="ttc" id="aclass_goku_html_a765fb8d008cd206879fc45a5bb5021b6"><div class="ttname"><a href="class_goku.html#a765fb8d008cd206879fc45a5bb5021b6">Goku::animarDisparoFrame</a></div><div class="ttdeci">void animarDisparoFrame()</div><div class="ttdoc">Controla los frames de animación durante disparo.</div><div class="ttdef"><b>Definition</b> goku.cpp:102</div></div>
+<div class="ttc" id="aclass_goku_html_a798ecf29afd7bb9c50235f3e2a55fd44"><div class="ttname"><a href="class_goku.html#a798ecf29afd7bb9c50235f3e2a55fd44">Goku::forzarCaida</a></div><div class="ttdeci">void forzarCaida()</div><div class="ttdoc">Fuerza la caída manual (por tecla S).</div><div class="ttdef"><b>Definition</b> goku.cpp:233</div></div>
+<div class="ttc" id="aclass_goku_html_a7c034634e15a597a56c6d8bd2c05604f"><div class="ttname"><a href="class_goku.html#a7c034634e15a597a56c6d8bd2c05604f">Goku::animarDisparo</a></div><div class="ttdeci">void animarDisparo()</div><div class="ttdoc">Ejecuta la animación de disparo.</div><div class="ttdef"><b>Definition</b> goku.cpp:94</div></div>
+<div class="ttc" id="aclass_goku_html_a7f4380fcd5774d952beef1691fbb02f5"><div class="ttname"><a href="class_goku.html#a7f4380fcd5774d952beef1691fbb02f5">Goku::activarCaida</a></div><div class="ttdeci">void activarCaida()</div><div class="ttdoc">Activa la caída por gravedad.</div><div class="ttdef"><b>Definition</b> goku.cpp:228</div></div>
+<div class="ttc" id="aclass_goku_html_a816deec7ea59394a78f10edee8942bc9"><div class="ttname"><a href="class_goku.html#a816deec7ea59394a78f10edee8942bc9">Goku::mover</a></div><div class="ttdeci">void mover() override</div><div class="ttdoc">Movimiento principal (nivel 1).</div><div class="ttdef"><b>Definition</b> goku.cpp:192</div></div>
+<div class="ttc" id="aclass_goku_html_a81c1de5476c67a2b44a9b0843f10c46a"><div class="ttname"><a href="class_goku.html#a81c1de5476c67a2b44a9b0843f10c46a">Goku::isEnabled</a></div><div class="ttdeci">bool isEnabled() const</div><div class="ttdoc">Verifica si el personaje está activo.</div><div class="ttdef"><b>Definition</b> goku.h:119</div></div>
+<div class="ttc" id="aclass_goku_html_a9053bbf4dca3cca4913f43e16c9d290a"><div class="ttname"><a href="class_goku.html#a9053bbf4dca3cca4913f43e16c9d290a">Goku::saltar</a></div><div class="ttdeci">void saltar()</div><div class="ttdoc">Ejecuta un salto hacia arriba.</div><div class="ttdef"><b>Definition</b> goku.cpp:64</div></div>
+<div class="ttc" id="aclass_goku_html_a9913ac9e0cd40ef508b453b706c06fb5"><div class="ttname"><a href="class_goku.html#a9913ac9e0cd40ef508b453b706c06fb5">Goku::framesCorrer</a></div><div class="ttdeci">QVector&lt; QPixmap &gt; framesCorrer</div><div class="ttdoc">Frames para animación de correr.</div><div class="ttdef"><b>Definition</b> goku.h:128</div></div>
+<div class="ttc" id="aclass_goku_html_a9fe9fb226a26b5589b177793a3209417"><div class="ttname"><a href="class_goku.html#a9fe9fb226a26b5589b177793a3209417">Goku::keyPressEvent</a></div><div class="ttdeci">void keyPressEvent(QKeyEvent *event) override</div><div class="ttdoc">Captura eventos de teclado.</div><div class="ttdef"><b>Definition</b> goku.cpp:269</div></div>
+<div class="ttc" id="aclass_goku_html_aa2c98f732aeffd2fcc926d8ab18d1bbc"><div class="ttname"><a href="class_goku.html#aa2c98f732aeffd2fcc926d8ab18d1bbc">Goku::enSuelo</a></div><div class="ttdeci">bool enSuelo</div><div class="ttdoc">Indica si está tocando el suelo.</div><div class="ttdef"><b>Definition</b> goku.h:141</div></div>
+<div class="ttc" id="aclass_goku_html_aa723ea9753637d4ddc31cf8562ffe886"><div class="ttname"><a href="class_goku.html#aa723ea9753637d4ddc31cf8562ffe886">Goku::energiaMaxima</a></div><div class="ttdeci">const int energiaMaxima</div><div class="ttdoc">Energía máxima que puede acumular.</div><div class="ttdef"><b>Definition</b> goku.h:144</div></div>
+<div class="ttc" id="aclass_goku_html_aab279ed20b428126db33291890bd5d15"><div class="ttname"><a href="class_goku.html#aab279ed20b428126db33291890bd5d15">Goku::frameActual</a></div><div class="ttdeci">int frameActual</div><div class="ttdoc">Frame actual de la animación.</div><div class="ttdef"><b>Definition</b> goku.h:133</div></div>
+<div class="ttc" id="aclass_goku_html_ab6d69a1709c432a248bfb280bf142585"><div class="ttname"><a href="class_goku.html#ab6d69a1709c432a248bfb280bf142585">Goku::energia</a></div><div class="ttdeci">int energia</div><div class="ttdoc">Energía actual.</div><div class="ttdef"><b>Definition</b> goku.h:143</div></div>
+<div class="ttc" id="aclass_goku_html_ab871de37708bc5d334ba5885a4fa7da9"><div class="ttname"><a href="class_goku.html#ab871de37708bc5d334ba5885a4fa7da9">Goku::framesDisparo</a></div><div class="ttdeci">QVector&lt; QPixmap &gt; framesDisparo</div><div class="ttdoc">Frames para animación de disparo.</div><div class="ttdef"><b>Definition</b> goku.h:130</div></div>
+<div class="ttc" id="aclass_goku_html_ab910b2a8aa310957fe9fa3c41eb5d4f6"><div class="ttname"><a href="class_goku.html#ab910b2a8aa310957fe9fa3c41eb5d4f6">Goku::m_enabled</a></div><div class="ttdeci">bool m_enabled</div><div class="ttdoc">Indica si Goku está habilitado en el nivel 2.</div><div class="ttdef"><b>Definition</b> goku.h:156</div></div>
+<div class="ttc" id="aclass_goku_html_ac02c36d109d2471bdde56dd5ec558ea0"><div class="ttname"><a href="class_goku.html#ac02c36d109d2471bdde56dd5ec558ea0">Goku::framesCaer</a></div><div class="ttdeci">QVector&lt; QPixmap &gt; framesCaer</div><div class="ttdoc">Frames para animación de caída.</div><div class="ttdef"><b>Definition</b> goku.h:129</div></div>
+<div class="ttc" id="aclass_goku_html_ac2056679a7161434029f8aff478c8be5"><div class="ttname"><a href="class_goku.html#ac2056679a7161434029f8aff478c8be5">Goku::animarCaida</a></div><div class="ttdeci">void animarCaida()</div><div class="ttdoc">Ejecuta la animación de caída.</div><div class="ttdef"><b>Definition</b> goku.cpp:86</div></div>
+<div class="ttc" id="aclass_goku_html_ac50050d3dd61735089bd4b11e712f0e9"><div class="ttname"><a href="class_goku.html#ac50050d3dd61735089bd4b11e712f0e9">Goku::listaEnemigos</a></div><div class="ttdeci">QVector&lt; Enemigo * &gt; * listaEnemigos</div><div class="ttdoc">Lista de enemigos en escena.</div><div class="ttdef"><b>Definition</b> goku.h:146</div></div>
+<div class="ttc" id="aclass_goku_html_ac5e13f1e4b00f80b9f5a53f01a9c39a0"><div class="ttname"><a href="class_goku.html#ac5e13f1e4b00f80b9f5a53f01a9c39a0">Goku::velocidadAnimacion</a></div><div class="ttdeci">int velocidadAnimacion</div><div class="ttdoc">Frecuencia de cambio de frame.</div><div class="ttdef"><b>Definition</b> goku.h:135</div></div>
+<div class="ttc" id="aclass_goku_html_ad3b5fe914818b229992c47a4513c68ab"><div class="ttname"><a href="class_goku.html#ad3b5fe914818b229992c47a4513c68ab">Goku::estaBajando</a></div><div class="ttdeci">bool estaBajando() const</div><div class="ttdoc">Verifica si está cayendo.</div><div class="ttdef"><b>Definition</b> goku.cpp:215</div></div>
+<div class="ttc" id="aclass_personaje_html_a11782e62db98f05a5c49bfe80157118b"><div class="ttname"><a href="class_personaje.html#a11782e62db98f05a5c49bfe80157118b">Personaje::ancho</a></div><div class="ttdeci">float ancho</div><div class="ttdef"><b>Definition</b> personaje.h:77</div></div>
+<div class="ttc" id="aclass_personaje_html_aaef6bf1b4161df811ffcabb26cdfa691"><div class="ttname"><a href="class_personaje.html#aaef6bf1b4161df811ffcabb26cdfa691">Personaje::alto</a></div><div class="ttdeci">float alto</div><div class="ttdoc">Dimensiones del personaje.</div><div class="ttdef"><b>Definition</b> personaje.h:77</div></div>
+<div class="ttc" id="aclass_personaje_html_ac788c154341f4805684d91929904d81f"><div class="ttname"><a href="class_personaje.html#ac788c154341f4805684d91929904d81f">Personaje::Personaje</a></div><div class="ttdeci">Personaje(float x, float y, float ancho, float alto)</div><div class="ttdoc">Constructor base del personaje.</div><div class="ttdef"><b>Definition</b> personaje.cpp:14</div></div>
+<div class="ttc" id="apersonaje_8h_html"><div class="ttname"><a href="personaje_8h.html">personaje.h</a></div></div>
+</div><!-- fragment --></div><!-- contents -->
+</div><!-- doc-content -->
+</div><!-- container -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a href="dir_dd9dbe427e32f67ea3b2a2afb81ef03e.html">Entrada</a></li><li class="navelem"><a href="goku_8h.html">goku.h</a></li>
+    <li class="footer">Generado por <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.14.0 </li>
+  </ul>
+</div>
+</body>
+</html>

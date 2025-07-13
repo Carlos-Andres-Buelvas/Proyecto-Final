@@ -1,0 +1,21 @@
+var searchData=
+[
+  ['pajaroitem_0',['pajaroItem',['../class_juego.html#a9de69908f992d6fa5fb40e30e31bb4b8',1,'Juego']]],
+  ['patrullando_1',['Patrullando',['../class_enemigo.html#a4e32029ef4688dd961fbe9c9a4f6e3d0a9801f71283fd889defb7e62f7e814d75',1,'Enemigo']]],
+  ['patrullar_2',['patrullar',['../class_enemigo.html#aeb8e360b8218c70bc5e88d504dfd80cf',1,'Enemigo']]],
+  ['pausado_3',['pausado',['../class_enemigo.html#a0f91d21e0b7c86d9cb71d2a6642b6eb9',1,'Enemigo::pausado'],['../class_juego.html#a1769c2b181868bb08f32a1c3a6a3b708',1,'Juego::pausado'],['../class_juego2.html#a1941e2fb3e7fd6e0d84d78b677090434',1,'Juego2::pausado']]],
+  ['pausarjuego_4',['pausarJuego',['../class_juego.html#a367fbfdc973bbb4eaf10e37012e9573a',1,'Juego']]],
+  ['personaje_5',['Personaje',['../class_personaje.html',1,'Personaje'],['../class_personaje.html#ac788c154341f4805684d91929904d81f',1,'Personaje::Personaje()']]],
+  ['personaje_2ecpp_6',['personaje.cpp',['../personaje_8cpp.html',1,'']]],
+  ['personaje_2eh_7',['personaje.h',['../personaje_8h.html',1,'']]],
+  ['plataformas_8',['plataformas',['../class_juego.html#a7b26470d729804e481d35fb37e58a2eb',1,'Juego']]],
+  ['posx_9',['posX',['../class_personaje.html#a18029fc8da0835895c69c9eaddda4312',1,'Personaje']]],
+  ['posy_10',['posY',['../class_personaje.html#a094d1c8b5f186c94d986ee6eb7457d98',1,'Personaje']]],
+  ['ppresionado_11',['pPresionado',['../class_juego.html#a8e4973134d70f27d4d7d2da071dd63e3',1,'Juego']]],
+  ['proxycontinuar_12',['proxyContinuar',['../class_juego.html#ab332bdd5d24c07ffa1fcc9f0808f2cda',1,'Juego::proxyContinuar'],['../class_juego2.html#aeed1db822c31fcbf9d123a1bad08c104',1,'Juego2::proxyContinuar']]],
+  ['proxysalir_13',['proxySalir',['../class_juego.html#a3275839db3485c47ba14f3adebb5e135',1,'Juego::proxySalir'],['../class_juego2.html#a9975ae76390f5502927ce576cce11be2',1,'Juego2::proxySalir']]],
+  ['proyectilesactivos_14',['proyectilesActivos',['../class_enemigo.html#a4c74261ca978d746e0e749fd1482ce6d',1,'Enemigo::proyectilesActivos'],['../class_personaje.html#a0bae2248fa9030f7e9d69a93dc3352f9',1,'Personaje::proyectilesActivos']]],
+  ['puededisparar_15',['puedeDisparar',['../class_goku.html#a2cc54b240347e2a9f6958f253af0d1a9',1,'Goku']]],
+  ['puerta_16',['puerta',['../class_juego2.html#a73f511b1b7eaa04e7537a222c27edc34',1,'Juego2']]],
+  ['puntomedio_17',['puntoMedio',['../struct_juego_1_1_cuerda.html#a1dcd854713df7c3287a22481acf6601c',1,'Juego::Cuerda']]]
+];
