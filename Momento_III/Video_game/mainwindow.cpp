@@ -6,13 +6,18 @@
 #include <QFile>
 #include <QDebug>
 #include <QGraphicsDropShadowEffect>
-#include <QMessageBox>  // Mostrar mensajes al usuario
+#include <QMessageBox>
 #include <QDialog>
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QPushButton>
 
-// Constructor de MainWindow
+/**
+ * @brief Constructor de la ventana principal.
+ *
+ * Inicializa la interfaz, carga la fuente personalizada,
+ * aplica estilos visuales y reproduce la música del menú.
+ */
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -28,13 +33,16 @@ MainWindow::MainWindow(QWidget *parent)
     musicaMenu = new QMediaPlayer(this);
     salidaAudioMenu = new QAudioOutput(this);
     musicaMenu->setSource(QUrl("qrc:/sounds/Sounds/musica_menu.mp3"));
-    salidaAudioMenu->setVolume(1.0);  // entre 0 y 100
+    salidaAudioMenu->setVolume(1.0);
     musicaMenu->setAudioOutput(salidaAudioMenu);
     musicaMenu->setLoops(QMediaPlayer::Infinite);
     musicaMenu->play();
 }
 
-// Carga la fuente personalizada desde el recurso
+/**
+ * @brief Carga la fuente personalizada desde los recursos.
+ * @return El nombre de la fuente cargada o "Arial" si falla.
+ */
 QString MainWindow::loadDragonBallFont() {
     QString fontPath = ":/fondos/Pictures/db_font.ttf";
 
@@ -59,8 +67,11 @@ QString MainWindow::loadDragonBallFont() {
     return fontFamilies.first();
 }
 
+/**
+ * @brief Aplica el estilo visual del menú usando la fuente personalizada.
+ */
 void MainWindow::aplicarEstilosMenu() {
-    if (!ui) return;  // Evita errores si UI no está inicializado
+    if (!ui) return;
 
     QFont font(dragonBallFont, 18, QFont::Bold);
     ui->newGameButton->setFont(font);
@@ -85,7 +96,9 @@ void MainWindow::aplicarEstilosMenu() {
     ui->informationButton->setStyleSheet(style);
 }
 
-// Slot al hacer clic en "New Game"
+/**
+ * @brief Slot que se ejecuta al hacer clic en el botón "Nuevo Juego".
+ */
 void MainWindow::on_newGameButton_clicked() {
     if (juego) {
         delete juego;
@@ -93,11 +106,11 @@ void MainWindow::on_newGameButton_clicked() {
     }
 
     if (musicaMenu && musicaMenu->playbackState() == QMediaPlayer::PlayingState) musicaMenu->stop();
+
     try {
         juego = new Juego();
         juego->show();
 
-        // Conectar señal para volver al menú principal
         connect(juego, &Juego::salirAlMenu, this, [this]() {
             juego->hide();
             this->show();
@@ -105,21 +118,17 @@ void MainWindow::on_newGameButton_clicked() {
                 musicaMenu->play();
         });
 
-        // Conectar señal de Game Over
         connect(juego, &Juego::gameOver, this, [this]() {
             juego->hide();
             mostrarGameOverDialog(false);
         });
 
-        // Conectar señal de nivel completado
         connect(juego, &Juego::nivelCompletado, this, [this]() {
             juego->hide();
             iniciarNivel2();
         });
 
         this->hide();
-
-        // Mostrar título del nivel
         mostrarTituloNivel("Nivel 1: Escape en la Isla", juego);
 
     } catch (const std::exception& e) {
@@ -128,7 +137,9 @@ void MainWindow::on_newGameButton_clicked() {
     }
 }
 
-// Slot al hacer clic en "Information"
+/**
+ * @brief Slot que se ejecuta al hacer clic en el botón "Información".
+ */
 void MainWindow::on_informationButton_clicked() {
     QDialog* infoDialog = new QDialog(this);
     infoDialog->setWindowTitle("Información del Juego");
@@ -210,30 +221,33 @@ void MainWindow::on_informationButton_clicked() {
     infoDialog->exec();
 }
 
+/**
+ * @brief Inicia el segundo nivel del juego y configura sus señales.
+ */
 void MainWindow::iniciarNivel2() {
     Juego2* juego2 = new Juego2();
     juego2->show();
 
-    // Conectar señal para volver al menú principal desde nivel 2
     connect(juego2, &Juego2::salirAlMenu, this, [this, juego2]() {
         juego2->hide();
         this->show();
         if (musicaMenu)
             musicaMenu->play();
-        //delete juego2;
     });
 
-    // Conectar señal de Game Over
     connect(juego2, &Juego2::gameOver, this, [this, juego2]() {
         juego2->hide();
-        mostrarGameOverDialog(true); // true = nivel 2
+        mostrarGameOverDialog(true);
     });
 
-    // Mostrar título del nivel 2
-    mostrarTituloNivel("Nivel 2: Rescate de Bulma", juego2, false); // El false indica que no tiene iniciar()
+    mostrarTituloNivel("Nivel 2: Rescate de Bulma", juego2, false);
 }
 
-void MainWindow::mostrarGameOverDialog(bool esNivel2 = false) {
+/**
+ * @brief Muestra el cuadro de diálogo de Game Over y da opciones al jugador.
+ * @param esNivel2 True si corresponde al nivel 2.
+ */
+void MainWindow::mostrarGameOverDialog(bool esNivel2) {
     QMessageBox msgBox;
     msgBox.setWindowTitle("Game Over");
     msgBox.setText("¡Has perdido! ¿Qué quieres hacer?");
@@ -302,10 +316,16 @@ void MainWindow::mostrarGameOverDialog(bool esNivel2 = false) {
     else if (msgBox.clickedButton() == menuButton) {
         this->show(); // Solo mostrar menú principal
         if (musicaMenu)
-        musicaMenu->play();
+            musicaMenu->play();
     }
 }
 
+/**
+ * @brief Muestra el título del nivel con efecto visual antes de iniciarlo.
+ * @param titulo Texto a mostrar.
+ * @param vistaJuego Vista del juego (nivel 1 o 2).
+ * @param tieneIniciar Si es true, llama a iniciar() después.
+ */
 void MainWindow::mostrarTituloNivel(const QString& titulo, QGraphicsView* vistaJuego, bool tieneIniciar) {
     if (!vistaJuego) return;
 
@@ -320,11 +340,9 @@ void MainWindow::mostrarTituloNivel(const QString& titulo, QGraphicsView* vistaJ
     shadow->setOffset(5, 5);
     tituloItem->setGraphicsEffect(shadow);
 
-    // Usamos dynamic_cast para acceder a los métodos específicos
     if (auto juegoPtr = dynamic_cast<Juego*>(vistaJuego)) {
         juegoPtr->agregarItemEscena(tituloItem);
-    }
-    else if (auto juego2Ptr = dynamic_cast<Juego2*>(vistaJuego)) {
+    } else if (auto juego2Ptr = dynamic_cast<Juego2*>(vistaJuego)) {
         juego2Ptr->agregarItemEscena(tituloItem);
     }
 
@@ -338,24 +356,19 @@ void MainWindow::mostrarTituloNivel(const QString& titulo, QGraphicsView* vistaJ
         if (auto juegoPtr = dynamic_cast<Juego*>(vistaJuego)) {
             juegoPtr->removerItemEscena(tituloItem);
             if (tieneIniciar) juegoPtr->iniciar();
-        }
-        else if (auto juego2Ptr = dynamic_cast<Juego2*>(vistaJuego)) {
+        } else if (auto juego2Ptr = dynamic_cast<Juego2*>(vistaJuego)) {
             juego2Ptr->removerItemEscena(tituloItem);
-            // No llamamos a iniciar() para Juego2
         }
         delete tituloItem;
     });
 }
 
-// Destructor de MainWindow
+/**
+ * @brief Destructor de la ventana principal.
+ */
 MainWindow::~MainWindow() {
     delete ui;
-    if (juego) {
-        delete juego;
-    }
-
-    if (musicaMenu)
-        delete musicaMenu;
-    if (salidaAudioMenu)
-        delete salidaAudioMenu;
+    if (juego) delete juego;
+    if (musicaMenu) delete musicaMenu;
+    if (salidaAudioMenu) delete salidaAudioMenu;
 }

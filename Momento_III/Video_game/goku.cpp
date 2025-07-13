@@ -10,7 +10,11 @@
 #include <QAudioOutput>
 #include <QUrl>
 
-// Constructor de Goku
+/**
+ * @brief Constructor de Goku
+ * Inicializa el personaje, carga animaciones, configura temporizador de disparo,
+ * y activa enfoque en nivel 2.
+ */
 Goku::Goku(float x, float y, float ancho, float alto)
     : Personaje(x, y, ancho, alto), frameActual(0), contador(0),
     velocidadAnimacion(10), disparando(false)
@@ -21,13 +25,15 @@ Goku::Goku(float x, float y, float ancho, float alto)
     disparoTimer = new QTimer(this);
     connect(disparoTimer, &QTimer::timeout, this, &Goku::animarDisparoFrame);
 
-//NIVEL 2:
+    // NIVEL 2:
     setFlag(QGraphicsItem::ItemIsFocusable);
     setFocus();
     tipo = "goku";
 }
 
-// Cargar animaciones (correr, caer, disparo, cuerda)
+/**
+ * @brief Carga los sprites para animaciones de correr, caer, disparar y cuerda.
+ */
 void Goku::cargarAnimaciones() {
     QPixmap spriteSheet(":/sprites/Pictures/goku_corre_se_cae.png");
 
@@ -54,16 +60,15 @@ void Goku::cargarAnimaciones() {
     spriteCuerda = QPixmap(":/sprites/Pictures/goku_agarrado.png");
 }
 
-// Salto de Goku (tecla W)
+/** @brief Salto de Goku al presionar W. */
 void Goku::saltar() {
     if (!enSuelo) return;
-
     velocidadY = -22;
     enSuelo = false;
     teclaWSostenida = true;
 }
 
-// Animación al correr (loop)
+/** @brief Animación continua de correr. */
 void Goku::animarCorrer() {
     contador++;
     if (contador >= velocidadAnimacion) {
@@ -77,7 +82,7 @@ void Goku::animarCorrer() {
     }
 }
 
-// Animación de caída (4 frames)
+/** @brief Animación de caída con 4 frames. */
 void Goku::animarCaida() {
     if (framesCaer.isEmpty()) return;
 
@@ -85,16 +90,15 @@ void Goku::animarCaida() {
     setPixmap(framesCaer[frameActual].scaled(ancho, alto, Qt::KeepAspectRatio, Qt::SmoothTransformation));
 }
 
-// Inicia animación de disparo (activar temporizador)
+/** @brief Inicia animación de disparo activando temporizador. */
 void Goku::animarDisparo() {
     if (disparando) return;
-
     disparando = true;
     frameDisparoActual = 0;
     disparoTimer->start(150);
 }
 
-// Animación cuadro a cuadro del disparo (cada 150 ms)
+/** @brief Cambia frame por frame la animación de disparo. */
 void Goku::animarDisparoFrame() {
     const int repeticiones = 6;
 
@@ -109,26 +113,25 @@ void Goku::animarDisparoFrame() {
     } else {
         disparoTimer->stop();
         disparando = false;
-        animarCorrer(); // Regresa a correr después de disparar
+        animarCorrer();
     }
 }
 
-// Mostrar sprite colgado en la cuerda
+/** @brief Muestra sprite cuando Goku está colgado en la cuerda. */
 void Goku::animarCuerda() {
     setPixmap(spriteCuerda.scaled(ancho, alto, Qt::KeepAspectRatio, Qt::SmoothTransformation));
 }
 
-// Acelera caída manual (tecla S)
+/** @brief Acelera la caída al presionar la tecla S. */
 void Goku::acelerarCaida() {
     velocidadY += 10;
 }
 
-// Verifica si está disparando
 bool Goku::estaDisparando() const {
     return disparando;
 }
 
-// Disparo de Goku (lanza 3 proyectiles amarillos)
+/** @brief Disparo de Goku (3 proyectiles amarillos). */
 void Goku::disparar(QGraphicsScene* escena) {
     QMediaPlayer* sonidoDisparo = new QMediaPlayer;
     QAudioOutput* audioDisparo = new QAudioOutput;
@@ -151,60 +154,44 @@ void Goku::disparar(QGraphicsScene* escena) {
         QTimer* timer = new QTimer(this);
         connect(timer, &QTimer::timeout, [=]() mutable {
             if (!proyectilGoku || !proyectilGoku->scene()) {
-                timer->stop();
-                timer->deleteLater();
-                return;
+                timer->stop(); timer->deleteLater(); return;
             }
 
-            proyectilGoku->moveBy(30, 0); // Avanza horizontalmente
+            proyectilGoku->moveBy(30, 0);
 
-            // Verificar colisión con enemigos
             if (listaEnemigos) {
                 for (int j = 0; j < listaEnemigos->size(); ++j) {
                     Enemigo* enemigo = listaEnemigos->at(j);
                     if (proyectilGoku->collidesWithItem(enemigo)) {
                         enemigo->eliminarProyectiles();
                         escena->removeItem(enemigo);
-
-                        // Notifica al juego que un soldado fue eliminado
                         if (Juego* juego = dynamic_cast<Juego*>(escena->views().first())) {
                             juego->aumentarContadorSoldados();
                         }
-
                         delete enemigo;
                         listaEnemigos->removeAt(j);
-
                         escena->removeItem(proyectilGoku);
                         delete proyectilGoku;
-
-                        timer->stop();
-                        timer->deleteLater();
-
+                        timer->stop(); timer->deleteLater();
                         return;
                     }
                 }
             }
 
-            // Eliminar si sale de la pantalla
             if (proyectilGoku->x() > 1300) {
                 escena->removeItem(proyectilGoku);
                 delete proyectilGoku;
-                timer->stop();
-                timer->deleteLater();
+                timer->stop(); timer->deleteLater();
             }
         });
-
         timer->start(30);
     }
 }
 
-// Lógica física: caída, gravedad y animación correspondiente
+/** @brief Aplica física de caída, gravedad y animaciones según el estado. */
 void Goku::mover() {
-    if (cayendoLento && velocidadY > 0) {
-        velocidadY += gravedad * 0.01; // Caída lenta
-    } else {
-        velocidadY += gravedad;       // Caída normal
-    }
+    if (cayendoLento && velocidadY > 0) velocidadY += gravedad * 0.01;
+    else velocidadY += gravedad;
 
     posY += velocidadY;
 
@@ -213,67 +200,53 @@ void Goku::mover() {
         posY = limiteSuelo;
         velocidadY = 0;
         enSuelo = true;
-
-        if (!disparando)
-            animarCorrer();  // Goku vuelve a correr en el suelo
+        if (!disparando) animarCorrer();
     } else {
         enSuelo = false;
     }
 
-    setPos(posX, posY);  // Posición actualizada
+    setPos(posX, posY);
 }
 
-// Establece lista de enemigos visibles (para colisiones)
 void Goku::setListaEnemigos(QVector<Enemigo*>* lista) {
     listaEnemigos = lista;
 }
 
-// Determina si está cayendo (velocidad positiva)
 bool Goku::estaBajando() const {
     return velocidadY > 0;
 }
 
-// Verifica si está en el suelo
 bool Goku::estaEnSuelo() const {
     return enSuelo;
 }
 
-// Detiene la caída y lo pone en el suelo
 void Goku::detenerCaida() {
     velocidadY = 0;
     enSuelo = true;
 }
 
-// Fuerza a que Goku comience a caer
 void Goku::activarCaida() {
     enSuelo = false;
-    if (velocidadY == 0)
-        velocidadY = 1;
+    if (velocidadY == 0) velocidadY = 1;
 }
 
-// Marca caída forzada por el jugador
 void Goku::forzarCaida() {
     forzarCaidaManual = true;
 }
 
-// Verifica si se está forzando la caída
 bool Goku::estaForzandoCaida() const {
     return forzarCaidaManual;
 }
 
-// Cancela el estado de caída forzada
 void Goku::cancelarCaidaForzada() {
     forzarCaidaManual = false;
 }
 
-//NIVEL 2
-
+/** @brief Carga las animaciones para el modo cenital (nivel 2). */
 void Goku::cargarAnimacionesNivel2() {
     QPixmap sheet(":/sprites/Pictures/goku_pixel.png");
     int originalW = 150;
     int originalH = 150;
-
-    // Tamaño final deseado según el mapa
     int tileW = 55;
     int tileH = 38;
 
@@ -292,8 +265,9 @@ void Goku::cargarAnimacionesNivel2() {
     setPixmap(framesAbajo[0]);
 }
 
+/** @brief Captura teclas W, A, S, D y P para movimiento y disparo (nivel 2). */
 void Goku::keyPressEvent(QKeyEvent* event) {
-    if (!m_enabled) return;  // <-- Ignorar eventos si está deshabilitado
+    if (!m_enabled) return;
 
     switch (event->key()) {
     case Qt::Key_W: mover2("arriba"); break;

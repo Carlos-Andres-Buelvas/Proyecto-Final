@@ -15,6 +15,13 @@
 #include <QVBoxLayout>
 #include <QLabel>
 
+/**
+ * @brief Constructor del nivel 2 del juego.
+ *
+ * Inicializa la escena, configura el fondo, la música, las fuentes, el mapa,
+ * los elementos gráficos como barra de energía, llaves, botones de pausa
+ * y conecta los temporizadores principales.
+ */
 Juego2::Juego2(QWidget* parent) : QGraphicsView(parent) {
     escena = new QGraphicsScene(this);
     escena->setSceneRect(0, 0, 1280, 680);
@@ -122,6 +129,12 @@ Juego2::Juego2(QWidget* parent) : QGraphicsView(parent) {
     connect(timerGameOver, &QTimer::timeout, this, &Juego2::mostrarMenuGameOver);
 }
 
+/**
+ * @brief Ciclo principal de actualización del nivel 2.
+ *
+ * Revisa colisiones entre Goku y cápsulas, llaves, enemigos y Bulma.
+ * Gestiona el avance del juego, condiciones de victoria y derrota.
+ */
 void Juego2::actualizar() {
     if (enPausa) return;
     // 1. Revisar colisiones con cápsulas
@@ -230,6 +243,15 @@ void Juego2::actualizar() {
     }
 }
 
+/**
+ * @brief Carga el mapa del nivel 2 desde una matriz de caracteres codificada.
+ *
+ * Interpreta los siguientes símbolos:
+ * '#' = muro, '.' = camino, 'G' = Goku, 'E' = enemigo, 'K' = llave,
+ * 'C' = cápsula, 'B' = Bulma, 'D' = puerta.
+ *
+ * @param archivo Ruta del archivo de mapa (no utilizado actualmente).
+ */
 void Juego2::cargarMapa(const QString&) {
     QStringList mapa = {
         "###########################",
@@ -354,6 +376,11 @@ void Juego2::cargarMapa(const QString&) {
     }
 }
 
+/**
+ * @brief Actualiza gráficamente la barra de energía de Goku.
+ *
+ * Anima el crecimiento de la barra y muestra un efecto visual si la energía está completa.
+ */
 void Juego2::actualizarBarraEnergia() {
     if (!goku || !barraEnergia) return;
 
@@ -390,6 +417,9 @@ void Juego2::actualizarBarraEnergia() {
     }
 }
 
+/**
+ * @brief Actualiza el contador visual de llaves recolectadas.
+ */
 void Juego2::actualizarContadorLlaves() {
     if (textoLlaves) {
         textoLlaves->setHtml(
@@ -402,6 +432,11 @@ void Juego2::actualizarContadorLlaves() {
     }
 }
 
+/**
+ * @brief Abre la puerta en el mapa cuando se recolectan todas las llaves.
+ *
+ * Muestra un mensaje animado "PUERTA ABIERTA" en pantalla.
+ */
 void Juego2::abrirPuerta() {
     if (puerta) {
         escena->removeItem(puerta);
@@ -433,6 +468,11 @@ void Juego2::abrirPuerta() {
     });
 }
 
+/**
+ * @brief Elimina un enemigo de la escena y limpia sus proyectiles.
+ *
+ * @param enemigo Puntero al enemigo a eliminar.
+ */
 void Juego2::eliminarEnemigo(Enemigo* enemigo) {
     if (!enemigo) return;
 
@@ -442,6 +482,11 @@ void Juego2::eliminarEnemigo(Enemigo* enemigo) {
     delete enemigo;
 }
 
+/**
+ * @brief Muestra la pantalla de Game Over y reproduce sonido de derrota.
+ *
+ * También emite la señal `gameOver()` después de 3 segundos.
+ */
 void Juego2::mostrarGameOver() {
     detenerTodo();
     if (musicaNivel2 && musicaNivel2->playbackState() == QMediaPlayer::PlayingState) musicaNivel2->stop();
@@ -472,23 +517,45 @@ void Juego2::mostrarGameOver() {
     timerGameOver->start(3000); // 3 segundos para ver el mensaje
 }
 
+/**
+ * @brief Emite la señal de Game Over tras una pausa.
+ */
 void Juego2::mostrarMenuGameOver() {
     emit gameOver(); // Ahora emitimos la señal después del retraso
 }
 
+/**
+ * @brief Método vacío que puede usarse para inicializar el juego desde MainWindow.
+ */
 void Juego2::iniciar() {
     // Comienza el juego (activar timers, etc.)
     // Por ahora vacío, pero lo puedes llenar si es necesario.
 }
 
+/**
+ * @brief Agrega un ítem a la escena si esta existe.
+ *
+ * @param item Puntero al QGraphicsItem a agregar.
+ */
 void Juego2::agregarItemEscena(QGraphicsItem* item) {
     if (escena) escena->addItem(item);
 }
 
+/**
+ * @brief Remueve un ítem de la escena si existe.
+ *
+ * @param item Puntero al QGraphicsItem a remover.
+ */
 void Juego2::removerItemEscena(QGraphicsItem* item) {
     if (escena && item) escena->removeItem(item);
 }
 
+/**
+ * @brief Alterna entre pausa y reanudación del juego.
+ *
+ * Muestra un overlay visual con el texto "PAUSA" y botones para continuar o salir al menú.
+ * Oculta el overlay y reanuda la lógica cuando se quita la pausa.
+ */
 void Juego2::togglePausa() {
     pausado = !pausado;
 
@@ -535,6 +602,11 @@ void Juego2::togglePausa() {
     }
 }
 
+/**
+ * @brief Configura los botones interactivos del menú de pausa.
+ *
+ * Incluye los botones "CONTINUAR" y "SALIR AL MENÚ".
+ */
 void Juego2::configurarBotonesPausa() {
     btnContinuar = new QPushButton("CONTINUAR");
     btnContinuar->setObjectName("btnPausa");
@@ -585,13 +657,16 @@ void Juego2::configurarBotonesPausa() {
 
     // Conexión botón SALIR AL MENÚ con pausa previa
     connect(btnSalir, &QPushButton::clicked, this, [this]() {
-        if (pausado) togglePausa();  // ⬅️ Quitar el overlay de pausa
-        emit salirAlMenu();          // ⬅️ Emitir señal al MainWindow
+        if (pausado) togglePausa();  // Quitar el overlay de pausa
+        emit salirAlMenu();          // Emitir señal al MainWindow
         detenerTodo();
         if (musicaNivel2 && musicaNivel2->playbackState() == QMediaPlayer::PlayingState) musicaNivel2->stop();
     });
 }
 
+/**
+ * @brief Detiene toda la lógica del juego: timers, enemigos y controles de Goku.
+ */
 void Juego2::detenerTodo() {
     if (goku) goku->setEnabled(false);  // Desactiva teclado
 
@@ -602,10 +677,13 @@ void Juego2::detenerTodo() {
     if (timerActualizar) timerActualizar->stop();  // Pausar colisiones
 }
 
+/**
+ * @brief Reanuda la lógica detenida del juego y devuelve el foco a Goku.
+ */
 void Juego2::reanudarTodo() {
     if (goku) {
         goku->setEnabled(true);  // Reactiva teclado
-        goku->setFocus();        // <-- ESTA ES LA LÍNEA CLAVE QUE FALTABA
+        goku->setFocus();
     }
 
     for (Enemigo* enemigo : enemigos) {

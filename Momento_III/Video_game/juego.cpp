@@ -1,3 +1,11 @@
+/**
+ * @file juego.cpp
+ * @brief Implementación de la clase Juego que maneja la lógica principal del primer nivel
+ *
+ * Contiene la implementación de todos los métodos para gestionar el juego,
+ * incluyendo inicialización, actualización del estado del juego, generación
+ * de elementos y manejo de colisiones.
+ */
 #include "juego.h"
 #include "enemigo.h"
 #include "mainwindow.h"
@@ -18,8 +26,16 @@
 #include <QMediaPlayer>
 #include <QAudioOutput>
 
-Juego::Juego(QWidget *parent) : QGraphicsView(parent), timerAnimacionCuerda(nullptr),
-    timerGeneracionCuerdas(nullptr), btnContinuar(nullptr), btnSalir(nullptr),
+/**
+ * @brief Constructor de la clase Juego
+ *
+ * Inicializa la escena gráfica, carga los recursos necesarios,
+ * configura los elementos visuales y prepara los temporizadores.
+ *
+ * @param parent Widget padre (opcional)
+ */
+Juego::Juego(QWidget *parent) : QGraphicsView(parent), btnContinuar(nullptr),
+    btnSalir(nullptr), timerAnimacionCuerda(nullptr), timerGeneracionCuerdas(nullptr),
     proxyContinuar(nullptr), proxySalir(nullptr), pajaroItem(nullptr), frameActualPajaro(0), timerAnimacionPajaro(nullptr) {
     escena = new QGraphicsScene(this);
     escena->setSceneRect(0, 0, 1280, 680);
@@ -246,6 +262,12 @@ Juego::Juego(QWidget *parent) : QGraphicsView(parent), timerAnimacionCuerda(null
     this->setFocus();
 }
 
+/**
+ * @brief Inicia el juego principal
+ *
+ * Comienza todos los temporizadores necesarios para el funcionamiento
+ * del juego y reproduce la música de fondo.
+ */
 void Juego::iniciar() {
     timerJuego->start(16);         // ~60 FPS
     int intervalo = QRandomGenerator::global()->bounded(10000, 15000); // Entre 10 y 15 segundos
@@ -261,6 +283,12 @@ void Juego::iniciar() {
 
 }
 
+/**
+ * @brief Actualiza el estado del juego en cada frame
+ *
+ * Maneja el movimiento de todos los elementos, las colisiones,
+ * la generación de objetos y la lógica general del juego.
+ */
 void Juego::actualizar() {
     // Movimiento automático
     goku->setX(goku->x() + velocidadScroll);
@@ -478,6 +506,12 @@ void Juego::actualizar() {
     }
 }
 
+/**
+ * @brief Genera nuevos enemigos en el juego
+ *
+ * Crea instancias de enemigos con posiciones aleatorias
+ * y los añade a la escena.
+ */
 void Juego::generarEnemigo() {
     if (enemigos.size() >= 2) {
         return; // No generar más si ya hay 2 en pantalla
@@ -502,6 +536,12 @@ void Juego::generarEnemigo() {
     }
 }
 
+/**
+ * @brief Actualiza la barra de energía visual
+ *
+ * Muestra gráficamente el estado actual de la energía
+ * del personaje principal con efectos de animación.
+ */
 void Juego::actualizarBarraEnergia() {
     float porcentaje = static_cast<float>(goku->obtenerEnergia()) / 100.0f;
     QRectF targetRect(25, 25, porcentaje * 200, 20);
@@ -511,7 +551,7 @@ void Juego::actualizarBarraEnergia() {
     timer->setFrameRange(0, 100);
 
     // Conectar la señal frameChanged para actualizar manualmente el rectángulo
-    connect(timer, &QTimeLine::frameChanged, [this, timer, targetRect](int frame) {
+    connect(timer, &QTimeLine::frameChanged, [this, timer, targetRect](int) {
         QRectF currentRect = barraEnergia->rect();
         qreal progress = timer->currentValue();
 
@@ -544,6 +584,12 @@ void Juego::actualizarBarraEnergia() {
     }
 }
 
+/**
+ * @brief Incrementa el contador de enemigos eliminados
+ *
+ * Actualiza la interfaz cuando se elimina un enemigo
+ * y verifica si se ha alcanzado el objetivo del nivel.
+ */
 void Juego::aumentarContadorSoldados() {
     soldadosEliminados++;
     contadorSoldados->setHtml(
@@ -585,6 +631,12 @@ void Juego::aumentarContadorSoldados() {
     }
 }
 
+/**
+ * @brief Genera plataformas en el escenario
+ *
+ * Crea plataformas en posiciones aleatorias con posibles
+ * obstáculos encima de ellas.
+ */
 void Juego::generarPlataforma() {
     int cantidad = QRandomGenerator::global()->bounded(1, 3); // 1 o 2 plataformas
     int baseX = 1280;
@@ -635,6 +687,12 @@ void Juego::generarPlataforma() {
     }
 }
 
+/**
+ * @brief Genera obstáculos en el suelo
+ *
+ * Crea obstáculos aleatorios (troncos o rocas) en el
+ * camino del personaje principal.
+ */
 void Juego::generarObstaculo() {
     if (QRandomGenerator::global()->bounded(0, 100) > 50) return;
     bool esTronco = QRandomGenerator::global()->bounded(0, 2) == 0;
@@ -652,6 +710,12 @@ void Juego::generarObstaculo() {
     obstaculos.append(obst);
 }
 
+/**
+ * @brief Genera cuerdas colgantes en el escenario
+ *
+ * Crea cuerdas que el personaje puede usar para balancearse,
+ * con física de péndulo incorporada.
+ */
 void Juego::generarCuerda() {
     if (QRandomGenerator::global()->bounded(0, 100) > 50) return;
 
@@ -693,6 +757,12 @@ void Juego::generarCuerda() {
     cuerdas.append(c);
 }
 
+/**
+ * @brief Actualiza el estado físico de las cuerdas
+ *
+ * Calcula el movimiento pendular de las cuerdas y maneja
+ * la interacción con el personaje principal.
+ */
 void Juego::actualizarCuerda() {
     for (int i = 0; i < cuerdas.size(); ++i) {
         Cuerda& cuerda = cuerdas[i];
@@ -755,6 +825,14 @@ void Juego::actualizarCuerda() {
     }
 }
 
+/**
+ * @brief Activa una cuerda cuando Goku interactúa con ella
+ *
+ * Verifica la colisión entre Goku y una cuerda disponible, activando
+ * el estado de balanceo y cambiando los sprites correspondientes.
+ *
+ * @param goku Puntero al personaje Goku que interactuará con la cuerda
+ */
 void Juego::activarCuerda(Goku* goku) {
     if (gokuEnCuerda) return;
 
@@ -785,6 +863,14 @@ void Juego::activarCuerda(Goku* goku) {
     }
 }
 
+/**
+ * @brief Libera a Goku de una cuerda
+ *
+ * Restablece el estado normal de Goku después de balancearse,
+ * calculando su posición final y desactivando la cuerda.
+ *
+ * @param cuerda Referencia a la cuerda de la que se soltará Goku
+ */
 void Juego::soltarGokuDeCuerda(Cuerda& cuerda) {
     if (!cuerda.gokuAgarrado) return;
 
@@ -808,6 +894,15 @@ void Juego::soltarGokuDeCuerda(Cuerda& cuerda) {
     gokuEnCuerda = false;
 }
 
+/**
+ * @brief Calcula la posición del extremo de una cuerda
+ *
+ * Determina las coordenadas del extremo inferior de la cuerda
+ * basándose en su punto de origen, largo y ángulo actual.
+ *
+ * @param cuerda Cuerda para calcular su extremo
+ * @return QPointF Coordenadas (x,y) del extremo de la cuerda
+ */
 QPointF Juego::calcularExtremo(const Cuerda& cuerda) const {
     // Cálculo preciso considerando el largo y ángulo actual
     return QPointF(
@@ -816,6 +911,12 @@ QPointF Juego::calcularExtremo(const Cuerda& cuerda) const {
         );
 }
 
+/**
+ * @brief Genera un tronco giratorio único en el escenario
+ *
+ * Crea un tronco especial con propiedades físicas particulares
+ * que rueda por el escenario de forma autónoma.
+ */
 void Juego::generarTroncoUnico() {
     if (troncoActual.sprite != nullptr || !timerJuego->isActive()) {
         qDebug() << "No se puede generar tronco: ya existe uno activo o juego pausado";
@@ -848,6 +949,12 @@ void Juego::generarTroncoUnico() {
     qDebug() << "Nuevo tronco generado en posición:" << troncoActual.sprite->pos();
 }
 
+/**
+ * @brief Actualiza el estado del tronco giratorio
+ *
+ * Maneja la física del tronco, incluyendo rotación, movimiento
+ * y detección de colisiones con plataformas y el personaje.
+ */
 void Juego::actualizarTronco() {
     if (troncoActual.sprite == nullptr) return;
 
@@ -927,6 +1034,14 @@ void Juego::actualizarTronco() {
     }
 }
 
+/**
+ * @brief Maneja eventos de teclado durante el juego
+ *
+ * Procesa las entradas del jugador para controlar a Goku,
+ * incluyendo movimiento, saltos, disparos y pausa.
+ *
+ * @param event Evento de tecla presionada
+ */
 void Juego::keyPressEvent(QKeyEvent* event) {
     if (pausado) {
         // Solo permitir despausar con ESPACIO cuando está pausado
@@ -975,6 +1090,14 @@ void Juego::keyPressEvent(QKeyEvent* event) {
     }
 }
 
+/**
+ * @brief Maneja eventos de liberación de teclas
+ *
+ * Procesa cuando el jugador suelta teclas para detener
+ * acciones continuas como saltos o disparos.
+ *
+ * @param event Evento de tecla liberada
+ */
 void Juego::keyReleaseEvent(QKeyEvent* event) {
     switch (event->key()) {
     case Qt::Key_W:
@@ -988,14 +1111,30 @@ void Juego::keyReleaseEvent(QKeyEvent* event) {
     QGraphicsView::keyReleaseEvent(event);
 }
 
+/**
+ * @brief Agrega un item gráfico a la escena
+ *
+ * @param item Puntero al item gráfico que se agregará
+ */
 void Juego::agregarItemEscena(QGraphicsItem* item) {
     escena->addItem(item);
 }
 
+/**
+ * @brief Remueve un item gráfico de la escena
+ *
+ * @param item Puntero al item gráfico que se removerá
+ */
 void Juego::removerItemEscena(QGraphicsItem* item) {
     escena->removeItem(item);
 }
 
+/**
+ * @brief Detiene temporalmente todos los elementos del juego
+ *
+ * Pausa timers, enemigos y animaciones para pausar el juego
+ * o mostrar pantallas de transición.
+ */
 void Juego::detenerTodo() {
     // Detener todos los timers
     timerJuego->stop();
@@ -1014,6 +1153,11 @@ void Juego::detenerTodo() {
     }
 }
 
+/**
+ * @brief Reanuda todos los elementos del juego
+ *
+ * Reactiva timers, enemigos y animaciones después de una pausa.
+ */
 void Juego::reanudarTodo() {
     // Reanudar todos los timers
     timerJuego->start(16);
@@ -1032,6 +1176,12 @@ void Juego::reanudarTodo() {
     }
 }
 
+/**
+ * @brief Alterna el estado de pausa del juego
+ *
+ * Activa/desactiva la pausa mostrando/ocultando el menú correspondiente
+ * y gestionando el estado de los elementos del juego.
+ */
 void Juego::togglePausa() {
     pausado = !pausado;
 
@@ -1076,6 +1226,12 @@ void Juego::togglePausa() {
     }
 }
 
+/**
+ * @brief Configura los botones del menú de pausa
+ *
+ * Crea y posiciona los botones para continuar o salir del juego,
+ * aplicando estilos visuales consistentes con el tema del juego.
+ */
 void Juego::configurarBotonesPausa() {
     // Botón Continuar
     btnContinuar = new QPushButton("CONTINUAR");
@@ -1134,6 +1290,12 @@ void Juego::configurarBotonesPausa() {
     });
 }
 
+/**
+ * @brief Carga los recursos gráficos para la decoración
+ *
+ * Inicializa los sprites de palmeras, pájaros y otros elementos
+ * decorativos que aparecerán en el fondo del juego.
+ */
 void Juego::cargarAssetsDecoracion()
 {
     // Cargar palmeras
@@ -1158,6 +1320,12 @@ void Juego::cargarAssetsDecoracion()
     }
 }
 
+/**
+ * @brief Genera elementos decorativos de palmeras
+ *
+ * Distribuye palmeras en el escenario de forma aleatoria
+ * para crear un entorno visual más rico y variado.
+ */
 void Juego::generarDecoracionPalmeras()
 {
     // Limpiar palmeras existentes
@@ -1189,6 +1357,12 @@ void Juego::generarDecoracionPalmeras()
     }
 }
 
+/**
+ * @brief Inicia la animación del pájaro decorativo
+ *
+ * Configura el pájaro con su posición inicial y temporizador
+ * para comenzar su animación de vuelo a través del escenario.
+ */
 void Juego::iniciarAnimacionPajaro()
 {
     if (framesPajaro.empty()) return;
@@ -1215,6 +1389,12 @@ void Juego::iniciarAnimacionPajaro()
     timerAnimacionPajaro->start(40);  // Más rápido (12-13 FPS)
 }
 
+/**
+ * @brief Actualiza la animación del pájaro
+ *
+ * Avanza los frames de animación y mueve el pájaro a través
+ * del escenario, reiniciando su posición cuando sale de pantalla.
+ */
 void Juego::animarPajaro()
 {
     if (!pajaroItem || framesPajaro.empty()) return;
@@ -1242,6 +1422,12 @@ void Juego::animarPajaro()
     }
 }
 
+/**
+ * @brief Actualiza la posición de los elementos decorativos
+ *
+ * Mueve palmeras y otros elementos decorativos con el scroll
+ * del juego, recolocándolos cuando salen de pantalla.
+ */
 void Juego::actualizarDecoracion()
 {
     // Mover palmeras existentes
@@ -1280,6 +1466,12 @@ void Juego::actualizarDecoracion()
     }
 }
 
+/**
+ * @brief Muestra la pantalla de Game Over
+ *
+ * Presenta el mensaje de fin de juego y reproduce los efectos
+ * de sonido correspondientes cuando Goku es derrotado.
+ */
 void Juego::mostrarGameOver() {
     detenerTodo();
     if (musicaNivel1 && musicaNivel1->playbackState() == QMediaPlayer::PlayingState) musicaNivel1->stop();
@@ -1310,10 +1502,22 @@ void Juego::mostrarGameOver() {
     timerGameOver->start(3000); // 3 segundos para ver el mensaje
 }
 
+/**
+ * @brief Muestra el menú después de Game Over
+ *
+ * Se ejecuta después de un breve retraso para mostrar las opciones
+ * disponibles tras perder el juego.
+ */
 void Juego::mostrarMenuGameOver() {
     emit gameOver(); // Ahora emitimos la señal después del retraso
 }
 
+/**
+ * @brief Reinicia completamente el juego
+ *
+ * Restablece todos los elementos a su estado inicial para comenzar
+ * una nueva partida, limpiando la escena actual.
+ */
 void Juego::reiniciarJuego() {
     // Limpiar todos los elementos del juego
     detenerTodo();
@@ -1392,6 +1596,19 @@ void Juego::reiniciarJuego() {
     iniciar();
 }
 
+/**
+ * @brief Destructor de la clase Juego
+ *
+ * Realiza la limpieza de todos los recursos asignados durante el juego:
+ * - Elimina los elementos decorativos (palmeras, pájaros)
+ * - Detiene y libera los temporizadores asociados
+ * - Detiene la reproducción de música
+ * - Libera la memoria de todos los elementos gráficos
+ *
+ * Garantiza que no queden fugas de memoria al destruir la instancia del juego.
+ * Se ejecuta automáticamente cuando la instancia de Juego sale de ámbito
+ * o es explícitamente eliminada.
+ */
 Juego::~Juego() {
     // Limpiar decoración
     for (auto palmera : decoracionPalmeras) {

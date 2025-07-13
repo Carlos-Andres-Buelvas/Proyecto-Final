@@ -4,15 +4,26 @@
 #include "juego2.h"
 #include <QGraphicsScene>
 
-// Constructor base para cualquier personaje
+/**
+ * @brief Constructor base para cualquier personaje.
+ * @param x Posición inicial en X.
+ * @param y Posición inicial en Y.
+ * @param ancho Ancho del sprite.
+ * @param alto Alto del sprite.
+ */
 Personaje::Personaje(float x, float y, float ancho, float alto)
     : posX(x), posY(y), velocidadY(0), gravedad(1), ancho(ancho), alto(alto)
 {
     setPos(posX, posY);  // Establece la posición inicial en la escena
 }
 
-//NIVEL 2:
+// NIVEL 2:
 
+/**
+ * @brief Mueve al personaje en una dirección dada y actualiza el sprite.
+ *
+ * @param direccion Dirección a mover: "arriba", "abajo", "izquierda", "derecha".
+ */
 void Personaje::mover2(const QString& direccion) {
     int paso = 4;
     QPointF nuevaPos = pos();  // posición actual
@@ -22,11 +33,12 @@ void Personaje::mover2(const QString& direccion) {
     else if (direccion == "izquierda") nuevaPos.rx() -= paso;
     else if (direccion == "derecha") nuevaPos.rx() += paso;
 
-    //Guardar dirección actual solo si es Goku
+    // Guardar dirección actual solo si es Goku
     if (tipo == "goku"){
         Goku* g = dynamic_cast<Goku*>(this);
         if (g) g->direccionActual = direccion;
     }
+
     // Verificar colisión con muros
     if (!colisionaConMuro(nuevaPos, scene())) {
         setPos(nuevaPos);  // Solo si no choca
@@ -34,7 +46,7 @@ void Personaje::mover2(const QString& direccion) {
         posY = nuevaPos.y();
     }
 
-    // Animación
+    // Animación de movimiento
     if (direccion == "arriba")
         setPixmap(framesArriba[frameActual++ % framesArriba.size()]);
     else if (direccion == "abajo")
@@ -45,6 +57,14 @@ void Personaje::mover2(const QString& direccion) {
         setPixmap(framesDerecha[frameActual++ % framesDerecha.size()]);
 }
 
+/**
+ * @brief Lanza un proyectil en la dirección del personaje (Goku o Enemigo).
+ *
+ * Goku dispara proyectiles amarillos en la dirección actual,
+ * mientras que los enemigos disparan hacia Goku con proyectiles rojos.
+ *
+ * @param escena Escena donde se agregan los proyectiles.
+ */
 void Personaje::disparar2(QGraphicsScene* escena) {
     if (tipo == "goku") {
         Goku* goku = dynamic_cast<Goku*>(this);
@@ -63,7 +83,6 @@ void Personaje::disparar2(QGraphicsScene* escena) {
         bola->setZValue(5);
         bola->setPos(x() + boundingRect().width() / 2, y() + boundingRect().height() / 2);
         escena->addItem(bola);
-        //proyectilesActivos.append(bola);
 
         QTimer* timer = new QTimer(this);
         connect(timer, &QTimer::timeout, [=]() mutable {
@@ -73,7 +92,6 @@ void Personaje::disparar2(QGraphicsScene* escena) {
             for (auto item : colisiones) {
                 if (item != bola && (item->data(0) == "muro" || item->data(0) == "enemigo")) {
                     escena->removeItem(bola);
-                    //proyectilesActivos.removeOne(bola);
                     delete bola;
                     timer->stop();
                     delete timer;
@@ -93,7 +111,6 @@ void Personaje::disparar2(QGraphicsScene* escena) {
             if (bola->x() < 0 || bola->x() > escena->width() ||
                 bola->y() < 0 || bola->y() > escena->height()) {
                 escena->removeItem(bola);
-                //proyectilesActivos.removeOne(bola);
                 delete bola;
                 timer->stop();
                 delete timer;
@@ -106,7 +123,6 @@ void Personaje::disparar2(QGraphicsScene* escena) {
         QTimer::singleShot(1, goku, [=](){
             emit actualizarBarraEnergiaSignal();
         });
-
 
     } else if (tipo == "enemigo") {
         if (proyectilesActivos.size() >= 30) return;
@@ -154,7 +170,6 @@ void Personaje::disparar2(QGraphicsScene* escena) {
                 if (item != bola) {
                     if (item->data(0) == "muro") {
                         escena->removeItem(bola);
-                        //proyectilesActivos.removeOne(bola);
                         delete bola;
                         timer->stop();
                         delete timer;
@@ -164,19 +179,16 @@ void Personaje::disparar2(QGraphicsScene* escena) {
                     Goku* goku = dynamic_cast<Goku*>(item);
                     if (goku) {
                         escena->removeItem(bola);
-                        //proyectilesActivos.removeOne(bola);
                         delete bola;
                         timer->stop();
                         delete timer;
 
-                        // Aquí puedes mostrar derrota o reiniciar el nivel
                         qDebug() << "Goku fue alcanzado por un disparo. Fin del juego.";
-                        // Espera 100 ms antes de emitir Game Over
                         QObject* parentView = escena->views().isEmpty() ? nullptr : escena->views().first();
                         Juego2* juego2 = qobject_cast<Juego2*>(parentView);
                         if (juego2) {
                             juego2->mostrarGameOver();
-                            }
+                        }
                         return;
                     }
                 }
@@ -185,7 +197,6 @@ void Personaje::disparar2(QGraphicsScene* escena) {
             if (bola->x() < 0 || bola->x() > escena->width() ||
                 bola->y() < 0 || bola->y() > escena->height()) {
                 escena->removeItem(bola);
-                //proyectilesActivos.removeOne(bola);
                 delete bola;
                 timer->stop();
                 delete timer;
@@ -200,9 +211,15 @@ void Personaje::disparar2(QGraphicsScene* escena) {
     }
 }
 
+/**
+ * @brief Verifica si una nueva posición colisiona con un muro o puerta.
+ * @param nuevaPos Nueva posición tentativa.
+ * @param escena Escena en la que se verifica la colisión.
+ * @return true si hay colisión con un muro o puerta; false si puede moverse.
+ */
 bool Personaje::colisionaConMuro(const QPointF& nuevaPos, QGraphicsScene* escena) {
-    // Creamos un rectángulo en la nueva posición que simula la hitbox de Goku
-    int margen = 6; // Puedes ajustar: 2–6 según sensibilidad deseada
+    int margen = 6; // Ajuste de sensibilidad
+
     QRectF rectNuevo = QRectF(
         nuevaPos.x() + margen,
         nuevaPos.y() + margen,
@@ -210,7 +227,6 @@ bool Personaje::colisionaConMuro(const QPointF& nuevaPos, QGraphicsScene* escena
         boundingRect().height() - 2 * margen
         );
 
-    // Verificamos si colisionaría con algún muro
     QVector<QGraphicsItem*> items = escena->items(rectNuevo);
 
     for (QGraphicsItem* item : items) {
