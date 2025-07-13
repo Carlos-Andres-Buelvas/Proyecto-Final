@@ -1,0 +1,757 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.14.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Proyecto Final - Informática II: Referencia de la clase Personaje</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript" src="clipboard.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript" src="cookie.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">Proyecto Final - Informática II
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generado por Doxygen 1.14.0 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+</script>
+<script type="text/javascript">
+$(function() { codefold.init(); });
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+$(function() {
+  initMenu('',true,false,'search.php','Buscar',true);
+  $(function() { init_search(); });
+});
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+$(function(){initNavTree('class_personaje.html','','class_personaje-members'); });
+</script>
+<div id="container">
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Cargando...</div>
+<div class="SRStatus" id="Searching">Buscando...</div>
+<div class="SRStatus" id="NoMatches">Nada coincide</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">Referencia de la clase Personaje<span class="mlabels"><span class="mlabel abstract">abstract</span></span></div></div>
+</div><!--header-->
+<div class="contents">
+
+<p>Clase base abstracta para todos los personajes del juego.  
+ <a href="#details">Más...</a></p>
+
+<p><code>#include &lt;<a class="el" href="personaje_8h_source.html">personaje.h</a>&gt;</code></p>
+<div class="dynheader">
+Diagrama de herencia de Personaje</div>
+<div class="dyncontent">
+ <div class="center">
+  <img src="class_personaje.png" usemap="#Personaje_map" alt=""/>
+  <map id="Personaje_map" name="Personaje_map">
+<area href="class_enemigo.html" title="La clase Enemigo representa un personaje hostil que puede patrullar y disparar." alt="Enemigo" shape="rect" coords="0,112,135,136"/>
+<area href="class_goku.html" title="La clase Goku representa al personaje principal controlado por el jugador." alt="Goku" shape="rect" coords="145,112,280,136"/>
+  </map>
+</div></div>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-signals" class="groupheader"><a id="signals" name="signals"></a>
+Señales</h2></td></tr>
+<tr class="memitem:a754622c13421973b752a5429ee8cb2d5" id="r_a754622c13421973b752a5429ee8cb2d5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a754622c13421973b752a5429ee8cb2d5">actualizarBarraEnergiaSignal</a> ()</td></tr>
+<tr class="memdesc:a754622c13421973b752a5429ee8cb2d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Señal emitida cuando la energía debe actualizarse visualmente.  <br /></td></tr>
+<tr class="memitem:a13458159f6e0bd24e12d02a873c461ed" id="r_a13458159f6e0bd24e12d02a873c461ed"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a13458159f6e0bd24e12d02a873c461ed">gokuDerrotado</a> ()</td></tr>
+<tr class="memdesc:a13458159f6e0bd24e12d02a873c461ed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Señal emitida cuando <a class="el" href="class_goku.html" title="La clase Goku representa al personaje principal controlado por el jugador.">Goku</a> es derrotado por un enemigo.  <br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Métodos públicos</h2></td></tr>
+<tr class="memitem:ac788c154341f4805684d91929904d81f" id="r_ac788c154341f4805684d91929904d81f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac788c154341f4805684d91929904d81f">Personaje</a> (float x, float y, float <a class="el" href="#a11782e62db98f05a5c49bfe80157118b">ancho</a>, float <a class="el" href="#aaef6bf1b4161df811ffcabb26cdfa691">alto</a>)</td></tr>
+<tr class="memdesc:ac788c154341f4805684d91929904d81f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor base del personaje.  <br /></td></tr>
+<tr class="memitem:a8f56997e18315b7153014a3f4bd98e9e" id="r_a8f56997e18315b7153014a3f4bd98e9e"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8f56997e18315b7153014a3f4bd98e9e">mover</a> ()=0</td></tr>
+<tr class="memdesc:a8f56997e18315b7153014a3f4bd98e9e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Método virtual puro para movimiento (nivel 1).  <br /></td></tr>
+<tr class="memitem:a58b1c3c7aa966c855c96c201bca07ecc" id="r_a58b1c3c7aa966c855c96c201bca07ecc"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a58b1c3c7aa966c855c96c201bca07ecc">disparar</a> (QGraphicsScene *escena)=0</td></tr>
+<tr class="memdesc:a58b1c3c7aa966c855c96c201bca07ecc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Método virtual puro para disparo (nivel 1).  <br /></td></tr>
+<tr class="memitem:af746a1a419744988f386f4a7777a1305" id="r_af746a1a419744988f386f4a7777a1305"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af746a1a419744988f386f4a7777a1305">mover2</a> (const QString &amp;direccion)</td></tr>
+<tr class="memdesc:af746a1a419744988f386f4a7777a1305"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mueve al personaje en dirección específica (nivel 2).  <br /></td></tr>
+<tr class="memitem:a737ff8ebed3b47ce9de105d774bf9150" id="r_a737ff8ebed3b47ce9de105d774bf9150"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a737ff8ebed3b47ce9de105d774bf9150">disparar2</a> (QGraphicsScene *escena)</td></tr>
+<tr class="memdesc:a737ff8ebed3b47ce9de105d774bf9150"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lanza un disparo con hasta 3 proyectiles activos (nivel 2).  <br /></td></tr>
+<tr class="memitem:a9d3833bb5eb7c555ce5491fa11efe3bb" id="r_a9d3833bb5eb7c555ce5491fa11efe3bb"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9d3833bb5eb7c555ce5491fa11efe3bb">colisionaConMuro</a> (const QPointF &amp;nuevaPos, QGraphicsScene *escena)</td></tr>
+<tr class="memdesc:a9d3833bb5eb7c555ce5491fa11efe3bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Verifica si una posición nueva colisiona con un muro.  <br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-pro-attribs" class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
+Atributos protegidos</h2></td></tr>
+<tr class="memitem:a18029fc8da0835895c69c9eaddda4312" id="r_a18029fc8da0835895c69c9eaddda4312"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a18029fc8da0835895c69c9eaddda4312">posX</a></td></tr>
+<tr class="memitem:a094d1c8b5f186c94d986ee6eb7457d98" id="r_a094d1c8b5f186c94d986ee6eb7457d98"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a094d1c8b5f186c94d986ee6eb7457d98">posY</a></td></tr>
+<tr class="memdesc:a094d1c8b5f186c94d986ee6eb7457d98"><td class="mdescLeft">&#160;</td><td class="mdescRight">Posición actual del personaje.  <br /></td></tr>
+<tr class="memitem:a09e5fc06d81313a6779ff1cc03cbc657" id="r_a09e5fc06d81313a6779ff1cc03cbc657"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a09e5fc06d81313a6779ff1cc03cbc657">velocidadY</a></td></tr>
+<tr class="memdesc:a09e5fc06d81313a6779ff1cc03cbc657"><td class="mdescLeft">&#160;</td><td class="mdescRight">Velocidad vertical (solo nivel 1)  <br /></td></tr>
+<tr class="memitem:a0b5ee03448f0bbb7c460550095d3a0fd" id="r_a0b5ee03448f0bbb7c460550095d3a0fd"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0b5ee03448f0bbb7c460550095d3a0fd">gravedad</a></td></tr>
+<tr class="memdesc:a0b5ee03448f0bbb7c460550095d3a0fd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gravedad aplicada (solo nivel 1)  <br /></td></tr>
+<tr class="memitem:a11782e62db98f05a5c49bfe80157118b" id="r_a11782e62db98f05a5c49bfe80157118b"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a11782e62db98f05a5c49bfe80157118b">ancho</a></td></tr>
+<tr class="memitem:aaef6bf1b4161df811ffcabb26cdfa691" id="r_aaef6bf1b4161df811ffcabb26cdfa691"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aaef6bf1b4161df811ffcabb26cdfa691">alto</a></td></tr>
+<tr class="memdesc:aaef6bf1b4161df811ffcabb26cdfa691"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dimensiones del personaje.  <br /></td></tr>
+<tr class="memitem:aef1282efe947a2469f0284a2bc877283" id="r_aef1282efe947a2469f0284a2bc877283"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aef1282efe947a2469f0284a2bc877283">frameActual</a> = 0</td></tr>
+<tr class="memdesc:aef1282efe947a2469f0284a2bc877283"><td class="mdescLeft">&#160;</td><td class="mdescRight">Índice del frame actual de animación.  <br /></td></tr>
+<tr class="memitem:a4d6e3883ba156041b1a73b306f855151" id="r_a4d6e3883ba156041b1a73b306f855151"><td class="memItemLeft" align="right" valign="top">QVector&lt; QPixmap &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4d6e3883ba156041b1a73b306f855151">framesArriba</a></td></tr>
+<tr class="memdesc:a4d6e3883ba156041b1a73b306f855151"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sprites al moverse hacia arriba.  <br /></td></tr>
+<tr class="memitem:ab2f4a071328ade95e72beaebbcb960fc" id="r_ab2f4a071328ade95e72beaebbcb960fc"><td class="memItemLeft" align="right" valign="top">QVector&lt; QPixmap &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab2f4a071328ade95e72beaebbcb960fc">framesAbajo</a></td></tr>
+<tr class="memdesc:ab2f4a071328ade95e72beaebbcb960fc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sprites al moverse hacia abajo.  <br /></td></tr>
+<tr class="memitem:a1a406360c826e02bd182725dca053617" id="r_a1a406360c826e02bd182725dca053617"><td class="memItemLeft" align="right" valign="top">QVector&lt; QPixmap &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1a406360c826e02bd182725dca053617">framesIzquierda</a></td></tr>
+<tr class="memdesc:a1a406360c826e02bd182725dca053617"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sprites al moverse a la izquierda.  <br /></td></tr>
+<tr class="memitem:a45eeee9d3e7c1aabb6626709e1b4aa8e" id="r_a45eeee9d3e7c1aabb6626709e1b4aa8e"><td class="memItemLeft" align="right" valign="top">QVector&lt; QPixmap &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a45eeee9d3e7c1aabb6626709e1b4aa8e">framesDerecha</a></td></tr>
+<tr class="memdesc:a45eeee9d3e7c1aabb6626709e1b4aa8e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sprites al moverse a la derecha.  <br /></td></tr>
+<tr class="memitem:a0bae2248fa9030f7e9d69a93dc3352f9" id="r_a0bae2248fa9030f7e9d69a93dc3352f9"><td class="memItemLeft" align="right" valign="top">QVector&lt; QPair&lt; QGraphicsEllipseItem *, QTimer * &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0bae2248fa9030f7e9d69a93dc3352f9">proyectilesActivos</a></td></tr>
+<tr class="memitem:a966e9bca5d5d22221cd4f41ebceec299" id="r_a966e9bca5d5d22221cd4f41ebceec299"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a966e9bca5d5d22221cd4f41ebceec299">tipo</a></td></tr>
+<tr class="memdesc:a966e9bca5d5d22221cd4f41ebceec299"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tipo de personaje ("goku" o "enemigo")  <br /></td></tr>
+</table>
+<a name="details" id="details"></a><h2 id="header-details" class="groupheader">Descripción detallada</h2>
+<div class="textblock"><p>Clase base abstracta para todos los personajes del juego. </p>
+<p>Sirve como clase padre para <span class="tt"><a class="el" href="class_goku.html" title="La clase Goku representa al personaje principal controlado por el jugador.">Goku</a></span> y <span class="tt"><a class="el" href="class_enemigo.html" title="La clase Enemigo representa un personaje hostil que puede patrullar y disparar.">Enemigo</a></span>, definiendo las funcionalidades comunes como movimiento, disparo y físicas. Incluye soporte para el segundo nivel con vista cenital. </p>
+</div><a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Documentación de constructores y destructores</h2>
+<a id="ac788c154341f4805684d91929904d81f" name="ac788c154341f4805684d91929904d81f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac788c154341f4805684d91929904d81f">&#9670;&#160;</a></span>Personaje()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Personaje::Personaje </td>
+          <td>(</td>
+          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>x</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>y</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>ancho</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>alto</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Constructor base del personaje. </p>
+<p>Constructor base para cualquier personaje.</p>
+<dl class="params"><dt>Parámetros</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">x</td><td>Posición X inicial </td></tr>
+    <tr><td class="paramname">y</td><td>Posición Y inicial </td></tr>
+    <tr><td class="paramname">ancho</td><td>Ancho del sprite </td></tr>
+    <tr><td class="paramname">alto</td><td>Alto del sprite</td></tr>
+    <tr><td class="paramname">x</td><td>Posición inicial en X. </td></tr>
+    <tr><td class="paramname">y</td><td>Posición inicial en Y. </td></tr>
+    <tr><td class="paramname">ancho</td><td>Ancho del sprite. </td></tr>
+    <tr><td class="paramname">alto</td><td>Alto del sprite. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Documentación de funciones miembro</h2>
+<a id="a754622c13421973b752a5429ee8cb2d5" name="a754622c13421973b752a5429ee8cb2d5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a754622c13421973b752a5429ee8cb2d5">&#9670;&#160;</a></span>actualizarBarraEnergiaSignal</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Personaje::actualizarBarraEnergiaSignal </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel signal">signal</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Señal emitida cuando la energía debe actualizarse visualmente. </p>
+
+</div>
+</div>
+<a id="a9d3833bb5eb7c555ce5491fa11efe3bb" name="a9d3833bb5eb7c555ce5491fa11efe3bb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9d3833bb5eb7c555ce5491fa11efe3bb">&#9670;&#160;</a></span>colisionaConMuro()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Personaje::colisionaConMuro </td>
+          <td>(</td>
+          <td class="paramtype">const QPointF &amp;</td>          <td class="paramname"><span class="paramname"><em>nuevaPos</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">QGraphicsScene *</td>          <td class="paramname"><span class="paramname"><em>escena</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Verifica si una posición nueva colisiona con un muro. </p>
+<p>Verifica si una nueva posición colisiona con un muro o puerta.</p>
+<dl class="params"><dt>Parámetros</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">nuevaPos</td><td>Nueva posición tentativa </td></tr>
+    <tr><td class="paramname">escena</td><td>Escena donde se verifica la colisión </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Devuelve</dt><dd>true si colisiona con un muro, false si el movimiento es válido</dd></dl>
+<dl class="params"><dt>Parámetros</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">nuevaPos</td><td>Nueva posición tentativa. </td></tr>
+    <tr><td class="paramname">escena</td><td>Escena en la que se verifica la colisión. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Devuelve</dt><dd>true si hay colisión con un muro o puerta; false si puede moverse. </dd></dl>
+
+</div>
+</div>
+<a id="a58b1c3c7aa966c855c96c201bca07ecc" name="a58b1c3c7aa966c855c96c201bca07ecc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a58b1c3c7aa966c855c96c201bca07ecc">&#9670;&#160;</a></span>disparar()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void Personaje::disparar </td>
+          <td>(</td>
+          <td class="paramtype">QGraphicsScene *</td>          <td class="paramname"><span class="paramname"><em>escena</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel pure-virtual">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Método virtual puro para disparo (nivel 1). </p>
+<dl class="params"><dt>Parámetros</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">escena</td><td>Escena donde se agregan los proyectiles </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Implementado en <a class="el" href="class_enemigo.html#a611b87942a45c27b3dc53cf228c9eb9f">Enemigo</a> y <a class="el" href="class_goku.html#a6239d74de7b3c64af085420ae6e83576">Goku</a>.</p>
+
+</div>
+</div>
+<a id="a737ff8ebed3b47ce9de105d774bf9150" name="a737ff8ebed3b47ce9de105d774bf9150"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a737ff8ebed3b47ce9de105d774bf9150">&#9670;&#160;</a></span>disparar2()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Personaje::disparar2 </td>
+          <td>(</td>
+          <td class="paramtype">QGraphicsScene *</td>          <td class="paramname"><span class="paramname"><em>escena</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Lanza un disparo con hasta 3 proyectiles activos (nivel 2). </p>
+<p>Lanza un proyectil en la dirección del personaje (<a class="el" href="class_goku.html" title="La clase Goku representa al personaje principal controlado por el jugador.">Goku</a> o <a class="el" href="class_enemigo.html" title="La clase Enemigo representa un personaje hostil que puede patrullar y disparar.">Enemigo</a>).</p>
+<dl class="params"><dt>Parámetros</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">escena</td><td>Escena donde se agregan los proyectiles</td></tr>
+  </table>
+  </dd>
+</dl>
+<p><a class="el" href="class_goku.html" title="La clase Goku representa al personaje principal controlado por el jugador.">Goku</a> dispara proyectiles amarillos en la dirección actual, mientras que los enemigos disparan hacia <a class="el" href="class_goku.html" title="La clase Goku representa al personaje principal controlado por el jugador.">Goku</a> con proyectiles rojos.</p>
+<dl class="params"><dt>Parámetros</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">escena</td><td>Escena donde se agregan los proyectiles. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a13458159f6e0bd24e12d02a873c461ed" name="a13458159f6e0bd24e12d02a873c461ed"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a13458159f6e0bd24e12d02a873c461ed">&#9670;&#160;</a></span>gokuDerrotado</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Personaje::gokuDerrotado </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel signal">signal</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Señal emitida cuando <a class="el" href="class_goku.html" title="La clase Goku representa al personaje principal controlado por el jugador.">Goku</a> es derrotado por un enemigo. </p>
+
+</div>
+</div>
+<a id="a8f56997e18315b7153014a3f4bd98e9e" name="a8f56997e18315b7153014a3f4bd98e9e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8f56997e18315b7153014a3f4bd98e9e">&#9670;&#160;</a></span>mover()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void Personaje::mover </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel pure-virtual">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Método virtual puro para movimiento (nivel 1). </p>
+
+<p>Implementado en <a class="el" href="class_enemigo.html#ae614a11726de2ea4ae9cfd939cac2444">Enemigo</a> y <a class="el" href="class_goku.html#a816deec7ea59394a78f10edee8942bc9">Goku</a>.</p>
+
+</div>
+</div>
+<a id="af746a1a419744988f386f4a7777a1305" name="af746a1a419744988f386f4a7777a1305"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af746a1a419744988f386f4a7777a1305">&#9670;&#160;</a></span>mover2()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Personaje::mover2 </td>
+          <td>(</td>
+          <td class="paramtype">const QString &amp;</td>          <td class="paramname"><span class="paramname"><em>direccion</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Mueve al personaje en dirección específica (nivel 2). </p>
+<p>Mueve al personaje en una dirección dada y actualiza el sprite.</p>
+<dl class="params"><dt>Parámetros</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">direccion</td><td>Puede ser "arriba", "abajo", "izquierda", "derecha"</td></tr>
+    <tr><td class="paramname">direccion</td><td>Dirección a mover: "arriba", "abajo", "izquierda", "derecha". </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a name="doc-variable-members" id="doc-variable-members"></a><h2 id="header-doc-variable-members" class="groupheader">Documentación de datos miembro</h2>
+<a id="aaef6bf1b4161df811ffcabb26cdfa691" name="aaef6bf1b4161df811ffcabb26cdfa691"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaef6bf1b4161df811ffcabb26cdfa691">&#9670;&#160;</a></span>alto</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">float Personaje::alto</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Dimensiones del personaje. </p>
+
+</div>
+</div>
+<a id="a11782e62db98f05a5c49bfe80157118b" name="a11782e62db98f05a5c49bfe80157118b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a11782e62db98f05a5c49bfe80157118b">&#9670;&#160;</a></span>ancho</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">float Personaje::ancho</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aef1282efe947a2469f0284a2bc877283" name="aef1282efe947a2469f0284a2bc877283"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aef1282efe947a2469f0284a2bc877283">&#9670;&#160;</a></span>frameActual</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int Personaje::frameActual = 0</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Índice del frame actual de animación. </p>
+
+</div>
+</div>
+<a id="ab2f4a071328ade95e72beaebbcb960fc" name="ab2f4a071328ade95e72beaebbcb960fc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab2f4a071328ade95e72beaebbcb960fc">&#9670;&#160;</a></span>framesAbajo</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">QVector&lt;QPixmap&gt; Personaje::framesAbajo</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Sprites al moverse hacia abajo. </p>
+
+</div>
+</div>
+<a id="a4d6e3883ba156041b1a73b306f855151" name="a4d6e3883ba156041b1a73b306f855151"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4d6e3883ba156041b1a73b306f855151">&#9670;&#160;</a></span>framesArriba</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">QVector&lt;QPixmap&gt; Personaje::framesArriba</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Sprites al moverse hacia arriba. </p>
+
+</div>
+</div>
+<a id="a45eeee9d3e7c1aabb6626709e1b4aa8e" name="a45eeee9d3e7c1aabb6626709e1b4aa8e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a45eeee9d3e7c1aabb6626709e1b4aa8e">&#9670;&#160;</a></span>framesDerecha</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">QVector&lt;QPixmap&gt; Personaje::framesDerecha</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Sprites al moverse a la derecha. </p>
+
+</div>
+</div>
+<a id="a1a406360c826e02bd182725dca053617" name="a1a406360c826e02bd182725dca053617"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1a406360c826e02bd182725dca053617">&#9670;&#160;</a></span>framesIzquierda</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">QVector&lt;QPixmap&gt; Personaje::framesIzquierda</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Sprites al moverse a la izquierda. </p>
+
+</div>
+</div>
+<a id="a0b5ee03448f0bbb7c460550095d3a0fd" name="a0b5ee03448f0bbb7c460550095d3a0fd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0b5ee03448f0bbb7c460550095d3a0fd">&#9670;&#160;</a></span>gravedad</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">float Personaje::gravedad</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Gravedad aplicada (solo nivel 1) </p>
+
+</div>
+</div>
+<a id="a18029fc8da0835895c69c9eaddda4312" name="a18029fc8da0835895c69c9eaddda4312"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a18029fc8da0835895c69c9eaddda4312">&#9670;&#160;</a></span>posX</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">float Personaje::posX</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a094d1c8b5f186c94d986ee6eb7457d98" name="a094d1c8b5f186c94d986ee6eb7457d98"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a094d1c8b5f186c94d986ee6eb7457d98">&#9670;&#160;</a></span>posY</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">float Personaje::posY</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Posición actual del personaje. </p>
+
+</div>
+</div>
+<a id="a0bae2248fa9030f7e9d69a93dc3352f9" name="a0bae2248fa9030f7e9d69a93dc3352f9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0bae2248fa9030f7e9d69a93dc3352f9">&#9670;&#160;</a></span>proyectilesActivos</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">QVector&lt;QPair&lt;QGraphicsEllipseItem*, QTimer*&gt; &gt; Personaje::proyectilesActivos</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a966e9bca5d5d22221cd4f41ebceec299" name="a966e9bca5d5d22221cd4f41ebceec299"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a966e9bca5d5d22221cd4f41ebceec299">&#9670;&#160;</a></span>tipo</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">QString Personaje::tipo</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Tipo de personaje ("goku" o "enemigo") </p>
+
+</div>
+</div>
+<a id="a09e5fc06d81313a6779ff1cc03cbc657" name="a09e5fc06d81313a6779ff1cc03cbc657"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a09e5fc06d81313a6779ff1cc03cbc657">&#9670;&#160;</a></span>velocidadY</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">float Personaje::velocidadY</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Velocidad vertical (solo nivel 1) </p>
+
+</div>
+</div>
+<hr/>La documentación de esta clase está generada de los siguientes archivos:<ul>
+<li>Entrada/<a class="el" href="personaje_8h_source.html">personaje.h</a></li>
+<li>Entrada/<a class="el" href="personaje_8cpp.html">personaje.cpp</a></li>
+</ul>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<div id="page-nav" class="page-nav-panel">
+<div id="page-nav-resize-handle"></div>
+<div id="page-nav-tree">
+<div id="page-nav-contents">
+</div><!-- page-nav-contents -->
+</div><!-- page-nav-tree -->
+</div><!-- page-nav -->
+</div><!-- container -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a href="class_personaje.html">Personaje</a></li>
+    <li class="footer">Generado por <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.14.0 </li>
+  </ul>
+</div>
+</body>
+</html>

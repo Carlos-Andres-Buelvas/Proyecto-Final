@@ -1,0 +1,180 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.14.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Proyecto Final - Informática II: Archivo de código fuente Entrada/personaje.h</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript" src="clipboard.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript" src="cookie.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">Proyecto Final - Informática II
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generado por Doxygen 1.14.0 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+</script>
+<script type="text/javascript">
+$(function() { codefold.init(); });
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+$(function() {
+  initMenu('',true,false,'search.php','Buscar',true);
+  $(function() { init_search(); });
+});
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+$(function(){initNavTree('personaje_8h_source.html','',''); });
+</script>
+<div id="container">
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Cargando...</div>
+<div class="SRStatus" id="Searching">Buscando...</div>
+<div class="SRStatus" id="NoMatches">Nada coincide</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">personaje.h</div></div>
+</div><!--header-->
+<div class="contents">
+<a href="personaje_8h.html">Ir a la documentación de este archivo.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#ifndef PERSONAJE_H</span></div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#define PERSONAJE_H</span></div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span> </div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &lt;QGraphicsPixmapItem&gt;</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &lt;QTimer&gt;</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span></div>
+<div class="foldopen" id="foldopen00014" data-start="{" data-end="};">
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno"><a class="line" href="class_personaje.html">   14</a></span><span class="keyword">class </span><a class="code hl_function" href="class_personaje.html#ac788c154341f4805684d91929904d81f">Personaje</a> : <span class="keyword">public</span> QObject, <span class="keyword">public</span> QGraphicsPixmapItem {</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>    Q_OBJECT</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>    <a class="code hl_function" href="class_personaje.html#ac788c154341f4805684d91929904d81f">Personaje</a>(<span class="keywordtype">float</span> x, <span class="keywordtype">float</span> y, <span class="keywordtype">float</span> <a class="code hl_variable" href="class_personaje.html#a11782e62db98f05a5c49bfe80157118b">ancho</a>, <span class="keywordtype">float</span> <a class="code hl_variable" href="class_personaje.html#aaef6bf1b4161df811ffcabb26cdfa691">alto</a>);</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span></div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno"><a class="line" href="class_personaje.html#a8f56997e18315b7153014a3f4bd98e9e">   30</a></span>    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="class_personaje.html#a8f56997e18315b7153014a3f4bd98e9e">mover</a>() = 0;</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span></div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno"><a class="line" href="class_personaje.html#a58b1c3c7aa966c855c96c201bca07ecc">   36</a></span>    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="class_personaje.html#a58b1c3c7aa966c855c96c201bca07ecc">disparar</a>(QGraphicsScene* escena) = 0;</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    <span class="comment">// NIVEL 2:</span></div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span></div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_personaje.html#af746a1a419744988f386f4a7777a1305">mover2</a>(<span class="keyword">const</span> QString&amp; direccion);</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span></div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_personaje.html#a737ff8ebed3b47ce9de105d774bf9150">disparar2</a>(QGraphicsScene* escena);</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span></div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="class_personaje.html#a9d3833bb5eb7c555ce5491fa11efe3bb">colisionaConMuro</a>(<span class="keyword">const</span> QPointF&amp; nuevaPos, QGraphicsScene* escena);</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> </div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>signals:</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno"><a class="line" href="class_personaje.html#a754622c13421973b752a5429ee8cb2d5">   64</a></span>    <span class="keywordtype">void</span> <a class="code hl_signal" href="class_personaje.html#a754622c13421973b752a5429ee8cb2d5">actualizarBarraEnergiaSignal</a>();</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span></div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno"><a class="line" href="class_personaje.html#a13458159f6e0bd24e12d02a873c461ed">   69</a></span>    <span class="keywordtype">void</span> <a class="code hl_signal" href="class_personaje.html#a13458159f6e0bd24e12d02a873c461ed">gokuDerrotado</a>();</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span> </div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span><span class="keyword">protected</span>:</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    <span class="comment">// Atributos físicos y visuales del personaje</span></div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span> </div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno"><a class="line" href="class_personaje.html#a18029fc8da0835895c69c9eaddda4312">   74</a></span>    <span class="keywordtype">float</span> <a class="code hl_variable" href="class_personaje.html#a18029fc8da0835895c69c9eaddda4312">posX</a>, <a class="code hl_variable" href="class_personaje.html#a094d1c8b5f186c94d986ee6eb7457d98">posY</a>;       </div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno"><a class="line" href="class_personaje.html#a09e5fc06d81313a6779ff1cc03cbc657">   75</a></span>    <span class="keywordtype">float</span> <a class="code hl_variable" href="class_personaje.html#a09e5fc06d81313a6779ff1cc03cbc657">velocidadY</a>;       </div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno"><a class="line" href="class_personaje.html#a0b5ee03448f0bbb7c460550095d3a0fd">   76</a></span>    <span class="keywordtype">float</span> <a class="code hl_variable" href="class_personaje.html#a0b5ee03448f0bbb7c460550095d3a0fd">gravedad</a>;         </div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno"><a class="line" href="class_personaje.html#aaef6bf1b4161df811ffcabb26cdfa691">   77</a></span>    <span class="keywordtype">float</span> <a class="code hl_variable" href="class_personaje.html#a11782e62db98f05a5c49bfe80157118b">ancho</a>, <a class="code hl_variable" href="class_personaje.html#aaef6bf1b4161df811ffcabb26cdfa691">alto</a>;      </div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span> </div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno"><a class="line" href="class_personaje.html#aef1282efe947a2469f0284a2bc877283">   79</a></span>    <span class="keywordtype">int</span> <a class="code hl_variable" href="class_personaje.html#aef1282efe947a2469f0284a2bc877283">frameActual</a> = 0;    </div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span> </div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    <span class="comment">// Animaciones para nivel 2</span></div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno"><a class="line" href="class_personaje.html#a4d6e3883ba156041b1a73b306f855151">   82</a></span>    QVector&lt;QPixmap&gt; <a class="code hl_variable" href="class_personaje.html#a4d6e3883ba156041b1a73b306f855151">framesArriba</a>;      </div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno"><a class="line" href="class_personaje.html#ab2f4a071328ade95e72beaebbcb960fc">   83</a></span>    QVector&lt;QPixmap&gt; <a class="code hl_variable" href="class_personaje.html#ab2f4a071328ade95e72beaebbcb960fc">framesAbajo</a>;       </div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno"><a class="line" href="class_personaje.html#a1a406360c826e02bd182725dca053617">   84</a></span>    QVector&lt;QPixmap&gt; <a class="code hl_variable" href="class_personaje.html#a1a406360c826e02bd182725dca053617">framesIzquierda</a>;   </div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno"><a class="line" href="class_personaje.html#a45eeee9d3e7c1aabb6626709e1b4aa8e">   85</a></span>    QVector&lt;QPixmap&gt; <a class="code hl_variable" href="class_personaje.html#a45eeee9d3e7c1aabb6626709e1b4aa8e">framesDerecha</a>;     </div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span> </div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>    <span class="comment">// Proyectiles activos y sus timers</span></div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno"><a class="line" href="class_personaje.html#a0bae2248fa9030f7e9d69a93dc3352f9">   88</a></span>    QVector&lt;QPair&lt;QGraphicsEllipseItem*, QTimer*&gt;&gt; <a class="code hl_variable" href="class_personaje.html#a0bae2248fa9030f7e9d69a93dc3352f9">proyectilesActivos</a>;</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span> </div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno"><a class="line" href="class_personaje.html#a966e9bca5d5d22221cd4f41ebceec299">   90</a></span>    QString <a class="code hl_variable" href="class_personaje.html#a966e9bca5d5d22221cd4f41ebceec299">tipo</a>; </div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>};</div>
+</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span> </div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span><span class="preprocessor">#endif </span><span class="comment">// PERSONAJE_H</span></div>
+<div class="ttc" id="aclass_personaje_html_a094d1c8b5f186c94d986ee6eb7457d98"><div class="ttname"><a href="class_personaje.html#a094d1c8b5f186c94d986ee6eb7457d98">Personaje::posY</a></div><div class="ttdeci">float posY</div><div class="ttdoc">Posición actual del personaje.</div><div class="ttdef"><b>Definition</b> personaje.h:74</div></div>
+<div class="ttc" id="aclass_personaje_html_a09e5fc06d81313a6779ff1cc03cbc657"><div class="ttname"><a href="class_personaje.html#a09e5fc06d81313a6779ff1cc03cbc657">Personaje::velocidadY</a></div><div class="ttdeci">float velocidadY</div><div class="ttdoc">Velocidad vertical (solo nivel 1)</div><div class="ttdef"><b>Definition</b> personaje.h:75</div></div>
+<div class="ttc" id="aclass_personaje_html_a0b5ee03448f0bbb7c460550095d3a0fd"><div class="ttname"><a href="class_personaje.html#a0b5ee03448f0bbb7c460550095d3a0fd">Personaje::gravedad</a></div><div class="ttdeci">float gravedad</div><div class="ttdoc">Gravedad aplicada (solo nivel 1)</div><div class="ttdef"><b>Definition</b> personaje.h:76</div></div>
+<div class="ttc" id="aclass_personaje_html_a0bae2248fa9030f7e9d69a93dc3352f9"><div class="ttname"><a href="class_personaje.html#a0bae2248fa9030f7e9d69a93dc3352f9">Personaje::proyectilesActivos</a></div><div class="ttdeci">QVector&lt; QPair&lt; QGraphicsEllipseItem *, QTimer * &gt; &gt; proyectilesActivos</div><div class="ttdef"><b>Definition</b> personaje.h:88</div></div>
+<div class="ttc" id="aclass_personaje_html_a11782e62db98f05a5c49bfe80157118b"><div class="ttname"><a href="class_personaje.html#a11782e62db98f05a5c49bfe80157118b">Personaje::ancho</a></div><div class="ttdeci">float ancho</div><div class="ttdef"><b>Definition</b> personaje.h:77</div></div>
+<div class="ttc" id="aclass_personaje_html_a13458159f6e0bd24e12d02a873c461ed"><div class="ttname"><a href="class_personaje.html#a13458159f6e0bd24e12d02a873c461ed">Personaje::gokuDerrotado</a></div><div class="ttdeci">void gokuDerrotado()</div><div class="ttdoc">Señal emitida cuando Goku es derrotado por un enemigo.</div></div>
+<div class="ttc" id="aclass_personaje_html_a18029fc8da0835895c69c9eaddda4312"><div class="ttname"><a href="class_personaje.html#a18029fc8da0835895c69c9eaddda4312">Personaje::posX</a></div><div class="ttdeci">float posX</div><div class="ttdef"><b>Definition</b> personaje.h:74</div></div>
+<div class="ttc" id="aclass_personaje_html_a1a406360c826e02bd182725dca053617"><div class="ttname"><a href="class_personaje.html#a1a406360c826e02bd182725dca053617">Personaje::framesIzquierda</a></div><div class="ttdeci">QVector&lt; QPixmap &gt; framesIzquierda</div><div class="ttdoc">Sprites al moverse a la izquierda.</div><div class="ttdef"><b>Definition</b> personaje.h:84</div></div>
+<div class="ttc" id="aclass_personaje_html_a45eeee9d3e7c1aabb6626709e1b4aa8e"><div class="ttname"><a href="class_personaje.html#a45eeee9d3e7c1aabb6626709e1b4aa8e">Personaje::framesDerecha</a></div><div class="ttdeci">QVector&lt; QPixmap &gt; framesDerecha</div><div class="ttdoc">Sprites al moverse a la derecha.</div><div class="ttdef"><b>Definition</b> personaje.h:85</div></div>
+<div class="ttc" id="aclass_personaje_html_a4d6e3883ba156041b1a73b306f855151"><div class="ttname"><a href="class_personaje.html#a4d6e3883ba156041b1a73b306f855151">Personaje::framesArriba</a></div><div class="ttdeci">QVector&lt; QPixmap &gt; framesArriba</div><div class="ttdoc">Sprites al moverse hacia arriba.</div><div class="ttdef"><b>Definition</b> personaje.h:82</div></div>
+<div class="ttc" id="aclass_personaje_html_a58b1c3c7aa966c855c96c201bca07ecc"><div class="ttname"><a href="class_personaje.html#a58b1c3c7aa966c855c96c201bca07ecc">Personaje::disparar</a></div><div class="ttdeci">virtual void disparar(QGraphicsScene *escena)=0</div><div class="ttdoc">Método virtual puro para disparo (nivel 1).</div></div>
+<div class="ttc" id="aclass_personaje_html_a737ff8ebed3b47ce9de105d774bf9150"><div class="ttname"><a href="class_personaje.html#a737ff8ebed3b47ce9de105d774bf9150">Personaje::disparar2</a></div><div class="ttdeci">void disparar2(QGraphicsScene *escena)</div><div class="ttdoc">Lanza un disparo con hasta 3 proyectiles activos (nivel 2).</div><div class="ttdef"><b>Definition</b> personaje.cpp:68</div></div>
+<div class="ttc" id="aclass_personaje_html_a754622c13421973b752a5429ee8cb2d5"><div class="ttname"><a href="class_personaje.html#a754622c13421973b752a5429ee8cb2d5">Personaje::actualizarBarraEnergiaSignal</a></div><div class="ttdeci">void actualizarBarraEnergiaSignal()</div><div class="ttdoc">Señal emitida cuando la energía debe actualizarse visualmente.</div></div>
+<div class="ttc" id="aclass_personaje_html_a8f56997e18315b7153014a3f4bd98e9e"><div class="ttname"><a href="class_personaje.html#a8f56997e18315b7153014a3f4bd98e9e">Personaje::mover</a></div><div class="ttdeci">virtual void mover()=0</div><div class="ttdoc">Método virtual puro para movimiento (nivel 1).</div></div>
+<div class="ttc" id="aclass_personaje_html_a966e9bca5d5d22221cd4f41ebceec299"><div class="ttname"><a href="class_personaje.html#a966e9bca5d5d22221cd4f41ebceec299">Personaje::tipo</a></div><div class="ttdeci">QString tipo</div><div class="ttdoc">Tipo de personaje (&quot;goku&quot; o &quot;enemigo&quot;)</div><div class="ttdef"><b>Definition</b> personaje.h:90</div></div>
+<div class="ttc" id="aclass_personaje_html_a9d3833bb5eb7c555ce5491fa11efe3bb"><div class="ttname"><a href="class_personaje.html#a9d3833bb5eb7c555ce5491fa11efe3bb">Personaje::colisionaConMuro</a></div><div class="ttdeci">bool colisionaConMuro(const QPointF &amp;nuevaPos, QGraphicsScene *escena)</div><div class="ttdoc">Verifica si una posición nueva colisiona con un muro.</div><div class="ttdef"><b>Definition</b> personaje.cpp:220</div></div>
+<div class="ttc" id="aclass_personaje_html_aaef6bf1b4161df811ffcabb26cdfa691"><div class="ttname"><a href="class_personaje.html#aaef6bf1b4161df811ffcabb26cdfa691">Personaje::alto</a></div><div class="ttdeci">float alto</div><div class="ttdoc">Dimensiones del personaje.</div><div class="ttdef"><b>Definition</b> personaje.h:77</div></div>
+<div class="ttc" id="aclass_personaje_html_ab2f4a071328ade95e72beaebbcb960fc"><div class="ttname"><a href="class_personaje.html#ab2f4a071328ade95e72beaebbcb960fc">Personaje::framesAbajo</a></div><div class="ttdeci">QVector&lt; QPixmap &gt; framesAbajo</div><div class="ttdoc">Sprites al moverse hacia abajo.</div><div class="ttdef"><b>Definition</b> personaje.h:83</div></div>
+<div class="ttc" id="aclass_personaje_html_ac788c154341f4805684d91929904d81f"><div class="ttname"><a href="class_personaje.html#ac788c154341f4805684d91929904d81f">Personaje::Personaje</a></div><div class="ttdeci">Personaje(float x, float y, float ancho, float alto)</div><div class="ttdoc">Constructor base del personaje.</div><div class="ttdef"><b>Definition</b> personaje.cpp:14</div></div>
+<div class="ttc" id="aclass_personaje_html_aef1282efe947a2469f0284a2bc877283"><div class="ttname"><a href="class_personaje.html#aef1282efe947a2469f0284a2bc877283">Personaje::frameActual</a></div><div class="ttdeci">int frameActual</div><div class="ttdoc">Índice del frame actual de animación.</div><div class="ttdef"><b>Definition</b> personaje.h:79</div></div>
+<div class="ttc" id="aclass_personaje_html_af746a1a419744988f386f4a7777a1305"><div class="ttname"><a href="class_personaje.html#af746a1a419744988f386f4a7777a1305">Personaje::mover2</a></div><div class="ttdeci">void mover2(const QString &amp;direccion)</div><div class="ttdoc">Mueve al personaje en dirección específica (nivel 2).</div><div class="ttdef"><b>Definition</b> personaje.cpp:27</div></div>
+</div><!-- fragment --></div><!-- contents -->
+</div><!-- doc-content -->
+</div><!-- container -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a href="dir_dd9dbe427e32f67ea3b2a2afb81ef03e.html">Entrada</a></li><li class="navelem"><a href="personaje_8h.html">personaje.h</a></li>
+    <li class="footer">Generado por <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.14.0 </li>
+  </ul>
+</div>
+</body>
+</html>

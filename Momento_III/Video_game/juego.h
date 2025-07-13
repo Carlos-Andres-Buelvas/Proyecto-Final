@@ -100,7 +100,7 @@ private:
     bool pPresionado = false;
     bool gokuEnCuerda = false;
     int soldadosEliminados = 0;
-    const int OBJETIVO_SOLDADOS = 1;
+    const int OBJETIVO_SOLDADOS = 25;
 
     // Estructura de la cuerda
     struct Cuerda {
